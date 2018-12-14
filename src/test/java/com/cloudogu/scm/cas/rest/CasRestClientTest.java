@@ -9,6 +9,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import sonia.scm.SCMContextProvider;
+import sonia.scm.Stage;
 import sonia.scm.net.ahc.AdvancedHttpClient;
 import sonia.scm.net.ahc.AdvancedHttpRequestWithBody;
 import sonia.scm.net.ahc.AdvancedHttpResponse;
@@ -33,6 +35,9 @@ class CasRestClientTest {
   private Configuration configuration;
 
   @Mock
+  private SCMContextProvider contextProvider;
+
+  @Mock
   private AdvancedHttpClient httpClient;
 
   private CasRestClient restClient;
@@ -41,7 +46,10 @@ class CasRestClientTest {
   void setUpObjectUnderTest() {
     configuration = new Configuration();
     configuration.setCasUrl(CAS_URL);
-    restClient = new CasRestClient(httpClient, configuration);
+
+    when(contextProvider.getStage()).thenReturn(Stage.PRODUCTION);
+
+    restClient = new CasRestClient(contextProvider, httpClient, configuration);
   }
 
   @Test
@@ -116,7 +124,7 @@ class CasRestClientTest {
   }
 
   private AdvancedHttpRequestWithBody mockRequestForST(String tgtUrl, String serviceUrl) {
-    AdvancedHttpRequestWithBody request = mock(AdvancedHttpRequestWithBody.class);
+    AdvancedHttpRequestWithBody request = mockRequest();
     when(httpClient.post(tgtUrl)).thenReturn(request);
 
     FormContentBuilder formContentBuilder = mock(FormContentBuilder.class);
@@ -136,7 +144,7 @@ class CasRestClientTest {
   }
 
   private AdvancedHttpRequestWithBody mockRequestForTGT(String username, String password) {
-    AdvancedHttpRequestWithBody request = mock(AdvancedHttpRequestWithBody.class);
+    AdvancedHttpRequestWithBody request = mockRequest();
     when(httpClient.post(CAS_URL + "/v1/tickets")).thenReturn(request);
 
     FormContentBuilder formContentBuilder = mock(FormContentBuilder.class);
@@ -146,6 +154,12 @@ class CasRestClientTest {
     when(formContentBuilder.field("password", password)).thenReturn(formContentBuilder);
     when(formContentBuilder.build()).thenReturn(request);
 
+    return request;
+  }
+
+  private AdvancedHttpRequestWithBody mockRequest() {
+    AdvancedHttpRequestWithBody request = mock(AdvancedHttpRequestWithBody.class);
+    when(request.disableCertificateValidation(false)).thenReturn(request);
     return request;
   }
 

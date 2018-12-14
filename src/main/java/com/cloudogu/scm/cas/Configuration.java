@@ -5,9 +5,9 @@ import sonia.scm.plugin.Extension;
 @Extension
 public class Configuration {
 
-  private String casLoginUrl = "http://localhost:8082/cas/login";
+  private String casLoginUrl = "https://cas.hitchhiker.com:8443/cas/login";
 
-  private String casUrl = "http://localhost:8082/cas";
+  private String casUrl = "https://cas.hitchhiker.com:8443/cas";
 
   private String displayNameAttribute = "displayName";
   private String mailAttribute = "mail";

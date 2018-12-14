@@ -2,6 +2,8 @@ package com.cloudogu.scm.cas.rest;
 
 import com.cloudogu.scm.cas.Configuration;
 import org.apache.shiro.authc.AuthenticationException;
+import sonia.scm.SCMContextProvider;
+import sonia.scm.Stage;
 import sonia.scm.net.ahc.AdvancedHttpClient;
 import sonia.scm.net.ahc.AdvancedHttpRequestWithBody;
 import sonia.scm.net.ahc.AdvancedHttpResponse;
@@ -12,17 +14,20 @@ import java.io.IOException;
 
 public class CasRestClient {
 
+  private final SCMContextProvider contextProvider;
   private final AdvancedHttpClient httpClient;
   private final Configuration configuration;
 
   @Inject
-  public CasRestClient(AdvancedHttpClient httpClient, Configuration configuration) {
+  public CasRestClient(SCMContextProvider contextProvider, AdvancedHttpClient httpClient, Configuration configuration) {
+    this.contextProvider = contextProvider;
     this.httpClient = httpClient;
     this.configuration = configuration;
   }
 
   public String requestGrantingTicketUrl(String username, String password) {
-    AdvancedHttpResponse response = execute(httpClient.post(configuration.getCasUrl() + "/v1/tickets")
+    AdvancedHttpResponse response = execute(post(configuration.getCasUrl() + "/v1/tickets")
+      .disableCertificateValidation(isDevelopmentStageActive())
       .formContent()
       .field("username", username)
       .field("password", password)
@@ -36,8 +41,12 @@ public class CasRestClient {
     return response.getFirstHeader("Location");
   }
 
+  private boolean isDevelopmentStageActive() {
+    return contextProvider.getStage() == Stage.DEVELOPMENT;
+  }
+
   public String requestServiceTicket(String url, String serviceUrl) {
-    AdvancedHttpResponse response = execute(httpClient.post(url)
+    AdvancedHttpResponse response = execute(post(url)
       .formContent()
       .field("service", serviceUrl)
       .build());
@@ -52,6 +61,11 @@ public class CasRestClient {
     } catch (IOException ex) {
       throw new AuthenticationException("failed to read service ticket from response", ex);
     }
+  }
+
+  private AdvancedHttpRequestWithBody post(String url) {
+    return httpClient.post(url)
+      .disableCertificateValidation(isDevelopmentStageActive());
   }
 
   private AdvancedHttpResponse execute(AdvancedHttpRequestWithBody request) {
