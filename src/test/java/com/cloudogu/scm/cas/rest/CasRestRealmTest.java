@@ -1,5 +1,7 @@
-package com.cloudogu.scm.cas;
+package com.cloudogu.scm.cas.rest;
 
+import com.cloudogu.scm.cas.AuthenticationInfoBuilder;
+import com.cloudogu.scm.cas.ServiceUrlProvider;
 import com.google.inject.util.Providers;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -10,7 +12,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)

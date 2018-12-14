@@ -1,5 +1,6 @@
-package com.cloudogu.scm.cas;
+package com.cloudogu.scm.cas.rest;
 
+import com.cloudogu.scm.cas.Configuration;
 import org.apache.shiro.authc.AuthenticationException;
 import sonia.scm.net.ahc.AdvancedHttpClient;
 import sonia.scm.net.ahc.AdvancedHttpRequestWithBody;
@@ -53,7 +54,7 @@ public class CasRestClient {
     }
   }
 
-  public AdvancedHttpResponse execute(AdvancedHttpRequestWithBody request) {
+  private AdvancedHttpResponse execute(AdvancedHttpRequestWithBody request) {
     try {
       return request.request();
     } catch (IOException ex) {

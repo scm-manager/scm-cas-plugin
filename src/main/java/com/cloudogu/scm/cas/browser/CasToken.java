@@ -1,4 +1,4 @@
-package com.cloudogu.scm.cas;
+package com.cloudogu.scm.cas.browser;
 
 import com.google.common.base.Strings;
 import org.apache.shiro.authc.AuthenticationToken;

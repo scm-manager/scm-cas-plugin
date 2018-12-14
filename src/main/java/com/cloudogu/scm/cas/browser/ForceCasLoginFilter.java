@@ -1,5 +1,7 @@
-package com.cloudogu.scm.cas;
+package com.cloudogu.scm.cas.browser;
 
+import com.cloudogu.scm.cas.Configuration;
+import com.cloudogu.scm.cas.ServiceUrlProvider;
 import com.google.common.base.Strings;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;

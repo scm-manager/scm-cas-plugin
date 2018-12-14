@@ -1,5 +1,7 @@
 package com.cloudogu.scm.cas;
 
+import com.cloudogu.scm.cas.browser.CasAuthenticationResource;
+import com.cloudogu.scm.cas.browser.CasToken;
 import sonia.scm.security.CipherHandler;
 import sonia.scm.util.HttpUtil;
 

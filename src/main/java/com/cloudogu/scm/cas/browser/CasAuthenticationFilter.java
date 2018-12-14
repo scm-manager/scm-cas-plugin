@@ -1,4 +1,4 @@
-package com.cloudogu.scm.cas;
+package com.cloudogu.scm.cas.browser;
 
 import sonia.scm.Priority;
 import sonia.scm.config.ScmConfiguration;

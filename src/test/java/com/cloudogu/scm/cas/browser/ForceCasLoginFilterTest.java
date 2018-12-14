@@ -1,5 +1,7 @@
-package com.cloudogu.scm.cas;
+package com.cloudogu.scm.cas.browser;
 
+import com.cloudogu.scm.cas.Configuration;
+import com.cloudogu.scm.cas.ServiceUrlProvider;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.SubjectThreadState;
 import org.apache.shiro.util.ThreadState;
@@ -14,7 +16,6 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 
 import static org.mockito.Mockito.verify;

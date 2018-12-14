@@ -1,5 +1,7 @@
-package com.cloudogu.scm.cas;
+package com.cloudogu.scm.cas.browser;
 
+import com.cloudogu.scm.cas.ServiceUrlProvider;
+import com.cloudogu.scm.cas.browser.CasToken;
 import com.google.inject.util.Providers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

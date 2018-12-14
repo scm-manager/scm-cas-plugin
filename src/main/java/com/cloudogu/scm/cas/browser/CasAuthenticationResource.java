@@ -1,4 +1,4 @@
-package com.cloudogu.scm.cas;
+package com.cloudogu.scm.cas.browser;
 
 import org.apache.shiro.SecurityUtils;
 import sonia.scm.security.AccessToken;

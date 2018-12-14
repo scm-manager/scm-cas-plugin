@@ -1,5 +1,7 @@
-package com.cloudogu.scm.cas;
+package com.cloudogu.scm.cas.browser;
 
+import com.cloudogu.scm.cas.AuthenticationInfoBuilder;
+import com.cloudogu.scm.cas.ServiceUrlProvider;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.credential.AllowAllCredentialsMatcher;

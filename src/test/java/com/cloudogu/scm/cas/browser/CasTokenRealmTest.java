@@ -1,18 +1,15 @@
-package com.cloudogu.scm.cas;
+package com.cloudogu.scm.cas.browser;
 
+import com.cloudogu.scm.cas.AuthenticationInfoBuilder;
+import com.cloudogu.scm.cas.ServiceUrlProvider;
 import org.apache.shiro.authc.AuthenticationInfo;
-import org.jasig.cas.client.validation.Assertion;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sonia.scm.security.SyncingRealmHelper;
-import sonia.scm.user.User;
-import sonia.scm.user.UserTestData;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
