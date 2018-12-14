@@ -18,39 +18,29 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class CasTokenRealmTest {
 
-  @Mock
-  private CasTokenValidator tokenValidator;
+  private static final String SERVICE_URL = "https://scm.hitchhiker.com/scm";
 
   @Mock
-  private AssertionMapper assertionMapper;
+  private ServiceUrlProvider serviceUrlProvider;
 
   @Mock
-  private Assertion assertion;
-
-  @Mock
-  private SyncingRealmHelper realmHelper;
-
-  @Mock
-  private AuthenticationInfo authenticationInfo;
+  private AuthenticationInfoBuilder authenticationInfoBuilder;
 
   @InjectMocks
   private CasTokenRealm realm;
 
+  @Mock
+  private AuthenticationInfo authenticationInfo;
 
   @Test
   void shouldReturnAuthenticationInfo() {
     CasToken token = CasToken.valueOf("TGT-123", "anc");
 
-    User trillian = UserTestData.createTrillian();
-
-    when(tokenValidator.validate(token)).thenReturn(assertion);
-    when(assertionMapper.createUser(assertion)).thenReturn(trillian);
-    when(realmHelper.createAuthenticationInfo("cas", trillian)).thenReturn(authenticationInfo);
+    when(serviceUrlProvider.createFromToken(token)).thenReturn(SERVICE_URL);
+    when(authenticationInfoBuilder.create("TGT-123", SERVICE_URL)).thenReturn(authenticationInfo);
 
     AuthenticationInfo result = realm.doGetAuthenticationInfo(token);
     assertThat(result).isSameAs(authenticationInfo);
-
-    verify(realmHelper).store(trillian);
   }
 
 }

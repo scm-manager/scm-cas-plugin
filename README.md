@@ -10,4 +10,4 @@ Start cas server with docker-compose:
 docker-compose up
 ```
 
-The server should now run on http://localhost:8082/cas the default credential are `casuser` with password `Mellon`.
+The server should now run on http://localhost:8082/cas the default credential are `trillian` with password `secret`.
