@@ -8,6 +8,7 @@ services:
     volumes:
       - ./docker/tmp:/root/.m2/repository/
       - ./docker/cas.properties:/cas-overlay/etc/cas/config/cas.properties:ro
+      - ./docker/attributes.json:/cas-overlay/etc/cas/attributes.json:ro
       - ./docker/All-10000005.json:/cas-overlay/etc/cas/services/All-10000005.json:ro
       - ./docker/pom.xml:/cas-overlay/pom.xml
     healthcheck:

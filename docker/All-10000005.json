@@ -8,5 +8,11 @@
   "proxyPolicy" : {
     "@class" : "org.apereo.cas.services.RegexMatchingRegisteredServiceProxyPolicy",
     "pattern" : "^(https?|imaps?)://.*"
+  },
+  "usernameAttributeProvider" : {
+    "@class" : "org.apereo.cas.services.DefaultRegisteredServiceUsernameProvider"
+  },
+  "attributeReleasePolicy" : {
+    "@class" : "org.apereo.cas.services.ReturnAllAttributeReleasePolicy"
   }
 }

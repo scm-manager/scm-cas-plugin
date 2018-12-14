@@ -1,0 +1,68 @@
+package com.cloudogu.scm.cas;
+
+import com.google.common.collect.ImmutableMap;
+import org.jasig.cas.client.authentication.AttributePrincipal;
+import org.jasig.cas.client.validation.Assertion;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.user.User;
+
+import java.util.Map;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
+class AssertionMapperTest {
+
+  private static final Map<String,Object> TRICIA_ATTRIBUTES = ImmutableMap.of(
+    "displayName", "Tricia McMillan",
+    "mail", "tricia.mcmillan@hitchhiker.com"
+  );
+
+  @Mock
+  private AttributePrincipal principal;
+
+  @Mock
+  private Assertion assertion;
+
+  private Configuration configuration;
+
+  private AssertionMapper mapper;
+
+  @BeforeEach
+  void setUpObjectUnderTest() {
+    when(assertion.getPrincipal()).thenReturn(principal);
+    when(principal.getName()).thenReturn("tricia");
+    when(principal.getAttributes()).thenReturn(TRICIA_ATTRIBUTES);
+
+    configuration = new Configuration();
+    mapper = new AssertionMapper(configuration);
+  }
+
+  @Test
+  void shouldCreateUser() {
+    User user = mapper.createUser(assertion);
+
+    assertThat(user.getName()).isEqualTo("tricia");
+    assertThat(user.getDisplayName()).isEqualTo("Tricia McMillan");
+    assertThat(user.getMail()).isEqualTo("tricia.mcmillan@hitchhiker.com");
+    assertThat(user.getType()).isEqualTo("cas");
+  }
+
+  @Test
+  void shouldCreateUserWithoutDisplayName() {
+    configuration.setDisplayNameAttribute("cn");
+
+    User user = mapper.createUser(assertion);
+
+    assertThat(user.getName()).isEqualTo("tricia");
+    assertThat(user.getDisplayName()).isNull();
+    assertThat(user.getMail()).isEqualTo("tricia.mcmillan@hitchhiker.com");
+    assertThat(user.getType()).isEqualTo("cas");
+  }
+
+}
