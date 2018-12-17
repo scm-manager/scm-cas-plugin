@@ -19,7 +19,7 @@ public class LogoutAccessTokenValidator implements TokenClaimsValidator {
   @Override
   public boolean validate(Map<String, Object> claims) {
     String id = resolveId(claims);
-    return !ticketStore.isBlacklistet(id);
+    return !ticketStore.isBlacklisted(id);
   }
 
   private String resolveId(Map<String, Object> claims) {

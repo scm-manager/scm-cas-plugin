@@ -23,7 +23,7 @@ class LogoutAccessTokenValidatorTest {
 
   @Test
   void shouldReturnFalseIfTheIdIsBlacklisted() {
-    when(ticketStore.isBlacklistet("123")).thenReturn(true);
+    when(ticketStore.isBlacklisted("123")).thenReturn(true);
 
     Map<String,Object> claims = new HashMap<>();
     claims.put("jti", "123");
@@ -34,7 +34,7 @@ class LogoutAccessTokenValidatorTest {
 
   @Test
   void shouldReturnFalseIfTheParentIdIsBlacklisted() {
-    when(ticketStore.isBlacklistet("456")).thenReturn(true);
+    when(ticketStore.isBlacklisted("456")).thenReturn(true);
 
     Map<String,Object> claims = new HashMap<>();
     claims.put("scm-manager.parentTokenId", "456");

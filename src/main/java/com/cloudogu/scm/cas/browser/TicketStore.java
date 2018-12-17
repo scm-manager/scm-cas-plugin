@@ -47,7 +47,7 @@ public class TicketStore {
     }
   }
 
-  public boolean isBlacklistet(String accessTokenId) {
+  public boolean isBlacklisted(String accessTokenId) {
     StoreEntry entry = byAccessTokenId.get(accessTokenId);
     if (entry != null) {
       return entry.isBlacklistet();
