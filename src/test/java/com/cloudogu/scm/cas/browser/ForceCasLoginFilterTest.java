@@ -16,6 +16,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 
 import static org.mockito.Mockito.verify;
@@ -74,9 +75,23 @@ class ForceCasLoginFilterTest {
   }
 
   @Test
-  void shouldNotRedirectOnCasCallback() throws IOException, ServletException {
+  void shouldNotRedirectOnCasLogin() throws IOException, ServletException {
+    when(request.getContextPath()).thenReturn("/scm");
     when(request.getRequestURI()).thenReturn("/scm/api/v2/cas/__enc__");
+    when(request.getMethod()).thenReturn("GET");
     when(request.getParameter("ticket")).thenReturn("TGT-123");
+
+    filter.doFilter(request, response, chain);
+
+    verify(chain).doFilter(request, response);
+  }
+
+  @Test
+  void shouldNotRedirectOnCasLogout() throws IOException, ServletException {
+    when(request.getContextPath()).thenReturn("/scm");
+    when(request.getRequestURI()).thenReturn("/scm/api/v2/cas/__enc__");
+    when(request.getMethod()).thenReturn("POST");
+    when(request.getContentType()).thenReturn(MediaType.APPLICATION_FORM_URLENCODED);
 
     filter.doFilter(request, response, chain);
 

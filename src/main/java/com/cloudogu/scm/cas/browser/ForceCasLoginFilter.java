@@ -2,6 +2,7 @@ package com.cloudogu.scm.cas.browser;
 
 import com.cloudogu.scm.cas.Configuration;
 import com.cloudogu.scm.cas.ServiceUrlProvider;
+import com.google.common.base.Strings;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import sonia.scm.Priority;
@@ -15,6 +16,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 
 @WebElement("/*")
@@ -41,8 +43,18 @@ public class ForceCasLoginFilter extends HttpFilter {
   }
 
   private boolean isCasCallback(HttpServletRequest request) {
-    return request.getRequestURI().contains("/v2/cas/");
+    return request.getRequestURI().startsWith(request.getContextPath() + "/api/v2/cas/")
+      && (isCasLoginRequest(request) || isCasLogoutRequest(request));
   }
+
+  private boolean isCasLogoutRequest(HttpServletRequest request) {
+    return "POST".equals(request.getMethod()) && MediaType.APPLICATION_FORM_URLENCODED.equals(request.getContentType());
+  }
+
+  private boolean isCasLoginRequest(HttpServletRequest request) {
+    return "GET".equals(request.getMethod()) && !Strings.isNullOrEmpty(request.getParameter("ticket"));
+  }
+
 
   private String createCasLoginRedirect() {
     String encodedServiceUrl = HttpUtil.encode(serviceUrlProvider.create());
