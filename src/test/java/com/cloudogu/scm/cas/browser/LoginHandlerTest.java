@@ -13,7 +13,6 @@ import sonia.scm.security.AccessToken;
 import sonia.scm.security.AccessTokenBuilder;
 import sonia.scm.security.AccessTokenBuilderFactory;
 import sonia.scm.security.AccessTokenCookieIssuer;
-import sonia.scm.security.CipherHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,38 +20,45 @@ import javax.ws.rs.core.Response;
 import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class CasAuthenticationResourceTest {
-
-
-  @Mock
-  private CipherHandler cipherHandler;
-
-  @InjectMocks
-  private CasAuthenticationResource casAuthenticationResource;
+class LoginHandlerTest {
 
   @Mock
-  private HttpServletRequest servletRequest;
+  private AccessTokenBuilderFactory tokenBuilderFactory;
 
   @Mock
-  private HttpServletResponse servletResponse;
+  private AccessTokenBuilder tokenBuilder;
+
+  @Mock
+  private AccessToken token;
+
+  @Mock
+  private TicketStore ticketStore;
+
+  @Mock
+  private AccessTokenCookieIssuer cookieIssuer;
 
   @Mock
   private Subject subject;
 
+  @Mock
+  private HttpServletRequest request;
+
+  @Mock
+  private HttpServletResponse response;
+
   private SubjectThreadState subjectThreadState;
+
+  @InjectMocks
+  private LoginHandler loginHandler;
 
   @BeforeEach
   void setUpMocks() {
-    when(servletRequest.getContextPath()).thenReturn("/scm");
-    when(servletRequest.getRequestURL()).thenReturn(new StringBuffer("http://hitchhiker.com/scm/repos"));
-    when(servletRequest.getRequestURI()).thenReturn("/scm/repos");
-
-
     subjectThreadState = new SubjectThreadState(subject);
     subjectThreadState.bind();
   }
@@ -63,9 +69,21 @@ class CasAuthenticationResourceTest {
   }
 
   @Test
-  void shouldAuthenticateAndRedirect() {
-    when(cipherHandler.decode("__enc__")).thenReturn("/repos");
+  void shouldLogin() {
+    when(tokenBuilderFactory.create()).thenReturn(tokenBuilder);
+    when(tokenBuilder.build()).thenReturn(token);
+
+    CasToken casToken = CasToken.valueOf("ST-123", "__enc__");
+
+    loginHandler.login(request, response, casToken);
+
+
+    verify(subject).login(any(CasToken.class));
+    verify(ticketStore).login(casToken, token);
+    verify(cookieIssuer).authenticate(request, response, token);
 
   }
+
+
 
 }

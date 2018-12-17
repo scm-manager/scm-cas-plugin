@@ -2,7 +2,6 @@ package com.cloudogu.scm.cas.browser;
 
 import com.cloudogu.scm.cas.Configuration;
 import com.cloudogu.scm.cas.ServiceUrlProvider;
-import com.google.common.base.Strings;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import sonia.scm.Priority;
@@ -42,7 +41,7 @@ public class ForceCasLoginFilter extends HttpFilter {
   }
 
   private boolean isCasCallback(HttpServletRequest request) {
-    return request.getRequestURI().contains("/v2/cas/") && ! Strings.isNullOrEmpty(request.getParameter("ticket"));
+    return request.getRequestURI().contains("/v2/cas/");
   }
 
   private String createCasLoginRedirect() {
