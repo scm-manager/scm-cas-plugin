@@ -7,14 +7,14 @@ import javax.inject.Inject;
 
 public class TicketValidatorFactory {
 
-  private Configuration configuration;
+  private final CasContext context;
 
   @Inject
-  public TicketValidatorFactory(Configuration configuration) {
-    this.configuration = configuration;
+  public TicketValidatorFactory(CasContext context) {
+    this.context = context;
   }
 
   public TicketValidator create() {
-    return new Cas30ServiceTicketValidator(configuration.getCasUrl());
+    return new Cas30ServiceTicketValidator(context.get().getCasUrl());
   }
 }

@@ -1,5 +1,6 @@
 package com.cloudogu.scm.cas.rest;
 
+import com.cloudogu.scm.cas.CasContext;
 import com.cloudogu.scm.cas.Configuration;
 import org.apache.shiro.authc.AuthenticationException;
 import sonia.scm.SCMContextProvider;
@@ -16,17 +17,17 @@ public class CasRestClient {
 
   private final SCMContextProvider contextProvider;
   private final AdvancedHttpClient httpClient;
-  private final Configuration configuration;
+  private final CasContext context;
 
   @Inject
-  public CasRestClient(SCMContextProvider contextProvider, AdvancedHttpClient httpClient, Configuration configuration) {
+  public CasRestClient(SCMContextProvider contextProvider, AdvancedHttpClient httpClient, CasContext context) {
     this.contextProvider = contextProvider;
     this.httpClient = httpClient;
-    this.configuration = configuration;
+    this.context = context;
   }
 
   public String requestGrantingTicketUrl(String username, String password) {
-    AdvancedHttpResponse response = execute(post(configuration.getCasUrl() + "/v1/tickets")
+    AdvancedHttpResponse response = execute(post(context.get().getCasUrl() + "/v1/tickets")
       .disableCertificateValidation(isDevelopmentStageActive())
       .formContent()
       .field("username", username)

@@ -11,11 +11,11 @@ import java.util.Map;
 
 public class AssertionMapper {
 
-  private final Configuration configuration;
+  private final CasContext context;
 
   @Inject
-  public AssertionMapper(Configuration configuration) {
-    this.configuration = configuration;
+  public AssertionMapper(CasContext context) {
+    this.context = context;
   }
 
   public User createUser(Assertion assertion) {
@@ -33,11 +33,11 @@ public class AssertionMapper {
   }
 
   private String getDisplayName(Map<String,Object> attributes) {
-    return getStringAttribute(attributes, configuration.getDisplayNameAttribute());
+    return getStringAttribute(attributes, context.get().getDisplayNameAttribute());
   }
 
   private String getMail(Map<String, Object> attributes) {
-    return getStringAttribute(attributes, configuration.getMailAttribute());
+    return getStringAttribute(attributes, context.get().getMailAttribute());
   }
 
   private String getStringAttribute(Map<String,Object> attributes, String attributeName) {
@@ -53,7 +53,7 @@ public class AssertionMapper {
 
     ImmutableSet.Builder<String> builder = ImmutableSet.builder();
 
-    Object attribute = attributes.get(configuration.getGroupAttribute());
+    Object attribute = attributes.get(context.get().getGroupAttribute());
     if (attribute instanceof Collection) {
       for ( Object item : (Collection) attribute ) {
         builder.add(item.toString());

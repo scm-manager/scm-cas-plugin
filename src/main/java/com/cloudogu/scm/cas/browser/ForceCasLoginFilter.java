@@ -1,5 +1,6 @@
 package com.cloudogu.scm.cas.browser;
 
+import com.cloudogu.scm.cas.CasContext;
 import com.cloudogu.scm.cas.Configuration;
 import com.cloudogu.scm.cas.ServiceUrlProvider;
 import com.google.common.base.Strings;
@@ -24,12 +25,12 @@ import java.io.IOException;
 public class ForceCasLoginFilter extends HttpFilter {
 
   private final ServiceUrlProvider serviceUrlProvider;
-  private final Configuration configuration;
+  private final CasContext context;
 
   @Inject
-  public ForceCasLoginFilter(ServiceUrlProvider serviceUrlProvider, Configuration configuration) {
+  public ForceCasLoginFilter(ServiceUrlProvider serviceUrlProvider, CasContext context) {
     this.serviceUrlProvider = serviceUrlProvider;
-    this.configuration = configuration;
+    this.context = context;
   }
 
   @Override
@@ -58,7 +59,7 @@ public class ForceCasLoginFilter extends HttpFilter {
 
   private String createCasLoginRedirect() {
     String encodedServiceUrl = HttpUtil.encode(serviceUrlProvider.create());
-    return HttpUtil.append(configuration.getCasUrl(), "login") + "?service=" + encodedServiceUrl;
+    return HttpUtil.append(context.get().getCasUrl(), "login") + "?service=" + encodedServiceUrl;
   }
 
 }

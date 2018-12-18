@@ -1,5 +1,6 @@
 package com.cloudogu.scm.cas.rest;
 
+import com.cloudogu.scm.cas.CasContext;
 import com.cloudogu.scm.cas.Configuration;
 import org.apache.shiro.authc.AuthenticationException;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,6 +33,9 @@ class CasRestClientTest {
   private static final String TGT_LOCATION = CAS_URL + "/v1/tickets/TGT-123";
   public static final String SERVICE_URL = "http://localhost:8081/scm";
 
+  @Mock
+  private CasContext context;
+
   private Configuration configuration;
 
   @Mock
@@ -47,9 +51,11 @@ class CasRestClientTest {
     configuration = new Configuration();
     configuration.setCasUrl(CAS_URL);
 
+    when(context.get()).thenReturn(configuration);
+
     when(contextProvider.getStage()).thenReturn(Stage.PRODUCTION);
 
-    restClient = new CasRestClient(contextProvider, httpClient, configuration);
+    restClient = new CasRestClient(contextProvider, httpClient, context);
   }
 
   @Test

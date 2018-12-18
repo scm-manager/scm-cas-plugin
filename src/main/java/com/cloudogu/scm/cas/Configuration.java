@@ -1,8 +1,5 @@
 package com.cloudogu.scm.cas;
 
-import sonia.scm.plugin.Extension;
-
-@Extension
 public class Configuration {
 
   private String casUrl = "https://cas.hitchhiker.com:8443/cas";

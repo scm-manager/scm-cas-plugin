@@ -34,6 +34,9 @@ class AssertionMapperTest {
 
   private Configuration configuration;
 
+  @Mock
+  private CasContext casContext;
+
   private AssertionMapper mapper;
 
   @BeforeEach
@@ -41,7 +44,8 @@ class AssertionMapperTest {
     when(assertion.getPrincipal()).thenReturn(principal);
 
     configuration = new Configuration();
-    mapper = new AssertionMapper(configuration);
+    when(casContext.get()).thenReturn(configuration);
+    mapper = new AssertionMapper(casContext);
   }
 
   @Nested

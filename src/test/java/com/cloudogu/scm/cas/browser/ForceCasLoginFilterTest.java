@@ -1,5 +1,6 @@
 package com.cloudogu.scm.cas.browser;
 
+import com.cloudogu.scm.cas.CasContext;
 import com.cloudogu.scm.cas.Configuration;
 import com.cloudogu.scm.cas.ServiceUrlProvider;
 import org.apache.shiro.subject.Subject;
@@ -11,6 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -23,6 +26,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 class ForceCasLoginFilterTest {
 
   private static final String CAS_URL = "https://sso.hitchhiker.com";
@@ -45,6 +49,9 @@ class ForceCasLoginFilterTest {
   @Mock
   private Subject subject;
 
+  @Mock
+  private CasContext casContext;
+
   private ForceCasLoginFilter filter;
 
   private ThreadState subjectThreadState;
@@ -54,7 +61,9 @@ class ForceCasLoginFilterTest {
     Configuration configuration = new Configuration();
     configuration.setCasUrl(CAS_URL);
 
-    filter = new ForceCasLoginFilter(serviceUrlProvider, configuration);
+    when(casContext.get()).thenReturn(configuration);
+
+    filter = new ForceCasLoginFilter(serviceUrlProvider, casContext);
 
     subjectThreadState = new SubjectThreadState(subject);
     subjectThreadState.bind();
