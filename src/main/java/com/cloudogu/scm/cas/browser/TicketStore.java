@@ -63,6 +63,8 @@ public class TicketStore {
     StoreEntry entry = byCasTicket.get(casTicket);
     if (entry != null) {
       entry.setBlacklistet(true);
+      byCasTicket.put(casTicket, entry);
+      byAccessTokenId.put(entry.getAccessTokenId(), entry);
     }
   }
 

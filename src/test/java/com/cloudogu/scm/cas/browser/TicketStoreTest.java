@@ -53,6 +53,12 @@ class TicketStoreTest {
   }
 
   @Test
+  void shouldReturnFalseForNonListed() {
+    TicketStore ticketStore = new TicketStore(new InMemoryDataStoreFactory());
+    assertFalse(ticketStore.isBlacklisted("AC-123"));
+  }
+
+  @Test
   void shouldRemoveTheExpiredTicket() {
     when(accessToken.getId()).thenReturn("AC-456");
 
