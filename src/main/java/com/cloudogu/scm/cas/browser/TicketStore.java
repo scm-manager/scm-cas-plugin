@@ -1,5 +1,6 @@
 package com.cloudogu.scm.cas.browser;
 
+import com.cloudogu.scm.cas.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.security.AccessToken;
@@ -28,8 +29,6 @@ public class TicketStore {
 
   private static final Logger LOG = LoggerFactory.getLogger(TicketStore.class);
 
-  private static final String STORE_NAME = "cas";
-
   private final DataStore<StoreEntry> byCasTicket;
   private final Clock clock;
 
@@ -41,7 +40,7 @@ public class TicketStore {
   }
 
   public TicketStore(DataStoreFactory storeFactory, Clock clock) {
-    this.byCasTicket = storeFactory.withType(StoreEntry.class).withName(STORE_NAME).build();
+    this.byCasTicket = storeFactory.withType(StoreEntry.class).withName(Constants.NAME).build();
     this.clock = clock;
 
     loadFromStore();

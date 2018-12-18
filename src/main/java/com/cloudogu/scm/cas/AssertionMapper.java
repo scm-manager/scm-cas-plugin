@@ -27,7 +27,7 @@ public class AssertionMapper {
     user.setDisplayName(getDisplayName(attributes));
     user.setMail(getMail(attributes));
 
-    user.setType("cas");
+    user.setType(Constants.NAME);
 
     return user;
   }

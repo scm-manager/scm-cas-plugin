@@ -10,17 +10,15 @@ import javax.inject.Singleton;
 @Singleton
 public class CasContext {
 
-  private static final String NAME = "cas";
-
   private ConfigurationStore<Configuration> store;
 
   @Inject
   public CasContext(ConfigurationStoreFactory storeFactory) {
-    this.store = storeFactory.withType(Configuration.class).withName(NAME).build();
+    this.store = storeFactory.withType(Configuration.class).withName(Constants.NAME).build();
   }
 
   public void set(Configuration configuration) {
-    ConfigurationPermissions.write(NAME).check();
+    ConfigurationPermissions.write(Constants.NAME).check();
     store.set(configuration);
   }
 

@@ -1,5 +1,6 @@
 package com.cloudogu.scm.cas.config;
 
+import com.cloudogu.scm.cas.Constants;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import sonia.scm.api.v2.resources.LinkBuilder;
@@ -18,8 +19,6 @@ import static sonia.scm.web.VndMediaType.INDEX;
 @Extension
 public class IndexConfigurationEnricher extends JsonEnricherBase {
 
-  private static final String NAME = "cas";
-
   private final Provider<ScmPathInfoStore> scmPathInfoStore;
 
   @Inject
@@ -30,7 +29,7 @@ public class IndexConfigurationEnricher extends JsonEnricherBase {
 
   @Override
   public void enrich(JsonEnricherContext context) {
-    if (resultHasMediaType(INDEX, context) && ConfigurationPermissions.read().isPermitted(NAME)) {
+    if (resultHasMediaType(INDEX, context) && ConfigurationPermissions.read().isPermitted(Constants.NAME)) {
       String configUrl = new LinkBuilder(scmPathInfoStore.get().get(), ConfigurationResource.class)
         .method("get")
         .parameters()

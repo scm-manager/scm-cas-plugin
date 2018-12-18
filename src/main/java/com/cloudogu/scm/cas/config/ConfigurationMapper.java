@@ -1,6 +1,7 @@
 package com.cloudogu.scm.cas.config;
 
 import com.cloudogu.scm.cas.Configuration;
+import com.cloudogu.scm.cas.Constants;
 import de.otto.edison.hal.Links;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
@@ -17,8 +18,6 @@ import static de.otto.edison.hal.Links.linkingTo;
 @Mapper
 public abstract class ConfigurationMapper {
 
-  private static final String NAME = "cas";
-
   abstract Configuration fromDto(ConfigurationDto dto);
 
   abstract ConfigurationDto toDto(Configuration configuration);
@@ -29,7 +28,7 @@ public abstract class ConfigurationMapper {
   @AfterMapping
   void appendLinks(Configuration configuration, @MappingTarget ConfigurationDto dto) {
     Links.Builder linksBuilder = linkingTo().self(self());
-    if (ConfigurationPermissions.write(NAME).isPermitted()) {
+    if (ConfigurationPermissions.write(Constants.NAME).isPermitted()) {
       linksBuilder.single(link("update", update()));
     }
     dto.add(linksBuilder.build());

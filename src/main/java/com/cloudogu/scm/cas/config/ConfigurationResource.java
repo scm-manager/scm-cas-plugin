@@ -2,6 +2,7 @@ package com.cloudogu.scm.cas.config;
 
 import com.cloudogu.scm.cas.CasContext;
 import com.cloudogu.scm.cas.Configuration;
+import com.cloudogu.scm.cas.Constants;
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
@@ -18,8 +19,6 @@ import javax.ws.rs.core.Response;
 
 @Path(ConfigurationResource.PATH)
 public class ConfigurationResource {
-
-  private static final String NAME = "cas";
 
   private static final String CONTENT_TYPE =  VndMediaType.PREFIX + "casConfig" + VndMediaType.SUFFIX;
 
@@ -44,7 +43,7 @@ public class ConfigurationResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   public ConfigurationDto get() {
-    ConfigurationPermissions.read(NAME).check();
+    ConfigurationPermissions.read(Constants.NAME).check();
     Configuration configuration = context.get();
     return mapper.toDto(configuration);
   }
@@ -60,7 +59,7 @@ public class ConfigurationResource {
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
   public Response update(ConfigurationDto dto) {
-    ConfigurationPermissions.write(NAME).check();
+    ConfigurationPermissions.write(Constants.NAME).check();
     Configuration configuration = mapper.fromDto(dto);
     context.set(configuration);
     return Response.noContent().build();
