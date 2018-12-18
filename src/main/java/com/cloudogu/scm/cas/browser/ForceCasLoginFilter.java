@@ -1,7 +1,6 @@
 package com.cloudogu.scm.cas.browser;
 
 import com.cloudogu.scm.cas.CasContext;
-import com.cloudogu.scm.cas.Configuration;
 import com.cloudogu.scm.cas.ServiceUrlProvider;
 import com.google.common.base.Strings;
 import org.apache.shiro.SecurityUtils;
@@ -35,12 +34,20 @@ public class ForceCasLoginFilter extends HttpFilter {
 
   @Override
   protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-    Subject subject = SecurityUtils.getSubject();
-    if (subject.isAuthenticated() || isCasCallback(request)) {
+    if (shouldRedirectToCas(request)) {
       chain.doFilter(request, response);
     } else {
       response.sendRedirect(createCasLoginRedirect());
     }
+  }
+
+  private boolean shouldRedirectToCas(HttpServletRequest request) {
+    Subject subject = SecurityUtils.getSubject();
+    return subject.isAuthenticated() || isCasAuthenticationDisabled() || isCasCallback(request);
+  }
+
+  private boolean isCasAuthenticationDisabled() {
+    return ! context.get().isEnabled();
   }
 
   private boolean isCasCallback(HttpServletRequest request) {

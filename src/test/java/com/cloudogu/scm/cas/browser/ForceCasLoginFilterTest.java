@@ -56,10 +56,13 @@ class ForceCasLoginFilterTest {
 
   private ThreadState subjectThreadState;
 
+  private Configuration configuration;
+
   @BeforeEach
   void setUpObjectUnderTest() {
-    Configuration configuration = new Configuration();
+    configuration = new Configuration();
     configuration.setCasUrl(CAS_URL);
+    configuration.setEnabled(true);
 
     when(casContext.get()).thenReturn(configuration);
 
@@ -111,6 +114,18 @@ class ForceCasLoginFilterTest {
   @Test
   void shouldNotRedirectIfUserIsAuthenticated() throws IOException, ServletException {
     when(subject.isAuthenticated()).thenReturn(true);
+
+    filter.doFilter(request, response, chain);
+
+    verify(chain).doFilter(request, response);
+  }
+
+  @Test
+  void shouldNotRedirectIfCasIsDisabled() throws IOException, ServletException {
+    configuration.setEnabled(false);
+
+    when(request.getRequestURI()).thenReturn("/scm/repos");
+    when(serviceUrlProvider.create()).thenReturn(SERVICE_URL);
 
     filter.doFilter(request, response, chain);
 

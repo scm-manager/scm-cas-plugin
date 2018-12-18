@@ -1,42 +1,18 @@
 package com.cloudogu.scm.cas;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
 public class Configuration {
 
-  private String casUrl = "https://cas.hitchhiker.com:8443/cas";
-
+  private String casUrl;
   private String displayNameAttribute = "displayName";
   private String mailAttribute = "mail";
   private String groupAttribute = "groups";
+  private boolean enabled = false;
 
-  public String getGroupAttribute() {
-    return groupAttribute;
-  }
-
-  public void setGroupAttribute(String groupAttribute) {
-    this.groupAttribute = groupAttribute;
-  }
-
-  public String getDisplayNameAttribute() {
-    return displayNameAttribute;
-  }
-
-  public void setDisplayNameAttribute(String displayNameAttribute) {
-    this.displayNameAttribute = displayNameAttribute;
-  }
-
-  public String getMailAttribute() {
-    return mailAttribute;
-  }
-
-  public void setMailAttribute(String mailAttribute) {
-    this.mailAttribute = mailAttribute;
-  }
-
-  public String getCasUrl() {
-    return casUrl;
-  }
-
-  public void setCasUrl(String casUrl) {
-    this.casUrl = casUrl;
-  }
 }

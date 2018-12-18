@@ -1,5 +1,6 @@
 package com.cloudogu.scm.cas;
 
+import org.apache.shiro.authc.AuthenticationException;
 import org.jasig.cas.client.validation.Cas30ServiceTicketValidator;
 import org.jasig.cas.client.validation.TicketValidator;
 
@@ -15,6 +16,10 @@ public class TicketValidatorFactory {
   }
 
   public TicketValidator create() {
-    return new Cas30ServiceTicketValidator(context.get().getCasUrl());
+    Configuration configuration = context.get();
+    if (!configuration.isEnabled()) {
+      throw new AuthenticationException("cas authentication is disabled");
+    }
+    return new Cas30ServiceTicketValidator(configuration.getCasUrl());
   }
 }
