@@ -11,6 +11,8 @@ services:
       - ./docker/services:/cas-overlay/etc/cas/services:ro
       - ./docker/keystore.jks:/cas-overlay/etc/cas/thekeystore:ro
       - ./docker/pom.xml:/cas-overlay/pom.xml
+    extra_hosts:
+      - "scm.hitchhiker.com:%%myip%%"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/cas"]
       interval: 1m30s
