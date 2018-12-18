@@ -25,7 +25,8 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class ForceCasLoginFilterTest {
 
-  private static final String CAS_LOGIN_URL = "https://sso.hitchhiker.com/login";
+  private static final String CAS_URL = "https://sso.hitchhiker.com";
+  private static final String CAS_LOGIN_URL = CAS_URL.concat("/login");
   private static final String SERVICE_URL = "https://scm.hitchhiker.com/repo/hitchhiker/deep-thought";
   private static final String SERVICE_URL_ESCAPED = "https%3A%2F%2Fscm.hitchhiker.com%2Frepo%2Fhitchhiker%2Fdeep-thought";
 
@@ -51,7 +52,7 @@ class ForceCasLoginFilterTest {
   @BeforeEach
   void setUpObjectUnderTest() {
     Configuration configuration = new Configuration();
-    configuration.setCasLoginUrl(CAS_LOGIN_URL);
+    configuration.setCasUrl(CAS_URL);
 
     filter = new ForceCasLoginFilter(serviceUrlProvider, configuration);
 

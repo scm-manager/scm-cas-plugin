@@ -58,7 +58,7 @@ public class ForceCasLoginFilter extends HttpFilter {
 
   private String createCasLoginRedirect() {
     String encodedServiceUrl = HttpUtil.encode(serviceUrlProvider.create());
-    return configuration.getCasLoginUrl() + "?service=" + encodedServiceUrl;
+    return HttpUtil.append(configuration.getCasUrl(), "login") + "?service=" + encodedServiceUrl;
   }
 
 }

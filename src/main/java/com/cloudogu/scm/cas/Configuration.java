@@ -5,8 +5,6 @@ import sonia.scm.plugin.Extension;
 @Extension
 public class Configuration {
 
-  private String casLoginUrl = "https://cas.hitchhiker.com:8443/cas/login";
-
   private String casUrl = "https://cas.hitchhiker.com:8443/cas";
 
   private String displayNameAttribute = "displayName";
@@ -43,13 +41,5 @@ public class Configuration {
 
   public void setCasUrl(String casUrl) {
     this.casUrl = casUrl;
-  }
-
-  public void setCasLoginUrl(String casLoginUrl) {
-    this.casLoginUrl = casLoginUrl;
-  }
-
-  public String getCasLoginUrl() {
-    return casLoginUrl;
   }
 }

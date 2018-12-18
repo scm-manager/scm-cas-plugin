@@ -23,7 +23,7 @@ import java.net.URI;
 @Path(CasAuthenticationResource.PATH)
 public class CasAuthenticationResource {
 
-  public static final String PATH = "v2/cas";
+  public static final String PATH = "v2/cas/auth";
 
   private final LoginHandler loginHandler;
   private final LogoutHandler logoutHandler;

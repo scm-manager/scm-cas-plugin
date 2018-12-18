@@ -1,7 +1,6 @@
 package com.cloudogu.scm.cas.browser;
 
 import com.cloudogu.scm.cas.ServiceUrlProvider;
-import com.cloudogu.scm.cas.browser.CasToken;
 import com.google.inject.util.Providers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,13 +42,13 @@ class ServiceUrlProviderTest {
     when(cipherHandler.encode("/repos")).thenReturn("__repos__");
 
     String serviceUrl = resolver.create();
-    assertThat(serviceUrl).isEqualTo("https://hitchhiker.com/scm/api/v2/cas/__repos__");
+    assertThat(serviceUrl).isEqualTo("https://hitchhiker.com/scm/api/v2/cas/auth/__repos__");
   }
 
   @Test
   void shouldCreateUriFromToken() {
     String serviceUrl = resolver.createFromToken(CasToken.valueOf("TGT-123", "__repos__"));
-    assertThat(serviceUrl).isEqualTo("https://hitchhiker.com/scm/api/v2/cas/__repos__");
+    assertThat(serviceUrl).isEqualTo("https://hitchhiker.com/scm/api/v2/cas/auth/__repos__");
   }
 
 }
