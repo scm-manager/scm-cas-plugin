@@ -58,12 +58,14 @@ class ConfigurationMapperTest {
     configuration.setDisplayNameAttribute("cn");
     configuration.setMailAttribute("email");
     configuration.setGroupAttribute("roles");
+    configuration.setEnabled(true);
 
     ConfigurationDto dto = mapper.toDto(configuration);
-    assertThat(configuration.getCasUrl()).isEqualTo(dto.getCasUrl());
-    assertThat(configuration.getDisplayNameAttribute()).isEqualTo(dto.getDisplayNameAttribute());
-    assertThat(configuration.getMailAttribute()).isEqualTo(dto.getMailAttribute());
-    assertThat(configuration.getGroupAttribute()).isEqualTo(dto.getGroupAttribute());
+    assertThat(dto.getCasUrl()).isEqualTo(configuration.getCasUrl());
+    assertThat(dto.getDisplayNameAttribute()).isEqualTo(configuration.getDisplayNameAttribute());
+    assertThat(dto.getMailAttribute()).isEqualTo(configuration.getMailAttribute());
+    assertThat(dto.getGroupAttribute()).isEqualTo(configuration.getGroupAttribute());
+    assertThat(dto.isEnabled()).isTrue();
   }
 
   @Test
@@ -73,13 +75,15 @@ class ConfigurationMapperTest {
     dto.setDisplayNameAttribute("cn");
     dto.setMailAttribute("email");
     dto.setGroupAttribute("roles");
+    dto.setEnabled(true);
 
     Configuration configuration = mapper.fromDto(dto);
 
-    assertThat(dto.getCasUrl()).isEqualTo(configuration.getCasUrl());
-    assertThat(dto.getDisplayNameAttribute()).isEqualTo(configuration.getDisplayNameAttribute());
-    assertThat(dto.getMailAttribute()).isEqualTo(configuration.getMailAttribute());
-    assertThat(dto.getGroupAttribute()).isEqualTo(configuration.getGroupAttribute());
+    assertThat(configuration.getCasUrl()).isEqualTo(dto.getCasUrl());
+    assertThat(configuration.getDisplayNameAttribute()).isEqualTo(dto.getDisplayNameAttribute());
+    assertThat(configuration.getMailAttribute()).isEqualTo(dto.getMailAttribute());
+    assertThat(configuration.getGroupAttribute()).isEqualTo(dto.getGroupAttribute());
+    assertThat(configuration.isEnabled()).isTrue();
   }
 
   @Test

@@ -15,6 +15,7 @@ public class ConfigurationDto extends HalRepresentation {
   private String displayNameAttribute;
   private String mailAttribute;
   private String groupAttribute;
+  private boolean enabled;
 
   @Override
   @SuppressWarnings("squid:S1185") // We want to have this method available in this package

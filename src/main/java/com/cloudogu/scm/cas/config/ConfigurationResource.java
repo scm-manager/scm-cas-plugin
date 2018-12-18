@@ -22,7 +22,7 @@ public class ConfigurationResource {
 
   private static final String CONTENT_TYPE =  VndMediaType.PREFIX + "casConfig" + VndMediaType.SUFFIX;
 
-  static final String PATH = "/v2/cas/configuration";
+  static final String PATH = "v2/cas/configuration";
 
   private final CasContext context;
   private final ConfigurationMapper mapper;

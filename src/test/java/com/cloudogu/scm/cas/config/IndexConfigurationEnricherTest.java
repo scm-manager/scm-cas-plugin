@@ -59,7 +59,7 @@ class IndexConfigurationEnricherTest {
 
     JsonNode links = root.get("_links");
     String link = links.get("casConfig").get("href").asText();
-    assertThat(link).isEqualTo(ConfigurationResource.PATH);
+    assertThat(link).isEqualTo("/" + ConfigurationResource.PATH);
   }
 
   @Test
