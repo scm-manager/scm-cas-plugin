@@ -1,12 +1,12 @@
 package com.cloudogu.scm.cas;
 
+import com.google.common.collect.ImmutableSet;
 import org.jasig.cas.client.authentication.AttributePrincipal;
 import org.jasig.cas.client.validation.Assertion;
 import sonia.scm.user.User;
 
 import javax.inject.Inject;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Map;
 
 public class AssertionMapper {
@@ -49,6 +49,19 @@ public class AssertionMapper {
   }
 
   public Collection<String> createGroups(Assertion assertion) {
-    return Collections.emptyList();
+    Map<String, Object> attributes = assertion.getPrincipal().getAttributes();
+
+    ImmutableSet.Builder<String> builder = ImmutableSet.builder();
+
+    Object attribute = attributes.get(configuration.getGroupAttribute());
+    if (attribute instanceof Collection) {
+      for ( Object item : (Collection) attribute ) {
+        builder.add(item.toString());
+      }
+    } else if (attribute != null) {
+      builder.add(attribute.toString());
+    }
+
+    return builder.build();
   }
 }

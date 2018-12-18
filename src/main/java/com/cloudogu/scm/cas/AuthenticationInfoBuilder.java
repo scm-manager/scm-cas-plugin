@@ -9,6 +9,7 @@ import sonia.scm.security.SyncingRealmHelper;
 import sonia.scm.user.User;
 
 import javax.inject.Inject;
+import java.util.Collection;
 
 public class AuthenticationInfoBuilder {
 
@@ -29,7 +30,9 @@ public class AuthenticationInfoBuilder {
     User user = assertionMapper.createUser(assertion);
     syncingRealmHelper.store(user);
 
-    return syncingRealmHelper.createAuthenticationInfo("cas", user);
+    Collection<String> groups = assertionMapper.createGroups(assertion);
+
+    return syncingRealmHelper.createAuthenticationInfo("cas", user, groups);
   }
 
   private Assertion validate(String serviceTicket, String serviceUrl) {

@@ -11,6 +11,15 @@ public class Configuration {
 
   private String displayNameAttribute = "displayName";
   private String mailAttribute = "mail";
+  private String groupAttribute = "groups";
+
+  public String getGroupAttribute() {
+    return groupAttribute;
+  }
+
+  public void setGroupAttribute(String groupAttribute) {
+    this.groupAttribute = groupAttribute;
+  }
 
   public String getDisplayNameAttribute() {
     return displayNameAttribute;

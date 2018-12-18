@@ -1,5 +1,6 @@
 package com.cloudogu.scm.cas;
 
+import com.google.common.collect.ImmutableSet;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.jasig.cas.client.validation.Assertion;
@@ -15,8 +16,10 @@ import sonia.scm.security.SyncingRealmHelper;
 import sonia.scm.user.User;
 import sonia.scm.user.UserTestData;
 
+import java.util.Collection;
+
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -58,7 +61,10 @@ class AuthenticationInfoBuilderTest {
     User trillian = UserTestData.createTrillian();
     when(assertionMapper.createUser(assertion)).thenReturn(trillian);
 
-    when(syncingRealmHelper.createAuthenticationInfo("cas", trillian)).thenReturn(authenticationInfo);
+    Collection<String> groups = ImmutableSet.of("heartOfGoldCrew", "earth2construction");
+    when(assertionMapper.createGroups(assertion)).thenReturn(groups);
+
+    when(syncingRealmHelper.createAuthenticationInfo("cas", trillian, groups)).thenReturn(authenticationInfo);
 
     AuthenticationInfo result = authenticationInfoBuilder.create("ST-123", SERVICE_URL);
 
