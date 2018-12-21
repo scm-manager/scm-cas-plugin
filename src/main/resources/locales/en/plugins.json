@@ -3,12 +3,16 @@
     "nav-link": "CAS",
     "form": {
       "header": "Global CAS Configuration",
-      "enabled": "enabled",
-      "url": "Url",
+      "enabled": "Enabled",
+      "enabledHelp": "If \"Enabled\" SCM-Manager uses CAS for authentication. \"Disabled\" allows convential authentication.",
+      "url": "CAS Server URL",
       "urlHelp": "Url of CAS installation (with contextpath).",
       "displayName": "Display name",
+      "displayNameHelp": "CAS attribute for username",
       "mail": "Mail",
-      "groups": "Groups"
+      "mailHelp": "CAS attribute for email",
+      "groups": "Groups",
+      "groupsHelp": "CAS attribute for group"
     },
     "configurationChangedSuccess": "Configuration changed"
   }

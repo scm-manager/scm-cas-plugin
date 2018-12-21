@@ -48,6 +48,7 @@ class GlobalCasConfigurationForm extends React.Component<Props, State> {
           disabled={!this.state.enabled}
           value={this.state.casUrl}
           onChange={this.valueChangeHandler}
+          type={"email"}
         />
         <InputField
           name={"displayNameAttribute"}
