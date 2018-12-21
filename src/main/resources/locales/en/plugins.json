@@ -1,4 +1,15 @@
 {
   "scm-cas-plugin": {
+    "nav-link": "CAS",
+    "form": {
+      "header": "Global CAS Configuration",
+      "enabled": "enabled",
+      "url": "Url",
+      "urlHelp": "Url of CAS installation (with contextpath).",
+      "displayName": "Display name",
+      "mail": "Mail",
+      "groups": "Groups"
+    },
+    "configurationChangedSuccess": "Configuration changed"
   }
 }
