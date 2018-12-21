@@ -13,7 +13,7 @@ import javax.servlet.ServletContextListener;
 public class CleanTicketStoreListener implements ServletContextListener {
 
   @VisibleForTesting
-  static final String CRON = "* */5 * * * ?";
+  static final String CRON = "0 0/5 * * * ?";
 
   private final Scheduler scheduler;
 
