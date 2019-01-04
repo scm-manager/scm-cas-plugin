@@ -61,7 +61,7 @@ public class TicketStore {
   public void logout(String casTicket) {
     StoreEntry entry = byCasTicket.get(casTicket);
     if (entry != null) {
-      entry.setBlacklistet(true);
+      entry.setBlacklisted(true);
       byCasTicket.put(casTicket, entry);
       byAccessTokenId.put(entry.getAccessTokenId(), entry);
     }
@@ -70,7 +70,7 @@ public class TicketStore {
   public boolean isBlacklisted(String accessTokenId) {
     StoreEntry entry = byAccessTokenId.get(accessTokenId);
     if (entry != null) {
-      return entry.isBlacklistet();
+      return entry.isBlacklisted();
     }
     return false;
   }
@@ -120,7 +120,7 @@ public class TicketStore {
     private String accessTokenId;
     @XmlJavaTypeAdapter(XmlInstantAdapter.class)
     private Instant expires;
-    private boolean blacklistet = false;
+    private boolean blacklisted = false;
 
     public StoreEntry() {}
 
@@ -137,12 +137,12 @@ public class TicketStore {
       return expires;
     }
 
-    public boolean isBlacklistet() {
-      return blacklistet;
+    public boolean isBlacklisted() {
+      return blacklisted;
     }
 
-    public void setBlacklistet(boolean blacklistet) {
-      this.blacklistet = blacklistet;
+    public void setBlacklisted(boolean blacklisted) {
+      this.blacklisted = blacklisted;
     }
   }
 

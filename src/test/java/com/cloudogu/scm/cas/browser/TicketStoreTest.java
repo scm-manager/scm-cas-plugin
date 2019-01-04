@@ -45,7 +45,7 @@ class TicketStoreTest {
   void shouldLoadBlacklistFromStore() {
     InMemoryDataStore<TicketStore.StoreEntry> store = new InMemoryDataStore<>();
     TicketStore.StoreEntry entry = new TicketStore.StoreEntry("AC-123", Instant.now());
-    entry.setBlacklistet(true);
+    entry.setBlacklisted(true);
     store.put("CAS-123", entry);
 
     TicketStore ticketStore = new TicketStore(new InMemoryDataStoreFactory(store));
@@ -77,7 +77,7 @@ class TicketStoreTest {
 
     // add not expired ticket
     TicketStore.StoreEntry entry = new TicketStore.StoreEntry("AC-123", toInstant(actual.plusHours(1)));
-    entry.setBlacklistet(true);
+    entry.setBlacklisted(true);
     store.put("CAS-123", entry);
 
     Clock clock = mock(Clock.class);
