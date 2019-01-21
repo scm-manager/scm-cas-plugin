@@ -5,6 +5,7 @@ import com.cloudogu.scm.cas.Constants;
 import de.otto.edison.hal.Links;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import sonia.scm.api.v2.resources.LinkBuilder;
 import sonia.scm.api.v2.resources.ScmPathInfoStore;
@@ -20,13 +21,17 @@ public abstract class ConfigurationMapper {
 
   abstract Configuration fromDto(ConfigurationDto dto);
 
+  @Mapping(
+    target = "attributes",
+    ignore = true
+  )
   abstract ConfigurationDto toDto(Configuration configuration);
 
   @Inject
   private ScmPathInfoStore scmPathInfoStore;
 
   @AfterMapping
-  void appendLinks(Configuration configuration, @MappingTarget ConfigurationDto dto) {
+  void appendLinks(@MappingTarget ConfigurationDto dto) {
     Links.Builder linksBuilder = linkingTo().self(self());
     if (ConfigurationPermissions.write(Constants.NAME).isPermitted()) {
       linksBuilder.single(link("update", update()));
