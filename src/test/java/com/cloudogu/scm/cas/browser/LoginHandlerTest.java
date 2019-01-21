@@ -1,5 +1,6 @@
 package com.cloudogu.scm.cas.browser;
 
+import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.SubjectThreadState;
 import org.junit.jupiter.api.AfterEach;
@@ -9,10 +10,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.group.GroupNames;
 import sonia.scm.security.AccessToken;
 import sonia.scm.security.AccessTokenBuilder;
 import sonia.scm.security.AccessTokenBuilderFactory;
 import sonia.scm.security.AccessTokenCookieIssuer;
+import sonia.scm.user.UserTestData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -70,6 +73,12 @@ class LoginHandlerTest {
 
   @Test
   void shouldLogin() {
+    SimplePrincipalCollection principals = new SimplePrincipalCollection();
+    principals.add("trillian", "h2g2");
+    principals.add(UserTestData.createTrillian(), "h2g2");
+    principals.add(new GroupNames("HeartOfGold"), "h2g2");
+    when(subject.getPrincipals()).thenReturn(principals);
+
     when(tokenBuilderFactory.create()).thenReturn(tokenBuilder);
     when(tokenBuilder.build()).thenReturn(token);
 
@@ -77,13 +86,10 @@ class LoginHandlerTest {
 
     loginHandler.login(request, response, casToken);
 
-
     verify(subject).login(any(CasToken.class));
     verify(ticketStore).login(casToken, token);
     verify(cookieIssuer).authenticate(request, response, token);
-
+    verify(tokenBuilder).groups("HeartOfGold");
   }
-
-
 
 }
