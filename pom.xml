@@ -22,6 +22,10 @@
     <url>http://bitbucket.org/scm-manager/scm-cas-plugin</url>
   </scm>
 
+  <properties>
+    <sonar.exclusions>**/DevelopmentContextListener.java</sonar.exclusions>
+  </properties>
+
   <dependencies>
 
     <dependency>
@@ -29,7 +33,6 @@
       <artifactId>cas-client-core</artifactId>
       <version>3.5.1</version>
     </dependency>
-
 
     <dependency>
       <groupId>org.mockito</groupId>
