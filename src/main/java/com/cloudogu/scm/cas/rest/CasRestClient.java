@@ -1,7 +1,6 @@
 package com.cloudogu.scm.cas.rest;
 
 import com.cloudogu.scm.cas.CasContext;
-import com.cloudogu.scm.cas.Configuration;
 import org.apache.shiro.authc.AuthenticationException;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.Stage;

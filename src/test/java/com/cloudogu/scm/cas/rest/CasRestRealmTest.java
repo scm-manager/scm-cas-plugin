@@ -1,6 +1,8 @@
 package com.cloudogu.scm.cas.rest;
 
 import com.cloudogu.scm.cas.AuthenticationInfoBuilder;
+import com.cloudogu.scm.cas.CasContext;
+import com.cloudogu.scm.cas.Configuration;
 import com.cloudogu.scm.cas.ServiceUrlProvider;
 import com.google.inject.util.Providers;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -20,6 +22,9 @@ class CasRestRealmTest {
   private static final String SERVICE_URL = "https://scm.hitchhiker.com";
 
   @Mock
+  private CasContext context;
+
+  @Mock
   private AuthenticationInfoBuilder authenticationInfoBuilder;
 
   @Mock
@@ -35,11 +40,13 @@ class CasRestRealmTest {
 
   @BeforeEach
   void setUpObjectUnderTest() {
-    realm = new CasRestRealm(authenticationInfoBuilder, Providers.of(restClient), serviceUrlProvider);
+    realm = new CasRestRealm(context, authenticationInfoBuilder, Providers.of(restClient), serviceUrlProvider);
   }
 
   @Test
   void shouldReturnAuthenticationInfo() {
+    bindConfiguration(true);
+
     String tgtLocation = "https://cas.hitchhiker/v1/tickets/TGT-123";
     when(restClient.requestGrantingTicketUrl("trillian", "secret")).thenReturn(tgtLocation);
 
@@ -52,5 +59,21 @@ class CasRestRealmTest {
     AuthenticationInfo result = realm.doGetAuthenticationInfo(token);
 
     assertThat(result).isSameAs(authenticationInfo);
+  }
+
+  @Test
+  void shouldReturnNullIfCasIsDisabled() {
+    bindConfiguration(false);
+
+    UsernamePasswordToken token = new UsernamePasswordToken("trillian", "secret".toCharArray());
+    AuthenticationInfo result = realm.doGetAuthenticationInfo(token);
+
+    assertThat(result).isNull();
+  }
+
+  private void bindConfiguration(boolean enabled) {
+    Configuration configuration = new Configuration();
+    configuration.setEnabled(enabled);
+    when(context.get()).thenReturn(configuration);
   }
 }
