@@ -1,0 +1,20 @@
+{
+  "scm-cas-plugin": {
+    "nav-link": "CAS",
+    "form": {
+      "header": "Globale CAS Konfiguration",
+      "enabled": "Aktiviert",
+      "enabledHelp": "Wenn \"Aktiviert\" benutzt der SCM-Manager den CAS Server zur Authentifizierung. \"Deaktiviert\" ermöglicht die herkömmliche Authentifizierung.",
+      "url": "CAS Server URL",
+      "urlHelp": "URL der CAS Installation (inklusive Kontextpfad).",
+      "attributeMapping": "Attribute Mapping",
+      "displayName": "Display Name",
+      "displayNameHelp": "CAS Attribut für den Benutzernamen",
+      "mail": "Mail",
+      "mailHelp": "CAS Attribut für die E-Mail-Adresse",
+      "groups": "Gruppen",
+      "groupsHelp": "CAS Attribut für die Gruppen"
+    },
+    "configurationChangedSuccess": "CAS Konfiguration gespeichert."
+  }
+}
