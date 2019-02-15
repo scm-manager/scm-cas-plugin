@@ -9,6 +9,7 @@ import org.jasig.cas.client.validation.TicketValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -34,7 +35,7 @@ class AuthenticationInfoBuilderTest {
   @Mock
   private AssertionMapper assertionMapper;
 
-  @Mock
+  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
   private SyncingRealmHelper syncingRealmHelper;
 
   @InjectMocks
@@ -64,7 +65,7 @@ class AuthenticationInfoBuilderTest {
     Collection<String> groups = ImmutableSet.of("heartOfGoldCrew", "earth2construction");
     when(assertionMapper.createGroups(assertion)).thenReturn(groups);
 
-    when(syncingRealmHelper.createAuthenticationInfo("cas", trillian, groups)).thenReturn(authenticationInfo);
+    when(syncingRealmHelper.authenticationInfo().forRealm("cas").andUser(trillian).withGroups(groups)).thenReturn(authenticationInfo);
 
     AuthenticationInfo result = authenticationInfoBuilder.create("ST-123", SERVICE_URL);
 

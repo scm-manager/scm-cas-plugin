@@ -32,7 +32,7 @@ public class AuthenticationInfoBuilder {
 
     Collection<String> groups = assertionMapper.createGroups(assertion);
 
-    return syncingRealmHelper.createAuthenticationInfo(Constants.NAME, user, groups);
+    return syncingRealmHelper.authenticationInfo().forRealm(Constants.NAME).andUser(user).withGroups(groups);
   }
 
   private Assertion validate(String serviceTicket, String serviceUrl) {
