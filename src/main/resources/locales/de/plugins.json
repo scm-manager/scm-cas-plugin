@@ -21,8 +21,8 @@
     "configuration": {
       "read,write": {
         "svn": {
-          "displayName": "Modify CAS configuration",
-          "description": "May modify the CAS configuration"
+          "displayName": "CAS Konfiguration ändern",
+          "description": "Darf die CAS Konfiguration verändern",
         }
       }
     }
