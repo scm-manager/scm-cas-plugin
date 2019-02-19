@@ -16,5 +16,15 @@
       "groupsHelp": "CAS Attribut für die Gruppen"
     },
     "configurationChangedSuccess": "CAS Konfiguration gespeichert."
+  },
+  "permissions": {
+    "configuration": {
+      "read,write": {
+        "svn": {
+          "displayName": "Modify CAS configuration",
+          "description": "May modify the CAS configuration"
+        }
+      }
+    }
   }
 }

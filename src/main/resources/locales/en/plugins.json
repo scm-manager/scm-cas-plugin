@@ -16,5 +16,15 @@
       "groupsHelp": "CAS attribute for group"
     },
     "configurationChangedSuccess": "Configuration changed"
+  },
+  "permissions": {
+    "configuration": {
+      "read,write": {
+        "svn": {
+          "displayName": "CAS Konfiguration ändern",
+          "description": "Darf die CAS Konfiguration verändern"
+        }
+      }
+    }
   }
 }

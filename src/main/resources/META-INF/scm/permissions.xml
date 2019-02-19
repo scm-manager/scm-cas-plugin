@@ -1,0 +1,5 @@
+<permissions>
+  <permission>
+    <value>configuration:read,write:cas</value>
+  </permission>
+</permissions>
