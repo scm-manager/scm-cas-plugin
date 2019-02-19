@@ -20,7 +20,7 @@
   "permissions": {
     "configuration": {
       "read,write": {
-        "svn": {
+        "cas": {
           "displayName": "CAS Konfiguration ändern",
           "description": "Darf die CAS Konfiguration verändern",
         }
