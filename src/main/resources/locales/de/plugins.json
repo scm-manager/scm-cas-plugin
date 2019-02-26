@@ -22,7 +22,7 @@
       "read,write": {
         "cas": {
           "displayName": "CAS Konfiguration ändern",
-          "description": "Darf die CAS Konfiguration verändern",
+          "description": "Darf die CAS Konfiguration verändern"
         }
       }
     }
