@@ -34,20 +34,34 @@ public class ForceCasLoginFilter extends HttpFilter {
 
   @Override
   protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-    if (shouldRedirectToCas(request)) {
+    if (shouldPassThrough(request)) {
       chain.doFilter(request, response);
+    } else if (isWebInterfaceRequest(request)) {
+      sendUnauthorized(response);
     } else {
-      response.sendRedirect(createCasLoginRedirect());
+      redirectToCas(response);
     }
   }
 
-  private boolean shouldRedirectToCas(HttpServletRequest request) {
+  private void redirectToCas(HttpServletResponse response) throws IOException {
+    response.sendRedirect(createCasLoginRedirect());
+  }
+
+  private void sendUnauthorized(HttpServletResponse response) throws IOException {
+    response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+  }
+
+  private boolean isWebInterfaceRequest(HttpServletRequest request) {
+    return "XMLHttpRequest".equalsIgnoreCase(request.getHeader("X-Requested-With"));
+  }
+
+  private boolean shouldPassThrough(HttpServletRequest request) {
     Subject subject = SecurityUtils.getSubject();
     return subject.isAuthenticated() || isCasAuthenticationDisabled() || isCasCallback(request);
   }
 
   private boolean isCasAuthenticationDisabled() {
-    return ! context.get().isEnabled();
+    return !context.get().isEnabled();
   }
 
   private boolean isCasCallback(HttpServletRequest request) {
@@ -62,7 +76,6 @@ public class ForceCasLoginFilter extends HttpFilter {
   private boolean isCasLoginRequest(HttpServletRequest request) {
     return "GET".equals(request.getMethod()) && !Strings.isNullOrEmpty(request.getParameter("ticket"));
   }
-
 
   private String createCasLoginRedirect() {
     String encodedServiceUrl = HttpUtil.encode(serviceUrlProvider.create());

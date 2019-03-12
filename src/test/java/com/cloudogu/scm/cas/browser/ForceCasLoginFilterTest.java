@@ -132,4 +132,15 @@ class ForceCasLoginFilterTest {
     verify(chain).doFilter(request, response);
   }
 
+  @Test
+  void shouldSendUnauthorizedOnAjaxRequests() throws IOException, ServletException {
+    when(request.getRequestURI()).thenReturn("/scm/repos");
+    when(request.getHeader("X-Requested-With")).thenReturn("XMLHttpRequest");
+    when(serviceUrlProvider.create()).thenReturn(SERVICE_URL);
+
+    filter.doFilter(request, response, chain);
+
+    verify(response).sendError(HttpServletResponse.SC_UNAUTHORIZED);
+  }
+
 }
