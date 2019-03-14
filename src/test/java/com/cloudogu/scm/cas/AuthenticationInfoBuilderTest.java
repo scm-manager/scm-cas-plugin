@@ -65,7 +65,13 @@ class AuthenticationInfoBuilderTest {
     Collection<String> groups = ImmutableSet.of("heartOfGoldCrew", "earth2construction");
     when(assertionMapper.createGroups(assertion)).thenReturn(groups);
 
-    when(syncingRealmHelper.authenticationInfo().forRealm("cas").andUser(trillian).withGroups(groups)).thenReturn(authenticationInfo);
+    when(
+      syncingRealmHelper.authenticationInfo()
+        .forRealm("cas")
+        .andUser(trillian)
+        .withExternalGroups(groups)
+        .build()
+    ).thenReturn(authenticationInfo);
 
     AuthenticationInfo result = authenticationInfoBuilder.create("ST-123", SERVICE_URL);
 
