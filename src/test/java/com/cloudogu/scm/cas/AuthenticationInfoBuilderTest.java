@@ -14,6 +14,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.security.SyncingRealmHelper;
+import sonia.scm.security.SyncingRealmHelper.AuthenticationInfoBuilder.ForRealm;
+import sonia.scm.security.SyncingRealmHelper.AuthenticationInfoBuilder.ForUser;
+import sonia.scm.security.SyncingRealmHelper.AuthenticationInfoBuilder.WithGroups;
 import sonia.scm.user.User;
 import sonia.scm.user.UserTestData;
 
@@ -21,6 +24,8 @@ import java.util.Collection;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.RETURNS_SELF;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -65,13 +70,13 @@ class AuthenticationInfoBuilderTest {
     Collection<String> groups = ImmutableSet.of("heartOfGoldCrew", "earth2construction");
     when(assertionMapper.createGroups(assertion)).thenReturn(groups);
 
-    when(
-      syncingRealmHelper.authenticationInfo()
-        .forRealm("cas")
-        .andUser(trillian)
-        .withExternalGroups(groups)
-        .build()
-    ).thenReturn(authenticationInfo);
+    ForRealm forRealmMock = mock(ForRealm.class);
+    when(syncingRealmHelper.authenticationInfo()).thenReturn(forRealmMock);
+    ForUser forUserMock = mock(ForUser.class);
+    when(forRealmMock.forRealm("cas")).thenReturn(forUserMock);
+    WithGroups withGroupsMock = mock(WithGroups.class, RETURNS_SELF);
+    when(forUserMock.andUser(trillian)).thenReturn(withGroupsMock);
+    when(withGroupsMock.build()).thenReturn(authenticationInfo);
 
     AuthenticationInfo result = authenticationInfoBuilder.create("ST-123", SERVICE_URL);
 
