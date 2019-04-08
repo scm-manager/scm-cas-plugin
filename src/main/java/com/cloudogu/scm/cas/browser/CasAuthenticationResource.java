@@ -1,5 +1,7 @@
 package com.cloudogu.scm.cas.browser;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.security.AllowAnonymousAccess;
 import sonia.scm.security.CipherHandler;
 import sonia.scm.util.HttpUtil;
@@ -22,6 +24,8 @@ import java.net.URI;
 @AllowAnonymousAccess
 @Path(CasAuthenticationResource.PATH)
 public class CasAuthenticationResource {
+
+  private static final Logger LOG = LoggerFactory.getLogger(CasAuthenticationResource.class);
 
   public static final String PATH = "v2/cas/auth";
 
@@ -46,6 +50,7 @@ public class CasAuthenticationResource {
   ) {
     String url = createRedirectUrl(request, encryptedUrlSuffix);
     CasToken token = CasToken.valueOf(ticket, encryptedUrlSuffix);
+    LOG.debug("got login call from cas with cas token {}", token.getCredentials());
 
     loginHandler.login(request, response, token);
 
@@ -61,6 +66,7 @@ public class CasAuthenticationResource {
   @Path("{urlSuffix}")
   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
   public Response logout(@FormParam("logoutRequest") String logoutRequest) {
+    LOG.debug("got logout call from cas");
     logoutHandler.logout(logoutRequest);
     return Response.ok().build();
   }

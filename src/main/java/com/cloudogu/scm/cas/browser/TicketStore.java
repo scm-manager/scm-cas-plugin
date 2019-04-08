@@ -48,6 +48,7 @@ public class TicketStore {
 
   private void loadFromStore() {
     for (StoreEntry e : byCasTicket.getAll().values()) {
+      LOG.debug("restoring entry for access token id {} (blacklisted: {})", e.getAccessTokenId(), e.isBlacklisted());
       byAccessTokenId.put(e.accessTokenId, e);
     }
   }
@@ -56,22 +57,28 @@ public class TicketStore {
     StoreEntry entry = create(accessToken);
     byCasTicket.put(casToken.getCredentials(), entry);
     byAccessTokenId.put(entry.getAccessTokenId(), entry);
+    LOG.trace("login for cas ticket {} with access token id {}", casToken.getCredentials(), entry.getAccessTokenId());
   }
 
   public void logout(String casTicket) {
     StoreEntry entry = byCasTicket.get(casTicket);
     if (entry != null) {
+      LOG.trace("blacklisting cas ticket {} with access token id {}", casTicket, entry.getAccessTokenId());
       entry.setBlacklisted(true);
       byCasTicket.put(casTicket, entry);
       byAccessTokenId.put(entry.getAccessTokenId(), entry);
+    } else {
+      LOG.warn("no stored login entry found for cas ticket {}", casTicket);
     }
   }
 
   public boolean isBlacklisted(String accessTokenId) {
     StoreEntry entry = byAccessTokenId.get(accessTokenId);
     if (entry != null) {
+      LOG.trace("found entry with id {}; blacklisted: {}", accessTokenId, entry.isBlacklisted());
       return entry.isBlacklisted();
     }
+    LOG.debug("no entry found with id {}; assuming _not_ blacklisted", accessTokenId);
     return false;
   }
 
@@ -84,8 +91,8 @@ public class TicketStore {
     });
 
     for (String casTicket : expiredTokens) {
-      LOG.debug("remove expired ticket {}", casTicket);
       StoreEntry storeEntry = byCasTicket.get(casTicket);
+      LOG.debug("remove expired ticket {} with access token id {}", casTicket, storeEntry.getAccessTokenId());
       byAccessTokenId.remove(storeEntry.getAccessTokenId());
       byCasTicket.remove(casTicket);
     }
