@@ -13,6 +13,7 @@ import sonia.scm.security.CipherHandler;
 
 import javax.servlet.http.HttpServletRequest;
 
+import static java.util.Collections.singletonMap;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -51,4 +52,12 @@ class ServiceUrlProviderTest {
     assertThat(serviceUrl).isEqualTo("https://hitchhiker.com/scm/api/v2/cas/auth/__repos__");
   }
 
+  @Test
+  void shouldIncludeParameters() {
+    when(request.getParameterMap()).thenReturn(singletonMap("create", new String[]{"true"}));
+    when(cipherHandler.encode("/repos?create=true")).thenReturn("__repos__");
+
+    String serviceUrl = resolver.create();
+    assertThat(serviceUrl).isEqualTo("https://hitchhiker.com/scm/api/v2/cas/auth/__repos__");
+  }
 }
