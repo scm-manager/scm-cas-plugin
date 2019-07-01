@@ -2,8 +2,10 @@ package com.cloudogu.scm.cas.rest;
 
 import com.cloudogu.scm.cas.CasContext;
 import com.cloudogu.scm.cas.Configuration;
+import com.cloudogu.scm.cas.Constants;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.InMemoryConfigurationStore;
 import sonia.scm.store.InMemoryConfigurationStoreFactory;
 
@@ -20,10 +22,11 @@ class AfterLogoutRedirectToCasTest {
 
   @BeforeEach
   void initConfig() {
-    InMemoryConfigurationStore store = new InMemoryConfigurationStore();
+    InMemoryConfigurationStoreFactory storeFactory = new InMemoryConfigurationStoreFactory();
+    ConfigurationStore store = storeFactory.withType(Configuration.class).withName(Constants.NAME).build();
     configuration = new Configuration();
     store.set(configuration);
-    afterLogoutRedirectToCas = new AfterLogoutRedirectToCas(new CasContext(new InMemoryConfigurationStoreFactory(store)));
+    afterLogoutRedirectToCas = new AfterLogoutRedirectToCas(new CasContext(storeFactory));
   }
 
   @Test
