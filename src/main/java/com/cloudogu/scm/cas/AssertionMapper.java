@@ -33,9 +33,8 @@ public class AssertionMapper {
   }
 
   private String getDisplayName(Map<String,Object> attributes, AttributePrincipal principal) {
-    return getStringAttribute(attributes, context.get().getDisplayNameAttribute()) != null?
-      getStringAttribute(attributes, context.get().getDisplayNameAttribute()):
-      principal.getName();
+    String displayName = getStringAttribute(attributes, context.get().getDisplayNameAttribute());
+    return displayName != null ? displayName : principal.getName();
   }
 
   private String getMail(Map<String, Object> attributes) {

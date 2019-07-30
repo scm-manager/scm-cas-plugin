@@ -78,7 +78,7 @@ class AssertionMapperTest {
       User user = mapper.createUser(assertion);
 
       assertThat(user.getName()).isEqualTo("tricia");
-      assertThat(user.getDisplayName()).isEqualTo("tricia");
+      assertThat(user.getDisplayName()).isEqualTo(principal.getName());
       assertThat(user.getMail()).isEqualTo("tricia.mcmillan@hitchhiker.com");
       assertThat(user.getType()).isEqualTo("cas");
     }
