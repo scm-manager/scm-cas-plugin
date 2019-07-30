@@ -7,6 +7,7 @@ import sonia.scm.user.User;
 
 import javax.inject.Inject;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.Map;
 
 public class AssertionMapper {
@@ -24,16 +25,17 @@ public class AssertionMapper {
 
     User user = new User(principal.getName());
 
-    user.setDisplayName(getDisplayName(attributes));
+    user.setDisplayName(getDisplayName(attributes, principal));
     user.setMail(getMail(attributes));
-
     user.setType(Constants.NAME);
 
     return user;
   }
 
-  private String getDisplayName(Map<String,Object> attributes) {
-    return getStringAttribute(attributes, context.get().getDisplayNameAttribute());
+  private String getDisplayName(Map<String,Object> attributes, AttributePrincipal principal) {
+    return getStringAttribute(attributes, context.get().getDisplayNameAttribute()) != null?
+      getStringAttribute(attributes, context.get().getDisplayNameAttribute()):
+      principal.getName();
   }
 
   private String getMail(Map<String, Object> attributes) {
@@ -41,6 +43,11 @@ public class AssertionMapper {
   }
 
   private String getStringAttribute(Map<String,Object> attributes, String attributeName) {
+
+    if(attributes.get(attributeName) instanceof LinkedList) {
+      LinkedList list = (LinkedList) attributes.get(attributeName);
+      return list.getFirst().toString();
+    }
     Object attributeValue = attributes.get(attributeName);
     if (attributeValue != null) {
       return attributeValue.toString();
