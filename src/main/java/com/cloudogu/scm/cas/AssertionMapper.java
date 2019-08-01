@@ -7,7 +7,6 @@ import sonia.scm.user.User;
 
 import javax.inject.Inject;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.Map;
 
 public class AssertionMapper {
@@ -43,9 +42,9 @@ public class AssertionMapper {
 
   private String getStringAttribute(Map<String,Object> attributes, String attributeName) {
 
-    if(attributes.get(attributeName) instanceof LinkedList) {
-      LinkedList list = (LinkedList) attributes.get(attributeName);
-      return list.getFirst().toString();
+    if(attributes.get(attributeName) instanceof Iterable) {
+      Iterable iterable = (Iterable) attributes.get(attributeName);
+      return iterable.iterator().next().toString();
     }
     Object attributeValue = attributes.get(attributeName);
     if (attributeValue != null) {
