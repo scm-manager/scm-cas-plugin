@@ -3,7 +3,6 @@ package com.cloudogu.scm.cas.browser;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
-import sonia.scm.group.GroupNames;
 import sonia.scm.security.AccessToken;
 import sonia.scm.security.AccessTokenBuilder;
 import sonia.scm.security.AccessTokenBuilderFactory;
@@ -34,9 +33,6 @@ public class LoginHandler {
 
     AccessTokenBuilder accessTokenBuilder = tokenBuilderFactory.create();
     accessTokenBuilder.subject(principals.getPrimaryPrincipal().toString());
-
-    GroupNames groups = principals.oneByType(GroupNames.class);
-    groups.forEach(accessTokenBuilder::groups);
 
     AccessToken accessToken = accessTokenBuilder.build();
     ticketStore.login(token, accessToken);

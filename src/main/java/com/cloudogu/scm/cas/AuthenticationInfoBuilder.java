@@ -30,13 +30,10 @@ public class AuthenticationInfoBuilder {
     User user = assertionMapper.createUser(assertion);
     syncingRealmHelper.store(user);
 
+    // TODO store
     Collection<String> groups = assertionMapper.createGroups(assertion);
 
-    return syncingRealmHelper.authenticationInfo()
-      .forRealm(Constants.NAME)
-      .andUser(user)
-      .withGroups(groups)
-      .build();
+    return syncingRealmHelper.createAuthenticationInfo(Constants.NAME, user);
   }
 
   private Assertion validate(String serviceTicket, String serviceUrl) {
