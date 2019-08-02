@@ -25,7 +25,7 @@ class AssertionMapperTest {
 
   private static final LinkedList mails = new LinkedList(Arrays.asList("tricia.mcmillan@hitchhiker.com", "tricia@hitchhiker.com"));
 
-  private static final Map<String,Object> TRICIA_ATTRIBUTES = ImmutableMap.of(
+  private static final Map<String, Object> TRICIA_ATTRIBUTES = ImmutableMap.of(
     "displayName", "Tricia McMillan",
     "mail", mails
   );

@@ -31,7 +31,7 @@ public class AssertionMapper {
     return user;
   }
 
-  private String getDisplayName(Map<String,Object> attributes, AttributePrincipal principal) {
+  private String getDisplayName(Map<String, Object> attributes, AttributePrincipal principal) {
     String displayName = getStringAttribute(attributes, context.get().getDisplayNameAttribute());
     return displayName != null ? displayName : principal.getName();
   }
@@ -40,9 +40,9 @@ public class AssertionMapper {
     return getStringAttribute(attributes, context.get().getMailAttribute());
   }
 
-  private String getStringAttribute(Map<String,Object> attributes, String attributeName) {
+  private String getStringAttribute(Map<String, Object> attributes, String attributeName) {
 
-    if(attributes.get(attributeName) instanceof Iterable) {
+    if (attributes.get(attributeName) instanceof Iterable) {
       Iterable iterable = (Iterable) attributes.get(attributeName);
       return iterable.iterator().next().toString();
     }
@@ -60,7 +60,7 @@ public class AssertionMapper {
 
     Object attribute = attributes.get(context.get().getGroupAttribute());
     if (attribute instanceof Collection) {
-      for ( Object item : (Collection) attribute ) {
+      for (Object item : (Collection) attribute) {
         builder.add(item.toString());
       }
     } else if (attribute != null) {
