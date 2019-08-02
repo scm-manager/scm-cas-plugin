@@ -9,19 +9,21 @@ import sonia.scm.security.SyncingRealmHelper;
 import sonia.scm.user.User;
 
 import javax.inject.Inject;
-import java.util.Collection;
+import java.util.Set;
 
 public class AuthenticationInfoBuilder {
 
   private final TicketValidatorFactory ticketValidatorFactory;
   private final AssertionMapper assertionMapper;
   private final SyncingRealmHelper syncingRealmHelper;
+  private final GroupStore groupStore;
 
   @Inject
-  public AuthenticationInfoBuilder(TicketValidatorFactory ticketValidatorFactory, AssertionMapper assertionMapper, SyncingRealmHelper syncingRealmHelper) {
+  public AuthenticationInfoBuilder(TicketValidatorFactory ticketValidatorFactory, AssertionMapper assertionMapper, SyncingRealmHelper syncingRealmHelper, GroupStore groupStore) {
     this.ticketValidatorFactory = ticketValidatorFactory;
     this.assertionMapper = assertionMapper;
     this.syncingRealmHelper = syncingRealmHelper;
+    this.groupStore = groupStore;
   }
 
   public AuthenticationInfo create(String serviceTicket, String serviceUrl) {
@@ -30,8 +32,8 @@ public class AuthenticationInfoBuilder {
     User user = assertionMapper.createUser(assertion);
     syncingRealmHelper.store(user);
 
-    // TODO store
-    Collection<String> groups = assertionMapper.createGroups(assertion);
+    Set<String> groups = assertionMapper.createGroups(assertion);
+    groupStore.put(user.getName(), groups);
 
     return syncingRealmHelper.createAuthenticationInfo(Constants.NAME, user);
   }

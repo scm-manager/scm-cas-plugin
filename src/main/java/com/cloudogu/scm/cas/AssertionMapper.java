@@ -8,6 +8,7 @@ import sonia.scm.user.User;
 import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 
 public class AssertionMapper {
 
@@ -48,7 +49,7 @@ public class AssertionMapper {
     return null;
   }
 
-  public Collection<String> createGroups(Assertion assertion) {
+  public Set<String> createGroups(Assertion assertion) {
     Map<String, Object> attributes = assertion.getPrincipal().getAttributes();
 
     ImmutableSet.Builder<String> builder = ImmutableSet.builder();

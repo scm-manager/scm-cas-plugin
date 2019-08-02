@@ -18,6 +18,7 @@ import sonia.scm.user.User;
 import sonia.scm.user.UserTestData;
 
 import java.util.Collection;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -35,8 +36,11 @@ class AuthenticationInfoBuilderTest {
   @Mock
   private AssertionMapper assertionMapper;
 
-  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+  @Mock
   private SyncingRealmHelper syncingRealmHelper;
+
+  @Mock
+  private GroupStore groupStore;
 
   @InjectMocks
   private AuthenticationInfoBuilder authenticationInfoBuilder;
@@ -62,7 +66,7 @@ class AuthenticationInfoBuilderTest {
     User trillian = UserTestData.createTrillian();
     when(assertionMapper.createUser(assertion)).thenReturn(trillian);
 
-    Collection<String> groups = ImmutableSet.of("heartOfGoldCrew", "earth2construction");
+    Set<String> groups = ImmutableSet.of("heartOfGoldCrew", "earth2construction");
     when(assertionMapper.createGroups(assertion)).thenReturn(groups);
 
     when(syncingRealmHelper.createAuthenticationInfo(Constants.NAME, trillian)).thenReturn(authenticationInfo);
@@ -71,6 +75,8 @@ class AuthenticationInfoBuilderTest {
 
     verify(syncingRealmHelper).store(trillian);
     assertThat(result).isSameAs(authenticationInfo);
+
+    verify(groupStore).put(trillian.getName(), groups);
   }
 
   @Test
