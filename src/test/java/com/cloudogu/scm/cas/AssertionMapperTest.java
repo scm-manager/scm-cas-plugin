@@ -12,7 +12,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.user.User;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -21,9 +23,11 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class AssertionMapperTest {
 
-  private static final Map<String,Object> TRICIA_ATTRIBUTES = ImmutableMap.of(
+  private static final LinkedList mails = new LinkedList(Arrays.asList("tricia.mcmillan@hitchhiker.com", "tricia@hitchhiker.com"));
+
+  private static final Map<String, Object> TRICIA_ATTRIBUTES = ImmutableMap.of(
     "displayName", "Tricia McMillan",
-    "mail", "tricia.mcmillan@hitchhiker.com"
+    "mail", mails
   );
 
   @Mock
@@ -74,11 +78,10 @@ class AssertionMapperTest {
       User user = mapper.createUser(assertion);
 
       assertThat(user.getName()).isEqualTo("tricia");
-      assertThat(user.getDisplayName()).isNull();
+      assertThat(user.getDisplayName()).isEqualTo(principal.getName());
       assertThat(user.getMail()).isEqualTo("tricia.mcmillan@hitchhiker.com");
       assertThat(user.getType()).isEqualTo("cas");
     }
-
   }
 
   @Nested

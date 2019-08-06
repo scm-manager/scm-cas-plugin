@@ -25,23 +25,28 @@ public class AssertionMapper {
 
     User user = new User(principal.getName());
 
-    user.setDisplayName(getDisplayName(attributes));
+    user.setDisplayName(getDisplayName(attributes, principal));
     user.setMail(getMail(attributes));
-
     user.setType(Constants.NAME);
 
     return user;
   }
 
-  private String getDisplayName(Map<String,Object> attributes) {
-    return getStringAttribute(attributes, context.get().getDisplayNameAttribute());
+  private String getDisplayName(Map<String, Object> attributes, AttributePrincipal principal) {
+    String displayName = getStringAttribute(attributes, context.get().getDisplayNameAttribute());
+    return displayName != null ? displayName : principal.getName();
   }
 
   private String getMail(Map<String, Object> attributes) {
     return getStringAttribute(attributes, context.get().getMailAttribute());
   }
 
-  private String getStringAttribute(Map<String,Object> attributes, String attributeName) {
+  private String getStringAttribute(Map<String, Object> attributes, String attributeName) {
+
+    if (attributes.get(attributeName) instanceof Iterable) {
+      Iterable iterable = (Iterable) attributes.get(attributeName);
+      return iterable.iterator().next().toString();
+    }
     Object attributeValue = attributes.get(attributeName);
     if (attributeValue != null) {
       return attributeValue.toString();
@@ -56,7 +61,7 @@ public class AssertionMapper {
 
     Object attribute = attributes.get(context.get().getGroupAttribute());
     if (attribute instanceof Collection) {
-      for ( Object item : (Collection) attribute ) {
+      for (Object item : (Collection) attribute) {
         builder.add(item.toString());
       }
     } else if (attribute != null) {
