@@ -2,6 +2,9 @@ package com.cloudogu.scm.cas;
 
 import com.cloudogu.scm.cas.browser.CasAuthenticationResource;
 import com.cloudogu.scm.cas.browser.CasToken;
+import com.google.inject.OutOfScopeException;
+import com.google.inject.Provider;
+import com.google.inject.ProvisionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.config.ScmConfiguration;
@@ -16,31 +19,46 @@ public class ServiceUrlProvider {
 
   Logger LOG = LoggerFactory.getLogger(ServiceUrlProvider.class);
 
-  private final RequestHolder requestHolder;
+  private final Provider<RequestHolder> requestHolder;
   private final CipherHandler cipherHandler;
   private final ScmConfiguration scmConfiguration;
 
   @Inject
-  public ServiceUrlProvider(RequestHolder requestHolder, CipherHandler cipherHandler, ScmConfiguration scmConfiguration) {
+  public ServiceUrlProvider(Provider<RequestHolder> requestHolder, CipherHandler cipherHandler, ScmConfiguration scmConfiguration) {
     this.requestHolder = requestHolder;
     this.cipherHandler = cipherHandler;
     this.scmConfiguration = scmConfiguration;
   }
 
   public String create() {
-    Optional<HttpServletRequest> optionalRequest = requestHolder.getRequest();
+    Optional<HttpServletRequest> optionalRequest = getOptionalRequest();
     if (optionalRequest.isPresent()) {
-      LOG.debug("get url from request");
+      LOG.debug("create url from http request");
       return createUrlFromRequest(optionalRequest.get());
     }
-    LOG.debug("get url from configuration");
+    LOG.debug("http request not found");
+    LOG.debug("create url from configuration");
     return createUrlFromConfiguration();
+  }
+
+  private Optional<HttpServletRequest> getOptionalRequest() {
+    LOG.debug("trying to get http request");
+    try {
+      return requestHolder.get().getRequest();
+    } catch (ProvisionException ex) {
+      if (ex.getCause() instanceof OutOfScopeException) {
+        return Optional.empty();
+      } else {
+        throw ex;
+      }
+    }
   }
 
   private String createUrlFromConfiguration() {
     StringBuilder url = new StringBuilder();
     url.append(scmConfiguration.getBaseUrl());
-    url.append("/scm/api/" + CasAuthenticationResource.PATH);
+    url.append("/scm/api/");
+    url.append(CasAuthenticationResource.PATH);
 
     return url.toString();
   }
@@ -52,7 +70,7 @@ public class ServiceUrlProvider {
   }
 
   public String createFromToken(CasToken casToken) {
-    Optional<HttpServletRequest> optionalRequest = requestHolder.getRequest();
+    Optional<HttpServletRequest> optionalRequest = requestHolder.get().getRequest();
     if (optionalRequest.isPresent()) {
       return createUrl(optionalRequest.get(), casToken.getUrlSuffix());
     }
