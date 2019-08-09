@@ -79,14 +79,14 @@ class ServiceUrlProviderTest {
 
     @BeforeEach
     void mockConfiguration() {
-      when(scmConfiguration.getBaseUrl()).thenReturn("https://hitchhiker.com/");
+      when(scmConfiguration.getBaseUrl()).thenReturn("https://hitchhiker.com");
       when(optionalRequest.isPresent()).thenReturn(false);
     }
 
     @Test
     void shouldCreateUrlFromConfiguration() {
       String serviceUrl = resolver.create();
-//      assertThat(serviceUrl).isEqualTo("https://hitchhiker.com/scm/api/v2/cas/auth/__repos__");
+      assertThat(serviceUrl).isEqualTo("https://hitchhiker.com/scm/api/v2/cas/auth");
     }
 
     @Test
