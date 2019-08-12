@@ -2,7 +2,6 @@ package com.cloudogu.scm.cas.browser;
 
 import com.cloudogu.scm.cas.RequestHolder;
 import com.cloudogu.scm.cas.ServiceUrlProvider;
-import com.google.inject.util.Providers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -45,7 +44,7 @@ class ServiceUrlProviderTest {
   @BeforeEach
   void initRequestHolderAndResolver() {
     when(requestHolder.getRequest()).thenReturn(optionalRequest);
-    resolver = new ServiceUrlProvider(Providers.of(requestHolder), cipherHandler, scmConfiguration);
+    resolver = new ServiceUrlProvider(requestHolder, cipherHandler, scmConfiguration);
   }
 
   @Nested

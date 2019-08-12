@@ -19,12 +19,12 @@ public class ServiceUrlProvider {
 
   Logger LOG = LoggerFactory.getLogger(ServiceUrlProvider.class);
 
-  private final Provider<RequestHolder> requestHolder;
+  private final RequestHolder requestHolder;
   private final CipherHandler cipherHandler;
   private final ScmConfiguration scmConfiguration;
 
   @Inject
-  public ServiceUrlProvider(Provider<RequestHolder> requestHolder, CipherHandler cipherHandler, ScmConfiguration scmConfiguration) {
+  public ServiceUrlProvider(RequestHolder requestHolder, CipherHandler cipherHandler, ScmConfiguration scmConfiguration) {
     this.requestHolder = requestHolder;
     this.cipherHandler = cipherHandler;
     this.scmConfiguration = scmConfiguration;
@@ -43,15 +43,7 @@ public class ServiceUrlProvider {
 
   private Optional<HttpServletRequest> getOptionalRequest() {
     LOG.debug("trying to get http request");
-    try {
-      return requestHolder.get().getRequest();
-    } catch (ProvisionException ex) {
-      if (ex.getCause() instanceof OutOfScopeException) {
-        return Optional.empty();
-      } else {
-        throw ex;
-      }
-    }
+    return requestHolder.getRequest();
   }
 
   private String createUrlFromConfiguration() {
@@ -70,7 +62,7 @@ public class ServiceUrlProvider {
   }
 
   public String createFromToken(CasToken casToken) {
-    Optional<HttpServletRequest> optionalRequest = requestHolder.get().getRequest();
+    Optional<HttpServletRequest> optionalRequest = requestHolder.getRequest();
     if (optionalRequest.isPresent()) {
       return createUrl(optionalRequest.get(), casToken.getUrlSuffix());
     }
