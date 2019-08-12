@@ -14,6 +14,7 @@ import sonia.scm.config.ScmConfiguration;
 import sonia.scm.security.CipherHandler;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collections;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -70,6 +71,14 @@ class ServiceUrlProviderTest {
     @Test
     void shouldCreateUriFromToken() {
       String serviceUrl = resolver.createFromToken(CasToken.valueOf("TGT-123", "__repos__"));
+      assertThat(serviceUrl).isEqualTo("https://hitchhiker.com/scm/api/v2/cas/auth/__repos__");
+    }
+
+    @Test
+    void shouldIncludeParameters() {
+      when(request.getParameterMap()).thenReturn(Collections.singletonMap("create", new String[]{"true"}));
+      when(cipherHandler.encode("/repos?create=true")).thenReturn("__repos__");
+      String serviceUrl = resolver.create();
       assertThat(serviceUrl).isEqualTo("https://hitchhiker.com/scm/api/v2/cas/auth/__repos__");
     }
   }
