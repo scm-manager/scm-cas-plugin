@@ -31,18 +31,13 @@ public class ServiceUrlProvider {
   }
 
   public String create() {
-    Optional<HttpServletRequest> optionalRequest = getOptionalRequest();
+    Optional<HttpServletRequest> optionalRequest = requestHolder.getRequest();
     if (optionalRequest.isPresent()) {
       LOG.debug("create url from http request");
       return createUrlFromRequest(optionalRequest.get());
     }
     LOG.debug("http request not found, create url from configuration");
     return createUrlFromConfiguration();
-  }
-
-  private Optional<HttpServletRequest> getOptionalRequest() {
-    LOG.debug("trying to get http request");
-    return requestHolder.getRequest();
   }
 
   private String createUrlFromConfiguration() {
@@ -90,7 +85,7 @@ public class ServiceUrlProvider {
     private final String key;
     private final String value;
 
-    public SingleParameter(String key, String value) {
+    private SingleParameter(String key, String value) {
       this.key = key;
       this.value = value;
     }
