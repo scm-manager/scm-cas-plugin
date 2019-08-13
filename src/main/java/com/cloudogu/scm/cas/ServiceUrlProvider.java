@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 public class ServiceUrlProvider {
 
-  Logger LOG = LoggerFactory.getLogger(ServiceUrlProvider.class);
+  private static final Logger LOG = LoggerFactory.getLogger(ServiceUrlProvider.class);
 
   private final RequestHolder requestHolder;
   private final CipherHandler cipherHandler;
