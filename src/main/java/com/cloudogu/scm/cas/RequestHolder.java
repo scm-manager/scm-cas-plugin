@@ -19,7 +19,7 @@ public class RequestHolder {
 
   public Optional<HttpServletRequest> getRequest() {
     try {
-      return Optional.ofNullable(requestProvider.get());
+      return Optional.of(requestProvider.get());
     } catch (ProvisionException ex) {
       if (ex.getCause() instanceof OutOfScopeException) {
         return Optional.empty();
