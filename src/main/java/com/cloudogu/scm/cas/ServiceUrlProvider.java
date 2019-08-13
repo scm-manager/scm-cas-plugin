@@ -2,33 +2,51 @@ package com.cloudogu.scm.cas;
 
 import com.cloudogu.scm.cas.browser.CasAuthenticationResource;
 import com.cloudogu.scm.cas.browser.CasToken;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.security.CipherHandler;
 import sonia.scm.util.HttpUtil;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ServiceUrlProvider {
 
-  private final Provider<HttpServletRequest> requestProvider;
+  private static final Logger LOG = LoggerFactory.getLogger(ServiceUrlProvider.class);
+
+  private final RequestHolder requestHolder;
   private final CipherHandler cipherHandler;
+  private final ScmConfiguration scmConfiguration;
 
   @Inject
-  public ServiceUrlProvider(Provider<HttpServletRequest> requestProvider, CipherHandler cipherHandler) {
-    this.requestProvider = requestProvider;
+  public ServiceUrlProvider(RequestHolder requestHolder, CipherHandler cipherHandler, ScmConfiguration scmConfiguration) {
+    this.requestHolder = requestHolder;
     this.cipherHandler = cipherHandler;
+    this.scmConfiguration = scmConfiguration;
   }
 
   public String create() {
-    HttpServletRequest request = requestProvider.get();
-    String urlSuffix = request.getRequestURI().substring(request.getContextPath().length());
-    String urlSuffixWithParameters = urlSuffix + buildQueryParameters(request);
-    String encoded = cipherHandler.encode(urlSuffixWithParameters);
-    return HttpUtil.getCompleteUrl(request, "api", CasAuthenticationResource.PATH, encoded);
+    Optional<HttpServletRequest> optionalRequest = requestHolder.getRequest();
+    if (optionalRequest.isPresent()) {
+      LOG.debug("create url from http request");
+      return createUrlFromRequest(optionalRequest.get());
+    }
+    LOG.debug("http request not found, create url from configuration");
+    return createUrlFromConfiguration();
+  }
+
+  private String createUrlFromConfiguration() {
+    StringBuilder url = new StringBuilder();
+    url.append(scmConfiguration.getBaseUrl());
+    url.append("/scm/api/");
+    url.append(CasAuthenticationResource.PATH);
+
+    return url.toString();
   }
 
   private String buildQueryParameters(HttpServletRequest request) {
@@ -44,8 +62,19 @@ public class ServiceUrlProvider {
       .collect(Collectors.joining("&", "?", ""));
   }
 
+  private String createUrlFromRequest(HttpServletRequest request) {
+    String urlSuffix = request.getRequestURI().substring(request.getContextPath().length());
+    String urlSuffixWithParameters = urlSuffix + buildQueryParameters(request);
+    String encoded = cipherHandler.encode(urlSuffixWithParameters);
+    return HttpUtil.getCompleteUrl(request, "api", CasAuthenticationResource.PATH, encoded);
+  }
+
   public String createFromToken(CasToken casToken) {
-    return createUrl(requestProvider.get(), casToken.getUrlSuffix());
+    Optional<HttpServletRequest> optionalRequest = requestHolder.getRequest();
+    if (optionalRequest.isPresent()) {
+      return createUrl(optionalRequest.get(), casToken.getUrlSuffix());
+    }
+    throw new IllegalStateException("request scope is not available");
   }
 
   private String createUrl(HttpServletRequest request, String suffix) {
@@ -56,7 +85,7 @@ public class ServiceUrlProvider {
     private final String key;
     private final String value;
 
-    public SingleParameter(String key, String value) {
+    private SingleParameter(String key, String value) {
       this.key = key;
       this.value = value;
     }
