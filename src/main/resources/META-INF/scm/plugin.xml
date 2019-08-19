@@ -38,7 +38,9 @@
   <scm-version>2</scm-version>
 
   <information>
+    <displayName>Central Authentication Service</displayName>
     <author>Cloudogu GmbH</author>
+    <category>Authentication</category>
   </information>
 
   <conditions>
