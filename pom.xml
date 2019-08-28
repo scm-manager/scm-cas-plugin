@@ -12,13 +12,13 @@
   <version>2.0.0-SNAPSHOT</version>
   <name>scm-cas-plugin</name>
   <packaging>smp</packaging>
-  <url>https://bitbucket.org/scm-manager/scm-cas-plugin</url>
+  <url>https://github.com/scm-manager/scm-cas-plugin</url>
   <description>Authentication for SCM-Manager using CAS</description>
 
   <scm>
-    <connection>scm:hg:http://bitbucket.org/scm-manager/scm-cas-plugin</connection>
-    <developerConnection>scm:hg:https://bitbucket.org/scm-manager/scm-cas-plugin</developerConnection>
-    <url>http://bitbucket.org/scm-manager/scm-cas-plugin</url>
+    <connection>scm:git:https://github.com/scm-manager/scm-cas-plugin</connection>
+    <developerConnection>scm:git:https://github.com/scm-manager/scm-cas-plugin</developerConnection>
+    <url>https://github.com/scm-manager/scm-cas-plugin</url>
   </scm>
 
   <properties>
