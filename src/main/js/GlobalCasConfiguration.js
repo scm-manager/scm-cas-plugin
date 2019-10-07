@@ -1,18 +1,18 @@
 // @flow
 import React from "react";
-import { Title } from "@scm-manager/ui-components";
-import Configuration from "@scm-manager/ui-components/src/config/Configuration";
-import GlobalCasConfigurationForm from "./GlobalCasConfigurationForm";
 import { translate } from "react-i18next";
+import { Title, Configuration } from "@scm-manager/ui-components";
+import GlobalCasConfigurationForm from "./GlobalCasConfigurationForm";
 
 type Props = {
   link: string,
+
   t: string => string
 };
 
 class GlobalCasConfiguration extends React.Component<Props> {
   render() {
-    const { t, link } = this.props;
+    const { link, t } = this.props;
     return (
       <>
         <Title title={t("scm-cas-plugin.form.header")} />

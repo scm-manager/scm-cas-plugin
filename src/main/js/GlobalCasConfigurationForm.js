@@ -1,7 +1,7 @@
 // @flow
 import React from "react";
-import {InputField, Checkbox, Subtitle} from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
+import { InputField, Checkbox, Subtitle } from "@scm-manager/ui-components";
 
 type GlobalConfiguration = {
   enabled: boolean,
@@ -51,7 +51,7 @@ class GlobalCasConfigurationForm extends React.Component<Props, State> {
           type="url"
         />
         <div>
-          <Subtitle subtitle={t("scm-cas-plugin.form.attributeMapping")}/>
+          <Subtitle subtitle={t("scm-cas-plugin.form.attributeMapping")} />
           <InputField
             name="displayNameAttribute"
             label={t("scm-cas-plugin.form.displayName")}
