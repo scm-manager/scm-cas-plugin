@@ -1,19 +1,21 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
+import type { Links } from "@scm-manager/ui-types";
 import { InputField, Checkbox, Subtitle } from "@scm-manager/ui-components";
 
 type GlobalConfiguration = {
-  enabled: boolean,
   casUrl: string,
   displayNameAttribute: string,
+  enabled: boolean,
+  groupAttribute: string,
   mailAttribute: string,
-  groupAttribute: string
+  _links: Links
 };
 // navposition
 type Props = {
-  initialConfiguration: Configuration,
-  onConfigurationChange: (Configuration, boolean) => void,
+  initialConfiguration: GlobalConfiguration,
+  onConfigurationChange: (GlobalConfiguration, boolean) => void,
   t: string => string
 };
 
@@ -29,7 +31,7 @@ class GlobalCasConfigurationForm extends React.Component<Props, State> {
     };
   }
 
-  render(): React.ReactNode {
+  render() {
     const { t } = this.props;
     return (
       <>

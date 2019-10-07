@@ -6,7 +6,6 @@ import GlobalCasConfigurationForm from "./GlobalCasConfigurationForm";
 
 type Props = {
   link: string,
-
   t: string => string
 };
 
