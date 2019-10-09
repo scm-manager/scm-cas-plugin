@@ -6,6 +6,8 @@ import sonia.scm.plugin.Extension;
 import javax.inject.Inject;
 import java.util.Set;
 
+import static java.util.Collections.emptySet;
+
 @Extension
 public class CasGroupResolver implements GroupResolver {
 
@@ -18,6 +20,10 @@ public class CasGroupResolver implements GroupResolver {
 
   @Override
   public Set<String> resolve(String principal) {
-    return store.get(principal);
+    Set<String> groups = store.get(principal);
+    if (groups == null) {
+      return emptySet();
+    }
+    return groups;
   }
 }
