@@ -1,12 +1,10 @@
-// @flow
 import React from "react";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { Title, Configuration } from "@scm-manager/ui-components";
 import GlobalCasConfigurationForm from "./GlobalCasConfigurationForm";
 
-type Props = {
-  link: string,
-  t: string => string
+type Props = WithTranslation & {
+  link: string;
 };
 
 class GlobalCasConfiguration extends React.Component<Props> {
@@ -15,14 +13,10 @@ class GlobalCasConfiguration extends React.Component<Props> {
     return (
       <>
         <Title title={t("scm-cas-plugin.form.header")} />
-        <Configuration
-          link={link}
-          render={props => <GlobalCasConfigurationForm {...props} />}
-          t={t}
-        />
+        <Configuration link={link} render={props => <GlobalCasConfigurationForm {...props} />} />
       </>
     );
   }
 }
 
-export default translate("plugins")(GlobalCasConfiguration);
+export default withTranslation("plugins")(GlobalCasConfiguration);

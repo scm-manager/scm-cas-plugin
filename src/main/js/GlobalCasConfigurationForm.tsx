@@ -1,26 +1,24 @@
-// @flow
 import React from "react";
-import { translate } from "react-i18next";
-import type { Links } from "@scm-manager/ui-types";
+import { WithTranslation, withTranslation } from "react-i18next";
+import { Links } from "@scm-manager/ui-types";
 import { InputField, Checkbox, Subtitle } from "@scm-manager/ui-components";
 
 type GlobalConfiguration = {
-  casUrl: string,
-  displayNameAttribute: string,
-  enabled: boolean,
-  groupAttribute: string,
-  mailAttribute: string,
-  _links: Links
+  casUrl: string;
+  displayNameAttribute: string;
+  enabled: boolean;
+  groupAttribute: string;
+  mailAttribute: string;
+  _links: Links;
 };
 // navposition
-type Props = {
-  initialConfiguration: GlobalConfiguration,
-  onConfigurationChange: (GlobalConfiguration, boolean) => void,
-  t: string => string
+type Props = WithTranslation & {
+  initialConfiguration: GlobalConfiguration;
+  onConfigurationChange: (p1: GlobalConfiguration, p2: boolean) => void;
 };
 
 type State = GlobalConfiguration & {
-  configurationChanged: boolean
+  configurationChanged?: boolean;
 };
 
 class GlobalCasConfigurationForm extends React.Component<Props, State> {
@@ -90,7 +88,10 @@ class GlobalCasConfigurationForm extends React.Component<Props, State> {
           <button
             className="delete"
             onClick={() =>
-              this.setState({ ...this.state, configurationChanged: false })
+              this.setState({
+                ...this.state,
+                configurationChanged: false
+              })
             }
           />
           {this.props.t("scm-cas-plugin.configurationChangedSuccess")}
@@ -105,9 +106,15 @@ class GlobalCasConfigurationForm extends React.Component<Props, State> {
       {
         [name]: value
       },
-      () => this.props.onConfigurationChange({ ...this.state }, true)
+      () =>
+        this.props.onConfigurationChange(
+          {
+            ...this.state
+          },
+          true
+        )
     );
   };
 }
 
-export default translate("plugins")(GlobalCasConfigurationForm);
+export default withTranslation("plugins")(GlobalCasConfigurationForm);
