@@ -31,6 +31,8 @@ public class CleanTicketStoreListener implements ServletContextListener {
 
   @Override
   public void contextDestroyed(ServletContextEvent sce) {
-    task.cancel();
+    if (task != null) {
+      task.cancel();
+    }
   }
 }
