@@ -4,7 +4,7 @@ CAS Authentication plugin for version 2.x of SCM-Manager
 
 # Setup Test Environment
 
-Add the the the following hostnames to your local `/etc/hosts`, pointing to your ip address (**not 127.0.0.1**):
+Add the following hostnames to your local `/etc/hosts`, pointing to your ip address (**not 127.0.0.1**):
 
 * cas.hitchhiker.com
 * scm.hitchhiker.com
