@@ -9,7 +9,7 @@
     "watch": "ui-scripts plugin-watch"
   },
   "dependencies": {
-    "@scm-manager/ui-plugins": "2.0.0-SNAPSHOT"
+    "@scm-manager/ui-plugins": "2.0.0-rc1"
   },
   "babel": {
     "presets": [
