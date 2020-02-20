@@ -1,10 +1,18 @@
 package com.cloudogu.scm.cas.browser;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.api.v2.resources.ErrorDto;
 import sonia.scm.security.AllowAnonymousAccess;
 import sonia.scm.security.CipherHandler;
 import sonia.scm.util.HttpUtil;
+import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +29,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 
+@OpenAPIDefinition(tags = {
+  @Tag(name = "CAS Plugin", description = "CAS plugin provided endpoints")
+})
 @AllowAnonymousAccess
 @Path(CasAuthenticationResource.PATH)
 public class CasAuthenticationResource {
@@ -42,6 +53,16 @@ public class CasAuthenticationResource {
 
   @GET
   @Path("{urlSuffix}")
+  @Operation(summary = "CAS login", description = "Login with CAS.", tags = "CAS Plugin")
+  @ApiResponse(responseCode = "200", description = "success")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
   public Response login(
     @Context HttpServletRequest request,
     @Context HttpServletResponse response,
@@ -65,6 +86,16 @@ public class CasAuthenticationResource {
   @POST
   @Path("{urlSuffix}")
   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+  @Operation(summary = "CAS logout", description = "Logout from CAS.", tags = "CAS Plugin")
+  @ApiResponse(responseCode = "200", description = "success")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
   public Response logout(@FormParam("logoutRequest") String logoutRequest) {
     LOG.debug("got logout call from cas");
     logoutHandler.logout(logoutRequest);
