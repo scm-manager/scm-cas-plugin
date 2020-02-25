@@ -3,9 +3,11 @@ package com.cloudogu.scm.cas.config;
 import com.cloudogu.scm.cas.CasContext;
 import com.cloudogu.scm.cas.Configuration;
 import com.cloudogu.scm.cas.Constants;
-import com.webcohesion.enunciate.metadata.rs.ResponseCode;
-import com.webcohesion.enunciate.metadata.rs.StatusCodes;
-import com.webcohesion.enunciate.metadata.rs.TypeHint;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import sonia.scm.api.v2.resources.ErrorDto;
 import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.web.VndMediaType;
 
@@ -20,7 +22,7 @@ import javax.ws.rs.core.Response;
 @Path(ConfigurationResource.PATH)
 public class ConfigurationResource {
 
-  private static final String CONTENT_TYPE =  VndMediaType.PREFIX + "casConfig" + VndMediaType.SUFFIX;
+  private static final String CONTENT_TYPE = VndMediaType.PREFIX + "casConfig" + VndMediaType.SUFFIX;
 
   public static final String PATH = "v2/cas/configuration";
 
@@ -36,12 +38,25 @@ public class ConfigurationResource {
   @GET
   @Path("")
   @Produces(CONTENT_TYPE)
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
-    @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"configuration:read:cas\" privilege"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
+  @Operation(summary = "Get cas configuration", description = "Returns the cas configuration.", tags = "CAS Plugin")
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+      mediaType = CONTENT_TYPE,
+      schema = @Schema(implementation = ConfigurationDto.class)
+    )
+  )
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized /  the current user does not have the \"configuration:read:cas\" privilege")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
   public ConfigurationDto get() {
     ConfigurationPermissions.read(Constants.NAME).check();
     Configuration configuration = context.get();
@@ -51,13 +66,18 @@ public class ConfigurationResource {
   @PUT
   @Path("")
   @Consumes(CONTENT_TYPE)
-  @StatusCodes({
-    @ResponseCode(code = 204, condition = "update success"),
-    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
-    @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"configuration:write:cas\" privilege"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
-  @TypeHint(TypeHint.NO_CONTENT.class)
+  @Operation(summary = "Update cas configuration", description = "Modifies the cas configuration.", tags = "CAS Plugin")
+  @ApiResponse(responseCode = "204", description = "update success")
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized /  the current user does not have the \"configuration:write:cas\" privilege")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
   public Response update(ConfigurationDto dto) {
     ConfigurationPermissions.write(Constants.NAME).check();
     Configuration configuration = mapper.fromDto(dto);
