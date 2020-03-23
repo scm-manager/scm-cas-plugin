@@ -29,9 +29,12 @@ import com.google.common.base.Strings;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import sonia.scm.Priority;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.filter.Filters;
 import sonia.scm.filter.WebElement;
+import sonia.scm.security.Authentications;
 import sonia.scm.util.HttpUtil;
+import sonia.scm.web.UserAgentParser;
 import sonia.scm.web.filter.HttpFilter;
 
 import javax.inject.Inject;
@@ -48,11 +51,15 @@ public class ForceCasLoginFilter extends HttpFilter {
 
   private final ServiceUrlProvider serviceUrlProvider;
   private final CasContext context;
+  private final ScmConfiguration configuration;
+  private final UserAgentParser userAgentParser;
 
   @Inject
-  public ForceCasLoginFilter(ServiceUrlProvider serviceUrlProvider, CasContext context) {
+  public ForceCasLoginFilter(ServiceUrlProvider serviceUrlProvider, CasContext context, ScmConfiguration configuration, UserAgentParser userAgentParser) {
     this.serviceUrlProvider = serviceUrlProvider;
     this.context = context;
+    this.configuration = configuration;
+    this.userAgentParser = userAgentParser;
   }
 
   @Override
@@ -80,7 +87,17 @@ public class ForceCasLoginFilter extends HttpFilter {
 
   private boolean shouldPassThrough(HttpServletRequest request) {
     Subject subject = SecurityUtils.getSubject();
-    return subject.isAuthenticated() || isCasAuthenticationDisabled() || isCasCallback(request);
+    return subject.isAuthenticated() && !Authentications.isAuthenticatedSubjectAnonymous()
+      || isCasAuthenticationDisabled()
+      || isCasCallback(request)
+      || isAnonymousProtocolRequest(request);
+  }
+
+  private boolean isAnonymousProtocolRequest(HttpServletRequest request) {
+    return !HttpUtil.isWUIRequest(request)
+      && Authentications.isAuthenticatedSubjectAnonymous()
+      && configuration.isAnonymousAccessEnabled()
+      && !userAgentParser.parse(request).isBrowser();
   }
 
   private boolean isCasAuthenticationDisabled() {

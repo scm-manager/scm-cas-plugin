@@ -37,6 +37,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import sonia.scm.config.ScmConfiguration;
+import sonia.scm.web.UserAgent;
+import sonia.scm.web.UserAgentParser;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -45,6 +48,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -75,6 +80,12 @@ class ForceCasLoginFilterTest {
   @Mock
   private CasContext casContext;
 
+  @Mock
+  private ScmConfiguration scmConfiguration;
+
+  @Mock
+  private UserAgentParser userAgentParser;
+
   private ForceCasLoginFilter filter;
 
   private ThreadState subjectThreadState;
@@ -89,7 +100,7 @@ class ForceCasLoginFilterTest {
 
     when(casContext.get()).thenReturn(configuration);
 
-    filter = new ForceCasLoginFilter(serviceUrlProvider, casContext);
+    filter = new ForceCasLoginFilter(serviceUrlProvider, casContext, scmConfiguration, userAgentParser);
 
     subjectThreadState = new SubjectThreadState(subject);
     subjectThreadState.bind();
@@ -144,6 +155,30 @@ class ForceCasLoginFilterTest {
   }
 
   @Test
+  void shouldRedirectIfUserIsAnonymousAndIsNoApiCall() throws IOException, ServletException {
+    mockAnonymousUser();
+    when(request.getRequestURI()).thenReturn("/scm/somewhere");
+    when(serviceUrlProvider.create()).thenReturn(SERVICE_URL);
+
+    filter.doFilter(request, response, chain);
+
+    verify(chain, never()).doFilter(request, response);
+  }
+
+  @Test
+  void shouldNotRedirectIfUserIsAnonymousAndCallsApi() throws IOException, ServletException {
+    mockAnonymousUser();
+    mockNonBrowserRequest();
+    when(request.getContextPath()).thenReturn("/scm");
+    when(request.getRequestURI()).thenReturn("/scm/api/v2/some");
+    when(scmConfiguration.isAnonymousAccessEnabled()).thenReturn(true);
+
+    filter.doFilter(request, response, chain);
+
+    verify(chain).doFilter(request, response);
+  }
+
+  @Test
   void shouldNotRedirectIfCasIsDisabled() throws IOException, ServletException {
     configuration.setEnabled(false);
 
@@ -166,4 +201,14 @@ class ForceCasLoginFilterTest {
     verify(response).sendError(HttpServletResponse.SC_UNAUTHORIZED);
   }
 
+  private void mockNonBrowserRequest() {
+    UserAgent userAgent = mock(UserAgent.class);
+    when(userAgentParser.parse(request)).thenReturn(userAgent);
+    when(userAgent.isBrowser()).thenReturn(false);
+  }
+
+  private void mockAnonymousUser() {
+    when(subject.isAuthenticated()).thenReturn(true);
+    when(subject.getPrincipal()).thenReturn("_anonymous");
+  }
 }
