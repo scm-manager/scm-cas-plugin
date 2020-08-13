@@ -146,6 +146,17 @@ class ForceCasLoginFilterTest {
   }
 
   @Test
+  void shouldNotRedirectForHgHooks() throws IOException, ServletException {
+    when(request.getContextPath()).thenReturn("/scm");
+    when(request.getRequestURI()).thenReturn("/scm/hook/hg/?ping=true");
+    when(request.getMethod()).thenReturn("GET");
+
+    filter.doFilter(request, response, chain);
+
+    verify(chain).doFilter(request, response);
+  }
+
+  @Test
   void shouldNotRedirectIfUserIsAuthenticated() throws IOException, ServletException {
     when(subject.isAuthenticated()).thenReturn(true);
 

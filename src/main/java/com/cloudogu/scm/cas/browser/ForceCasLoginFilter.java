@@ -86,11 +86,20 @@ public class ForceCasLoginFilter extends HttpFilter {
   }
 
   private boolean shouldPassThrough(HttpServletRequest request) {
-    Subject subject = SecurityUtils.getSubject();
-    return subject.isAuthenticated() && !Authentications.isAuthenticatedSubjectAnonymous()
+    return isUserAuthenticated()
       || isCasAuthenticationDisabled()
       || isCasCallback(request)
-      || isAnonymousProtocolRequest(request);
+      || isAnonymousProtocolRequest(request)
+      || isMercurialHookRequest(request);
+  }
+
+  private boolean isMercurialHookRequest(HttpServletRequest request) {
+    return request.getRequestURI().startsWith(request.getContextPath() + "/hook/hg/");
+  }
+
+  private boolean isUserAuthenticated() {
+    Subject subject = SecurityUtils.getSubject();
+    return subject.isAuthenticated() && !Authentications.isAuthenticatedSubjectAnonymous();
   }
 
   private boolean isAnonymousProtocolRequest(HttpServletRequest request) {
