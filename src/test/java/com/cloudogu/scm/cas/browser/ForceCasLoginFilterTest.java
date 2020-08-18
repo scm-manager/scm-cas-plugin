@@ -38,6 +38,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.security.AnonymousMode;
 import sonia.scm.web.UserAgent;
 import sonia.scm.web.UserAgentParser;
 
@@ -99,6 +100,7 @@ class ForceCasLoginFilterTest {
     configuration.setEnabled(true);
 
     when(casContext.get()).thenReturn(configuration);
+    when(serviceUrlProvider.create()).thenReturn(SERVICE_URL);
 
     filter = new ForceCasLoginFilter(serviceUrlProvider, casContext, scmConfiguration, userAgentParser);
 
@@ -114,7 +116,27 @@ class ForceCasLoginFilterTest {
   @Test
   void shouldRedirectToCas() throws IOException, ServletException {
     when(request.getRequestURI()).thenReturn("/scm/repos");
-    when(serviceUrlProvider.create()).thenReturn(SERVICE_URL);
+
+    filter.doFilter(request, response, chain);
+
+    verify(response).sendRedirect(CAS_LOGIN_URL + "?service=" + SERVICE_URL_ESCAPED);
+  }
+
+  @Test
+  void shouldNotRedirectToCasIfFullAnonymousModeIsEnabled() throws IOException, ServletException {
+    when(scmConfiguration.getAnonymousMode()).thenReturn(AnonymousMode.FULL);
+    when(request.getRequestURI()).thenReturn("/scm/repos");
+
+    filter.doFilter(request, response, chain);
+
+    verify(chain).doFilter(request, response);
+  }
+
+  @Test
+  void shouldRedirectToCasIfFullAnonymousModeIsEnabledAndIsLoginRoute() throws IOException, ServletException {
+    when(scmConfiguration.getAnonymousMode()).thenReturn(AnonymousMode.FULL);
+    when(request.getRequestURI()).thenReturn("/scm/login");
+    when(request.getContextPath()).thenReturn("/scm");
 
     filter.doFilter(request, response, chain);
 
@@ -182,7 +204,8 @@ class ForceCasLoginFilterTest {
     mockNonBrowserRequest();
     when(request.getContextPath()).thenReturn("/scm");
     when(request.getRequestURI()).thenReturn("/scm/api/v2/some");
-    when(scmConfiguration.isAnonymousAccessEnabled()).thenReturn(true);
+    when(serviceUrlProvider.create()).thenReturn(SERVICE_URL);
+    when(scmConfiguration.getAnonymousMode()).thenReturn(AnonymousMode.PROTOCOL_ONLY);
 
     filter.doFilter(request, response, chain);
 
@@ -203,7 +226,7 @@ class ForceCasLoginFilterTest {
 
   @Test
   void shouldSendUnauthorizedOnAjaxRequests() throws IOException, ServletException {
-    when(request.getRequestURI()).thenReturn("/scm/repos");
+    when(request.getRequestURI()).thenReturn("/repos");
     when(request.getHeader("X-Requested-With")).thenReturn("XMLHttpRequest");
     when(serviceUrlProvider.create()).thenReturn(SERVICE_URL);
 

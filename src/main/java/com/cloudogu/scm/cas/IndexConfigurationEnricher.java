@@ -32,6 +32,7 @@ import sonia.scm.api.v2.resources.LinkBuilder;
 import sonia.scm.api.v2.resources.ScmPathInfoStore;
 import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.plugin.Extension;
+import sonia.scm.security.CipherHandler;
 import sonia.scm.user.User;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.web.JsonEnricherBase;
@@ -78,6 +79,12 @@ public class IndexConfigurationEnricher extends JsonEnricherBase {
         addPropertyNode(links, "casLogout", logoutNode);
       }
 
+      if (isCasAuthenticationEnabled() && !isCasUserAuthenticated()) {
+        JsonNode loginNode = createObject(singletonMap("href", value(createLoginLink())));
+
+        addPropertyNode(links, "casLogin", loginNode);
+      }
+
     }
   }
 
@@ -97,4 +104,9 @@ public class IndexConfigurationEnricher extends JsonEnricherBase {
   private String createLogoutLink() {
     return HttpUtil.append(casContext.get().getCasUrl(), "logout");
   }
+
+  private String createLoginLink() {
+    return HttpUtil.append(casContext.get().getCasUrl(), "login");
+  }
+
 }

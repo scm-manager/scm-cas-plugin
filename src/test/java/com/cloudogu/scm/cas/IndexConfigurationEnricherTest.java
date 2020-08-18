@@ -33,7 +33,6 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -41,6 +40,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import sonia.scm.api.v2.resources.ScmPathInfoStore;
+import sonia.scm.security.CipherHandler;
 import sonia.scm.user.User;
 import sonia.scm.user.UserTestData;
 import sonia.scm.web.JsonEnricherContext;
@@ -150,9 +150,48 @@ class IndexConfigurationEnricherTest {
     assertNoLogoutLinkWasAdded();
   }
 
+  @Test
+  void shouldAddCasLoginLink() {
+    configuration.setEnabled(true);
+    configuration.setCasUrl("https://cas.hitchhiker.com");
+
+    when(subject.isAuthenticated()).thenReturn(false);
+    mockTrillianAuthentication("cas");
+
+    enricher.enrich(context(VndMediaType.INDEX));
+
+    JsonNode links = root.get("_links");
+    String link = links.get("casLogin").get("href").asText();
+    assertThat(link).isEqualTo("https://cas.hitchhiker.com/login");
+  }
+
+  @Test
+  void shouldNotAddCasLoginIfCasIsDisabled() {
+    configuration.setEnabled(false);
+    configuration.setCasUrl("https://cas.hitchhiker.com");
+
+    enricher.enrich(context(VndMediaType.INDEX));
+
+    assertNoLoginLinkWasAdded();
+  }
+
+  @Test
+  void shouldNotAddCasLoginLinkIfAuthenticated() {
+    when(subject.isAuthenticated()).thenReturn(true);
+
+    enricher.enrich(context(VndMediaType.INDEX));
+
+    assertNoLoginLinkWasAdded();
+  }
+
   private void assertNoLogoutLinkWasAdded() {
     JsonNode links = root.get("_links");
     assertThat(links.has("casLogout")).isFalse();
+  }
+
+  private void assertNoLoginLinkWasAdded() {
+    JsonNode links = root.get("_links");
+    assertThat(links.has("casLogin")).isFalse();
   }
 
   private void mockTrillianAuthentication(String type) {
