@@ -92,6 +92,14 @@ class ServiceUrlProviderTest {
     }
 
     @Test
+    void shouldCreateRootUriFromRequest() {
+      when(cipherHandler.encode("/")).thenReturn("%2F");
+
+      String serviceUrl = resolver.createRoot();
+      assertThat(serviceUrl).isEqualTo("https://hitchhiker.com/scm/api/v2/cas/auth/%2F");
+    }
+
+    @Test
     void shouldCreateUriFromToken() {
       String serviceUrl = resolver.createFromToken(CasToken.valueOf("TGT-123", "__repos__"));
       assertThat(serviceUrl).isEqualTo("https://hitchhiker.com/scm/api/v2/cas/auth/__repos__");
@@ -119,6 +127,13 @@ class ServiceUrlProviderTest {
     void shouldCreateUrlFromConfiguration() {
       String serviceUrl = resolver.create();
       assertThat(serviceUrl).isEqualTo("https://hitchhiker.com/scm/api/v2/cas/auth");
+    }
+
+    @Test
+    void shouldCreateUrlForRoot() {
+      when(cipherHandler.encode("/")).thenReturn("%2F");
+      String serviceUrl = resolver.createRoot();
+      assertThat(serviceUrl).isEqualTo("https://hitchhiker.com/scm/api/v2/cas/auth/%2F");
     }
 
     @Test

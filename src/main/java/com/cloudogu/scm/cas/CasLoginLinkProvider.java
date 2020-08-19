@@ -22,15 +22,16 @@
  * SOFTWARE.
  */
 
-import React from "react";
-import {Links, Link} from "@scm-manager/ui-types";
+package com.cloudogu.scm.cas;
 
-const CasLoginLink = (props: { links: Links, label: string }) => {
-  const url = (props.links?.casLogin as Link)?.href;
-  const label = props.label;
-  return <li>
-    <a href={url}>{label}</a>
-  </li>;
-};
+import sonia.scm.util.HttpUtil;
 
-export default CasLoginLink;
+public final class CasLoginLinkProvider {
+  private CasLoginLinkProvider() {
+  }
+
+  public static String createLoginLink(CasContext casContext, String serviceUrl) {
+    String encodedServiceUrl = HttpUtil.encode(serviceUrl);
+    return HttpUtil.append(casContext.get().getCasUrl(), "login") + "?service=" + encodedServiceUrl;
+  }
+}

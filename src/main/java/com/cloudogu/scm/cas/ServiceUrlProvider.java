@@ -36,6 +36,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class ServiceUrlProvider {
@@ -54,20 +55,34 @@ public class ServiceUrlProvider {
   }
 
   public String create() {
+    return createFromSuffix(request -> request.getRequestURI().substring(request.getContextPath().length()));
+  }
+
+  public String createRoot() {
+    return createFromSuffix(request -> "/");
+  }
+
+  private String createFromSuffix(Function<HttpServletRequest, String> urlSuffixProvider) {
     Optional<HttpServletRequest> optionalRequest = requestHolder.getRequest();
     if (optionalRequest.isPresent()) {
       LOG.debug("create url from http request");
-      return createUrlFromRequest(optionalRequest.get());
+      return createUrlFromRequest(optionalRequest.get(), urlSuffixProvider.apply(optionalRequest.get()));
     }
     LOG.debug("http request not found, create url from configuration");
     return createUrlFromConfiguration();
   }
 
   private String createUrlFromConfiguration() {
+    String encoded = cipherHandler.encode("/");
+
     StringBuilder url = new StringBuilder();
     url.append(scmConfiguration.getBaseUrl());
     url.append("/scm/api/");
     url.append(CasAuthenticationResource.PATH);
+    if (encoded != null) {
+      url.append("/");
+      url.append(encoded);
+    }
 
     return url.toString();
   }
@@ -85,8 +100,7 @@ public class ServiceUrlProvider {
       .collect(Collectors.joining("&", "?", ""));
   }
 
-  private String createUrlFromRequest(HttpServletRequest request) {
-    String urlSuffix = request.getRequestURI().substring(request.getContextPath().length());
+  private String createUrlFromRequest(HttpServletRequest request, String urlSuffix) {
     String urlSuffixWithParameters = urlSuffix + buildQueryParameters(request);
     String encoded = cipherHandler.encode(urlSuffixWithParameters);
     return HttpUtil.getCompleteUrl(request, "api", CasAuthenticationResource.PATH, encoded);

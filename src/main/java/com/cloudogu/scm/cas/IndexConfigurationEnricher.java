@@ -32,7 +32,6 @@ import sonia.scm.api.v2.resources.LinkBuilder;
 import sonia.scm.api.v2.resources.ScmPathInfoStore;
 import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.plugin.Extension;
-import sonia.scm.security.CipherHandler;
 import sonia.scm.user.User;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.web.JsonEnricherBase;
@@ -41,6 +40,7 @@ import sonia.scm.web.JsonEnricherContext;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
+import static com.cloudogu.scm.cas.CasLoginLinkProvider.createLoginLink;
 import static java.util.Collections.singletonMap;
 import static sonia.scm.web.VndMediaType.INDEX;
 
@@ -49,12 +49,14 @@ public class IndexConfigurationEnricher extends JsonEnricherBase {
 
   private final Provider<ScmPathInfoStore> scmPathInfoStore;
   private final CasContext casContext;
+  private final ServiceUrlProvider serviceUrlProvider;
 
   @Inject
-  public IndexConfigurationEnricher(Provider<ScmPathInfoStore> scmPathInfoStore, ObjectMapper objectMapper, CasContext casContext) {
+  public IndexConfigurationEnricher(Provider<ScmPathInfoStore> scmPathInfoStore, ObjectMapper objectMapper, CasContext casContext, ServiceUrlProvider serviceUrlProvider) {
     super(objectMapper);
     this.scmPathInfoStore = scmPathInfoStore;
     this.casContext = casContext;
+    this.serviceUrlProvider = serviceUrlProvider;
   }
 
   @Override
@@ -80,7 +82,8 @@ public class IndexConfigurationEnricher extends JsonEnricherBase {
       }
 
       if (isCasAuthenticationEnabled() && !isCasUserAuthenticated()) {
-        JsonNode loginNode = createObject(singletonMap("href", value(createLoginLink())));
+        String loginLink = createLoginLink(casContext, serviceUrlProvider.createRoot());
+        JsonNode loginNode = createObject(singletonMap("href", value(loginLink)));
 
         addPropertyNode(links, "casLogin", loginNode);
       }
@@ -103,10 +106,6 @@ public class IndexConfigurationEnricher extends JsonEnricherBase {
 
   private String createLogoutLink() {
     return HttpUtil.append(casContext.get().getCasUrl(), "logout");
-  }
-
-  private String createLoginLink() {
-    return HttpUtil.append(casContext.get().getCasUrl(), "login");
   }
 
 }

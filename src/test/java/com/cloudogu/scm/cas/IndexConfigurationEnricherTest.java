@@ -40,7 +40,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import sonia.scm.api.v2.resources.ScmPathInfoStore;
-import sonia.scm.security.CipherHandler;
 import sonia.scm.user.User;
 import sonia.scm.user.UserTestData;
 import sonia.scm.web.JsonEnricherContext;
@@ -65,6 +64,9 @@ class IndexConfigurationEnricherTest {
   @Mock
   private CasContext context;
 
+  @Mock
+  private ServiceUrlProvider serviceUrlProvider;
+
   private Configuration configuration;
 
   private IndexConfigurationEnricher enricher;
@@ -80,8 +82,9 @@ class IndexConfigurationEnricherTest {
 
     configuration = new Configuration();
     when(context.get()).thenReturn(configuration);
+    when(serviceUrlProvider.createRoot()).thenReturn("http://hitchhiker.com/scm/api/v2/cas/auth/v2:fSF5L2EOJqNoSdd8-KdqoUgujB6KWPQw8W9MAnjewWaS");
 
-    enricher = new IndexConfigurationEnricher(Providers.of(pathInfoStore), objectMapper, context);
+    enricher = new IndexConfigurationEnricher(Providers.of(pathInfoStore), objectMapper, context, serviceUrlProvider);
     root = objectMapper.createObjectNode();
     root.set("_links", objectMapper.createObjectNode());
   }
@@ -162,7 +165,7 @@ class IndexConfigurationEnricherTest {
 
     JsonNode links = root.get("_links");
     String link = links.get("casLogin").get("href").asText();
-    assertThat(link).isEqualTo("https://cas.hitchhiker.com/login");
+    assertThat(link).isEqualTo("https://cas.hitchhiker.com/login?service=http%3A%2F%2Fhitchhiker.com%2Fscm%2Fapi%2Fv2%2Fcas%2Fauth%2Fv2%3AfSF5L2EOJqNoSdd8-KdqoUgujB6KWPQw8W9MAnjewWaS");
   }
 
   @Test

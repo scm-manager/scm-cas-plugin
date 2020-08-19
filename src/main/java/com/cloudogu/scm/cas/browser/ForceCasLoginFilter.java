@@ -46,6 +46,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 
+import static com.cloudogu.scm.cas.CasLoginLinkProvider.createLoginLink;
+
 @WebElement("/*")
 @Priority(Filters.PRIORITY_POST_AUTHENTICATION)
 public class ForceCasLoginFilter extends HttpFilter {
@@ -75,7 +77,7 @@ public class ForceCasLoginFilter extends HttpFilter {
   }
 
   private void redirectToCas(HttpServletResponse response) throws IOException {
-    response.sendRedirect(createCasLoginRedirect());
+    response.sendRedirect(createLoginLink(context, serviceUrlProvider.create()));
   }
 
   private void sendUnauthorized(HttpServletResponse response) throws IOException {
@@ -136,11 +138,6 @@ public class ForceCasLoginFilter extends HttpFilter {
 
   private boolean isCasLoginRequest(HttpServletRequest request) {
     return "GET".equals(request.getMethod()) && !Strings.isNullOrEmpty(request.getParameter("ticket"));
-  }
-
-  private String createCasLoginRedirect() {
-    String encodedServiceUrl = HttpUtil.encode(serviceUrlProvider.create());
-    return HttpUtil.append(context.get().getCasUrl(), "login") + "?service=" + encodedServiceUrl;
   }
 
 }
