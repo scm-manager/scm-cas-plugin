@@ -22,15 +22,21 @@
  * SOFTWARE.
  */
 
-import React from "react";
-import {Links, Link} from "@scm-manager/ui-types";
+import React, { FC } from "react";
+import { Links, Link } from "@scm-manager/ui-types";
 
-const CasLoginLink = (props: { links: Links, label: string }) => {
-  const url = (props.links?.casLogin as Link)?.href;
-  const label = props.label;
-  return <li>
-    <a href={url}>{label}</a>
-  </li>;
+type Props = {
+  label: string;
+  links: Links;
+};
+
+const CasLoginLink: FC<Props> = ({ label, links }) => {
+  const url = (links?.casLogin as Link)?.href;
+  return (
+    <li>
+      <a href={url}>{label}</a>
+    </li>
+  );
 };
 
 export default CasLoginLink;
