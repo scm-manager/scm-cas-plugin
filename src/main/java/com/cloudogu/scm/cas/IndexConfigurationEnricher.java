@@ -40,6 +40,7 @@ import sonia.scm.web.JsonEnricherContext;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
+import static com.cloudogu.scm.cas.CasLoginLinkProvider.createLoginLink;
 import static java.util.Collections.singletonMap;
 import static sonia.scm.web.VndMediaType.INDEX;
 
@@ -48,12 +49,14 @@ public class IndexConfigurationEnricher extends JsonEnricherBase {
 
   private final Provider<ScmPathInfoStore> scmPathInfoStore;
   private final CasContext casContext;
+  private final ServiceUrlProvider serviceUrlProvider;
 
   @Inject
-  public IndexConfigurationEnricher(Provider<ScmPathInfoStore> scmPathInfoStore, ObjectMapper objectMapper, CasContext casContext) {
+  public IndexConfigurationEnricher(Provider<ScmPathInfoStore> scmPathInfoStore, ObjectMapper objectMapper, CasContext casContext, ServiceUrlProvider serviceUrlProvider) {
     super(objectMapper);
     this.scmPathInfoStore = scmPathInfoStore;
     this.casContext = casContext;
+    this.serviceUrlProvider = serviceUrlProvider;
   }
 
   @Override
@@ -78,6 +81,13 @@ public class IndexConfigurationEnricher extends JsonEnricherBase {
         addPropertyNode(links, "casLogout", logoutNode);
       }
 
+      if (isCasAuthenticationEnabled() && !isCasUserAuthenticated()) {
+        String loginLink = createLoginLink(casContext, serviceUrlProvider.createRoot());
+        JsonNode loginNode = createObject(singletonMap("href", value(loginLink)));
+
+        addPropertyNode(links, "casLogin", loginNode);
+      }
+
     }
   }
 
@@ -97,4 +107,5 @@ public class IndexConfigurationEnricher extends JsonEnricherBase {
   private String createLogoutLink() {
     return HttpUtil.append(casContext.get().getCasUrl(), "logout");
   }
+
 }

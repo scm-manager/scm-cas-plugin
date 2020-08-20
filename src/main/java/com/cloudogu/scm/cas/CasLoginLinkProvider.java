@@ -21,11 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import {Links} from "@scm-manager/ui-types";
-import {ConfigurationBinder as cfgBinder} from "@scm-manager/ui-components";
-import {binder} from "@scm-manager/ui-extensions";
-import GlobalCasConfiguration from "./GlobalCasConfiguration";
-import CasLoginLink from "./CasLoginLink";
 
-cfgBinder.bindGlobal("/cas", "scm-cas-plugin.nav-link", "casConfig", GlobalCasConfiguration);
-binder.bind("primary-navigation.login", CasLoginLink, props => "casLogin" in (props?.links as Links));
+package com.cloudogu.scm.cas;
+
+import sonia.scm.util.HttpUtil;
+
+public final class CasLoginLinkProvider {
+  private CasLoginLinkProvider() {
+  }
+
+  public static String createLoginLink(CasContext casContext, String serviceUrl) {
+    String encodedServiceUrl = HttpUtil.encode(serviceUrl);
+    return HttpUtil.append(casContext.get().getCasUrl(), "login") + "?service=" + encodedServiceUrl;
+  }
+}

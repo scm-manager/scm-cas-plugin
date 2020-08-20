@@ -33,7 +33,6 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -65,6 +64,9 @@ class IndexConfigurationEnricherTest {
   @Mock
   private CasContext context;
 
+  @Mock
+  private ServiceUrlProvider serviceUrlProvider;
+
   private Configuration configuration;
 
   private IndexConfigurationEnricher enricher;
@@ -80,8 +82,9 @@ class IndexConfigurationEnricherTest {
 
     configuration = new Configuration();
     when(context.get()).thenReturn(configuration);
+    when(serviceUrlProvider.createRoot()).thenReturn("http://hitchhiker.com/scm/api/v2/cas/auth/v2:fSF5L2EOJqNoSdd8-KdqoUgujB6KWPQw8W9MAnjewWaS");
 
-    enricher = new IndexConfigurationEnricher(Providers.of(pathInfoStore), objectMapper, context);
+    enricher = new IndexConfigurationEnricher(Providers.of(pathInfoStore), objectMapper, context, serviceUrlProvider);
     root = objectMapper.createObjectNode();
     root.set("_links", objectMapper.createObjectNode());
   }
@@ -150,9 +153,48 @@ class IndexConfigurationEnricherTest {
     assertNoLogoutLinkWasAdded();
   }
 
+  @Test
+  void shouldAddCasLoginLink() {
+    configuration.setEnabled(true);
+    configuration.setCasUrl("https://cas.hitchhiker.com");
+
+    when(subject.isAuthenticated()).thenReturn(false);
+    mockTrillianAuthentication("cas");
+
+    enricher.enrich(context(VndMediaType.INDEX));
+
+    JsonNode links = root.get("_links");
+    String link = links.get("casLogin").get("href").asText();
+    assertThat(link).isEqualTo("https://cas.hitchhiker.com/login?service=http%3A%2F%2Fhitchhiker.com%2Fscm%2Fapi%2Fv2%2Fcas%2Fauth%2Fv2%3AfSF5L2EOJqNoSdd8-KdqoUgujB6KWPQw8W9MAnjewWaS");
+  }
+
+  @Test
+  void shouldNotAddCasLoginIfCasIsDisabled() {
+    configuration.setEnabled(false);
+    configuration.setCasUrl("https://cas.hitchhiker.com");
+
+    enricher.enrich(context(VndMediaType.INDEX));
+
+    assertNoLoginLinkWasAdded();
+  }
+
+  @Test
+  void shouldNotAddCasLoginLinkIfAuthenticated() {
+    when(subject.isAuthenticated()).thenReturn(true);
+
+    enricher.enrich(context(VndMediaType.INDEX));
+
+    assertNoLoginLinkWasAdded();
+  }
+
   private void assertNoLogoutLinkWasAdded() {
     JsonNode links = root.get("_links");
     assertThat(links.has("casLogout")).isFalse();
+  }
+
+  private void assertNoLoginLinkWasAdded() {
+    JsonNode links = root.get("_links");
+    assertThat(links.has("casLogin")).isFalse();
   }
 
   private void mockTrillianAuthentication(String type) {

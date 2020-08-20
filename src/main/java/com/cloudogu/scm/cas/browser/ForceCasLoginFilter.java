@@ -32,6 +32,7 @@ import sonia.scm.Priority;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.filter.Filters;
 import sonia.scm.filter.WebElement;
+import sonia.scm.security.AnonymousMode;
 import sonia.scm.security.Authentications;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.web.UserAgentParser;
@@ -44,6 +45,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
+
+import static com.cloudogu.scm.cas.CasLoginLinkProvider.createLoginLink;
 
 @WebElement("/*")
 @Priority(Filters.PRIORITY_POST_AUTHENTICATION)
@@ -74,7 +77,7 @@ public class ForceCasLoginFilter extends HttpFilter {
   }
 
   private void redirectToCas(HttpServletResponse response) throws IOException {
-    response.sendRedirect(createCasLoginRedirect());
+    response.sendRedirect(createLoginLink(context, serviceUrlProvider.create()));
   }
 
   private void sendUnauthorized(HttpServletResponse response) throws IOException {
@@ -90,11 +93,18 @@ public class ForceCasLoginFilter extends HttpFilter {
       || isCasAuthenticationDisabled()
       || isCasCallback(request)
       || isAnonymousProtocolRequest(request)
-      || isMercurialHookRequest(request);
+      || isMercurialHookRequest(request)
+      || (!isLoginRequest(request) && isFullAnonymousAccessEnabled());
   }
 
   private boolean isMercurialHookRequest(HttpServletRequest request) {
     return request.getRequestURI().startsWith(request.getContextPath() + "/hook/hg/");
+  }
+
+  private boolean isLoginRequest(HttpServletRequest request) {
+    final String requestURI = request.getRequestURI();
+    final String contextPath = request.getContextPath();
+    return requestURI != null && requestURI.startsWith(contextPath + "/login");
   }
 
   private boolean isUserAuthenticated() {
@@ -105,8 +115,12 @@ public class ForceCasLoginFilter extends HttpFilter {
   private boolean isAnonymousProtocolRequest(HttpServletRequest request) {
     return !HttpUtil.isWUIRequest(request)
       && Authentications.isAuthenticatedSubjectAnonymous()
-      && configuration.isAnonymousAccessEnabled()
+      && configuration.getAnonymousMode() == AnonymousMode.PROTOCOL_ONLY
       && !userAgentParser.parse(request).isBrowser();
+  }
+
+  private boolean isFullAnonymousAccessEnabled() {
+    return configuration.getAnonymousMode() == AnonymousMode.FULL;
   }
 
   private boolean isCasAuthenticationDisabled() {
@@ -124,11 +138,6 @@ public class ForceCasLoginFilter extends HttpFilter {
 
   private boolean isCasLoginRequest(HttpServletRequest request) {
     return "GET".equals(request.getMethod()) && !Strings.isNullOrEmpty(request.getParameter("ticket"));
-  }
-
-  private String createCasLoginRedirect() {
-    String encodedServiceUrl = HttpUtil.encode(serviceUrlProvider.create());
-    return HttpUtil.append(context.get().getCasUrl(), "login") + "?service=" + encodedServiceUrl;
   }
 
 }

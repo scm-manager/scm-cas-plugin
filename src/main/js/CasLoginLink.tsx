@@ -21,11 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import {Links} from "@scm-manager/ui-types";
-import {ConfigurationBinder as cfgBinder} from "@scm-manager/ui-components";
-import {binder} from "@scm-manager/ui-extensions";
-import GlobalCasConfiguration from "./GlobalCasConfiguration";
-import CasLoginLink from "./CasLoginLink";
 
-cfgBinder.bindGlobal("/cas", "scm-cas-plugin.nav-link", "casConfig", GlobalCasConfiguration);
-binder.bind("primary-navigation.login", CasLoginLink, props => "casLogin" in (props?.links as Links));
+import React, { FC } from "react";
+import { Links, Link } from "@scm-manager/ui-types";
+
+type Props = {
+  label: string;
+  links: Links;
+};
+
+const CasLoginLink: FC<Props> = ({ label, links }) => {
+  const url = (links?.casLogin as Link)?.href;
+  return (
+    <li>
+      <a href={url}>{label}</a>
+    </li>
+  );
+};
+
+export default CasLoginLink;
