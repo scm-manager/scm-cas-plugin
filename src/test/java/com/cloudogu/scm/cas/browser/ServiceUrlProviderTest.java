@@ -71,6 +71,33 @@ class ServiceUrlProviderTest {
     resolver = new ServiceUrlProvider(requestHolder, cipherHandler, scmConfiguration);
   }
 
+  @Test
+  public void withLoginHTTPRequestWithFrom() {
+    when(optionalRequest.isPresent()).thenReturn(true);
+    when(optionalRequest.get()).thenReturn(request);
+    when(request.getContextPath()).thenReturn("/scm");
+    when(request.getRequestURI()).thenReturn("/scm/login");
+    when(request.getRequestURL()).thenReturn(new StringBuffer("https://hitchhiker.com/scm/login"));
+    when(request.getParameter("from")).thenReturn("/admin/plugins/installed");
+    when(cipherHandler.encode("/admin/plugins/installed")).thenReturn("__plugins__");
+
+    String serviceUrl = resolver.create();
+    assertThat(serviceUrl).isEqualTo("https://hitchhiker.com/scm/api/v2/cas/auth/__plugins__");
+  }
+
+  @Test
+  public void withLoginHTTPRequestWithoutFrom() {
+    when(optionalRequest.isPresent()).thenReturn(true);
+    when(optionalRequest.get()).thenReturn(request);
+    when(request.getContextPath()).thenReturn("/scm");
+    when(request.getRequestURI()).thenReturn("/scm/login");
+    when(request.getRequestURL()).thenReturn(new StringBuffer("https://hitchhiker.com/scm/login"));
+    when(cipherHandler.encode("/")).thenReturn("%2F");
+
+    String serviceUrl = resolver.create();
+    assertThat(serviceUrl).isEqualTo("https://hitchhiker.com/scm/api/v2/cas/auth/%2F");
+  }
+
   @Nested
   class withHTTPRequest {
 

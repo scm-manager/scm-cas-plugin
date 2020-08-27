@@ -25,6 +25,7 @@ package com.cloudogu.scm.cas;
 
 import com.cloudogu.scm.cas.browser.CasAuthenticationResource;
 import com.cloudogu.scm.cas.browser.CasToken;
+import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.config.ScmConfiguration;
@@ -101,8 +102,13 @@ public class ServiceUrlProvider {
   }
 
   private String createUrlFromRequest(HttpServletRequest request, String urlSuffix) {
-    String urlSuffixWithParameters = urlSuffix + buildQueryParameters(request);
-    String encoded = cipherHandler.encode(urlSuffixWithParameters);
+    String urlSuffixWithParameters;
+    if (urlSuffix.equals("/login")) {
+      urlSuffixWithParameters = request.getParameter("from");
+    } else {
+      urlSuffixWithParameters = urlSuffix + buildQueryParameters(request);
+    }
+    String encoded = cipherHandler.encode(Strings.isNullOrEmpty(urlSuffixWithParameters) ? "/" : urlSuffixWithParameters);
     return HttpUtil.getCompleteUrl(request, "api", CasAuthenticationResource.PATH, encoded);
   }
 
