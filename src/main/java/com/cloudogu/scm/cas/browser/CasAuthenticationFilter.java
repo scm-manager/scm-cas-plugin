@@ -27,6 +27,7 @@ import sonia.scm.Priority;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.filter.Filters;
 import sonia.scm.filter.WebElement;
+import sonia.scm.security.TokenExpiredException;
 import sonia.scm.web.WebTokenGenerator;
 import sonia.scm.web.filter.AuthenticationFilter;
 
@@ -49,6 +50,11 @@ public class CasAuthenticationFilter extends AuthenticationFilter {
 
   @Override
   protected void handleUnauthorized(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+    chain.doFilter(request, response);
+  }
+
+  @Override
+  protected void handleTokenExpiredException(HttpServletRequest request, HttpServletResponse response, FilterChain chain, TokenExpiredException tokenExpiredException) throws IOException, ServletException {
     chain.doFilter(request, response);
   }
 }
