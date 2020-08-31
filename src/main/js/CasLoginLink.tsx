@@ -22,19 +22,18 @@
  * SOFTWARE.
  */
 
-import React, { FC } from "react";
-import { Links, Link } from "@scm-manager/ui-types";
+import React, {FC} from "react";
 
 type Props = {
   label: string;
-  links: Links;
+  loginUrl: string;
+  from: string;
 };
 
-const CasLoginLink: FC<Props> = ({ label, links }) => {
-  const url = (links?.casLogin as Link)?.href;
+const CasLoginLink: FC<Props> = ({label, loginUrl, from}) => {
   return (
     <li>
-      <a href={url}>{label}</a>
+      <a href={`${loginUrl}?from=${from}`}>{label}</a>
     </li>
   );
 };
