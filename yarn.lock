@@ -1247,17 +1247,17 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^13.0.0"
 
-"@pmmmwh/react-refresh-webpack-plugin@^0.3.0":
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/@pmmmwh/react-refresh-webpack-plugin/-/react-refresh-webpack-plugin-0.3.3.tgz#40a3d674f42a011b7f30a9609aa8fb68ec3c39c9"
-  integrity sha512-uc6FmPEegAZawSHjUMFQwU7EjaDn7zy1iD/KD/wBROL9F4378OES8MKMYHoRAKT61Fk7LxVKZSDR5VespMQiqw==
+"@pmmmwh/react-refresh-webpack-plugin@^0.4.0":
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/@pmmmwh/react-refresh-webpack-plugin/-/react-refresh-webpack-plugin-0.4.1.tgz#a4db0ed8e58c2f8566161c9a8cdf1d095c9a891b"
+  integrity sha512-MzM87WdX2r2KRFfhEho7oGyK1XRE/J9WwjB3v6oLQHN0dzBypBZxSWjnoYx+RWneRCsg8Sin1myf+EjX1fqIbQ==
   dependencies:
     ansi-html "^0.0.7"
     error-stack-parser "^2.0.6"
     html-entities "^1.2.1"
-    lodash.debounce "^4.0.8"
     native-url "^0.2.6"
     schema-utils "^2.6.5"
+    source-map "^0.7.3"
 
 "@scm-manager/babel-preset@^2.1.0":
   version "2.1.0"
@@ -1316,10 +1316,10 @@
   dependencies:
     typescript "^3.7.2"
 
-"@scm-manager/ui-components@^2.4.0":
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/@scm-manager/ui-components/-/ui-components-2.4.0.tgz#0096c4a8cd93c8af544f54ed0462a044ee116647"
-  integrity sha512-WgLLgYMpHIdobFXo8hmO4RbF8zP+AQlzSKoa5rc8i52qws51yFNM8E/EIeAQubKtTZik2yb/Gp8G6saIADQGJw==
+"@scm-manager/ui-components@^2.4.1":
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/@scm-manager/ui-components/-/ui-components-2.4.1.tgz#37827781c76bdcfa35ae4a21081bda036dae9172"
+  integrity sha512-QymdJWUldLLfLsEXoDorDAScjZ6QVrLlMij/ibDOfFDOf/MWvUMOF9jc9auJECONjASH3RkTGaqsIF5hTr9hnw==
   dependencies:
     "@scm-manager/ui-extensions" "^2.1.0"
     "@scm-manager/ui-types" "^2.4.0"
@@ -1344,12 +1344,12 @@
   dependencies:
     react "^16.10.2"
 
-"@scm-manager/ui-plugins@2.4.0":
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/@scm-manager/ui-plugins/-/ui-plugins-2.4.0.tgz#a730d5049b92bbccb0049cdc3da47a0290e18f07"
-  integrity sha512-NAYrKttYLaaM2A7NR+7zQFhmTPq5SPKr7XamuzrxebxaebhF6SaJ6O7zz2wYJeDFBPgZPfa3f8trDRYi/+pN4w==
+"@scm-manager/ui-plugins@2.4.1":
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/@scm-manager/ui-plugins/-/ui-plugins-2.4.1.tgz#ad2cfaec1784d53ba3613bfd693a63faa72da9b9"
+  integrity sha512-t0SGmJLM6SL9/VX0s/SjYnUp4HNk+AwTVZkvKNwHC9YDH1lIwKU0oK/WgvppeIZo1TejHCiQt8eJnpupFMoQpw==
   dependencies:
-    "@scm-manager/ui-components" "^2.4.0"
+    "@scm-manager/ui-components" "^2.4.1"
     "@scm-manager/ui-extensions" "^2.1.0"
     classnames "^2.2.6"
     query-string "^5.0.1"
@@ -1360,16 +1360,16 @@
     redux "^4.0.0"
     styled-components "^5.1.0"
 
-"@scm-manager/ui-scripts@^2.1.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@scm-manager/ui-scripts/-/ui-scripts-2.1.0.tgz#807dd02df6946161d860d9ffa9248042b239afe9"
-  integrity sha512-csMgTIcmO1rZs1H2B1x/FKQ91ZQIC2RcLmz4Ofdlvisk3A+Yk6q2zzSaqpxEZcxTDnJrXVR4zIIs/7A+jWITZw==
+"@scm-manager/ui-scripts@^2.4.1":
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/@scm-manager/ui-scripts/-/ui-scripts-2.4.1.tgz#99abc13bb58ba8a86fe75cdf7f27f1510ba8588a"
+  integrity sha512-uHJF9ny/yGCxAIZesHAHne02By05GpyebD0l9ZdQ5X1cR+DiVWR6sJC9QhjRavgYC2dpu4Hw3WAQ3JHuqCKY7Q==
   dependencies:
-    "@pmmmwh/react-refresh-webpack-plugin" "^0.3.0"
+    "@pmmmwh/react-refresh-webpack-plugin" "^0.4.0"
     babel-loader "^8.0.6"
     css-loader "^3.2.0"
     file-loader "^4.2.0"
-    mini-css-extract-plugin "^0.9.0"
+    mini-css-extract-plugin "^0.10.0"
     mustache "^3.1.0"
     optimize-css-assets-webpack-plugin "^5.0.3"
     react-refresh "^0.8.0"
@@ -6307,11 +6307,6 @@ lodash.camelcase@^4.3.0:
   resolved "https://registry.yarnpkg.com/lodash.camelcase/-/lodash.camelcase-4.3.0.tgz#b28aa6288a2b9fc651035c7711f65ab6190331a6"
   integrity sha1-soqmKIorn8ZRA1x3EfZathkDMaY=
 
-lodash.debounce@^4.0.8:
-  version "4.0.8"
-  resolved "https://registry.yarnpkg.com/lodash.debounce/-/lodash.debounce-4.0.8.tgz#82d79bff30a67c4005ffd5e2515300ad9ca4d7af"
-  integrity sha1-gteb/zCmfEAF/9XiUVMArZyk168=
-
 lodash.escape@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/lodash.escape/-/lodash.escape-4.0.1.tgz#c9044690c21e04294beaa517712fded1fa88de98"
@@ -6569,10 +6564,10 @@ mini-create-react-context@^0.4.0:
     "@babel/runtime" "^7.5.5"
     tiny-warning "^1.0.3"
 
-mini-css-extract-plugin@^0.9.0:
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/mini-css-extract-plugin/-/mini-css-extract-plugin-0.9.0.tgz#47f2cf07aa165ab35733b1fc97d4c46c0564339e"
-  integrity sha512-lp3GeY7ygcgAmVIcRPBVhIkf8Us7FZjA+ILpal44qLdSu11wmjKQ3d9k15lfD7pO4esu9eUIAW7qiYIBppv40A==
+mini-css-extract-plugin@^0.10.0:
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/mini-css-extract-plugin/-/mini-css-extract-plugin-0.10.1.tgz#2592c891f965e15750da6a6c0b60740b5b0cb62d"
+  integrity sha512-9B10gZixtNjHerADBrMxPXM5G0uL0CRGMcLRV67I8nd1SKbwJrI0okKUzD+PxKsUZ9Dxt8/hPvtzF0DrRnrOyA==
   dependencies:
     loader-utils "^1.1.0"
     normalize-url "1.9.1"
@@ -8963,7 +8958,7 @@ source-map@^0.6.0, source-map@^0.6.1, source-map@~0.6.1:
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.6.1.tgz#74722af32e9614e9c287a8d0bbde48b5e2f1a263"
   integrity sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==
 
-source-map@^0.7.2:
+source-map@^0.7.2, source-map@^0.7.3:
   version "0.7.3"
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.7.3.tgz#5302f8169031735226544092e64981f751750383"
   integrity sha512-CkCj6giN3S+n9qrYiBTX5gystlENnRW5jZeNLHpe6aue+SrHcG5VYwujhW9s4dY31mEGsxBDrHR6oI69fTXsaQ==
