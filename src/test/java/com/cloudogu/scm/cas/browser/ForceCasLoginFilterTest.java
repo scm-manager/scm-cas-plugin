@@ -38,6 +38,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.security.AccessTokenCookieIssuer;
 import sonia.scm.security.AnonymousMode;
 import sonia.scm.web.UserAgent;
 import sonia.scm.web.UserAgentParser;
@@ -87,6 +88,9 @@ class ForceCasLoginFilterTest {
   @Mock
   private UserAgentParser userAgentParser;
 
+  @Mock
+  private AccessTokenCookieIssuer accessTokenCookieIssuer;
+
   private ForceCasLoginFilter filter;
 
   private ThreadState subjectThreadState;
@@ -102,7 +106,7 @@ class ForceCasLoginFilterTest {
     when(casContext.get()).thenReturn(configuration);
     when(serviceUrlProvider.create()).thenReturn(SERVICE_URL);
 
-    filter = new ForceCasLoginFilter(serviceUrlProvider, casContext, scmConfiguration, userAgentParser);
+    filter = new ForceCasLoginFilter(serviceUrlProvider, casContext, scmConfiguration, userAgentParser, accessTokenCookieIssuer);
 
     subjectThreadState = new SubjectThreadState(subject);
     subjectThreadState.bind();
@@ -120,6 +124,7 @@ class ForceCasLoginFilterTest {
     filter.doFilter(request, response, chain);
 
     verify(response).sendRedirect(CAS_LOGIN_URL + "?service=" + SERVICE_URL_ESCAPED);
+    verify(accessTokenCookieIssuer).invalidate(request, response);
   }
 
   @Test
@@ -130,6 +135,7 @@ class ForceCasLoginFilterTest {
     filter.doFilter(request, response, chain);
 
     verify(chain).doFilter(request, response);
+    verify(accessTokenCookieIssuer, never()).invalidate(request, response);
   }
 
   @Test
@@ -141,6 +147,7 @@ class ForceCasLoginFilterTest {
     filter.doFilter(request, response, chain);
 
     verify(response).sendRedirect(CAS_LOGIN_URL + "?service=" + SERVICE_URL_ESCAPED);
+    verify(accessTokenCookieIssuer).invalidate(request, response);
   }
 
   @Test
@@ -153,6 +160,7 @@ class ForceCasLoginFilterTest {
     filter.doFilter(request, response, chain);
 
     verify(chain).doFilter(request, response);
+    verify(accessTokenCookieIssuer, never()).invalidate(request, response);
   }
 
   @Test
@@ -165,6 +173,7 @@ class ForceCasLoginFilterTest {
     filter.doFilter(request, response, chain);
 
     verify(chain).doFilter(request, response);
+    verify(accessTokenCookieIssuer, never()).invalidate(request, response);
   }
 
   @Test
@@ -176,6 +185,7 @@ class ForceCasLoginFilterTest {
     filter.doFilter(request, response, chain);
 
     verify(chain).doFilter(request, response);
+    verify(accessTokenCookieIssuer, never()).invalidate(request, response);
   }
 
   @Test
@@ -185,6 +195,7 @@ class ForceCasLoginFilterTest {
     filter.doFilter(request, response, chain);
 
     verify(chain).doFilter(request, response);
+    verify(accessTokenCookieIssuer, never()).invalidate(request, response);
   }
 
   @Test
@@ -196,6 +207,7 @@ class ForceCasLoginFilterTest {
     filter.doFilter(request, response, chain);
 
     verify(chain, never()).doFilter(request, response);
+    verify(accessTokenCookieIssuer).invalidate(request, response);
   }
 
   @Test
@@ -210,6 +222,7 @@ class ForceCasLoginFilterTest {
     filter.doFilter(request, response, chain);
 
     verify(chain).doFilter(request, response);
+    verify(accessTokenCookieIssuer, never()).invalidate(request, response);
   }
 
   @Test
@@ -222,6 +235,7 @@ class ForceCasLoginFilterTest {
     filter.doFilter(request, response, chain);
 
     verify(chain).doFilter(request, response);
+    verify(accessTokenCookieIssuer, never()).invalidate(request, response);
   }
 
   @Test
@@ -233,6 +247,7 @@ class ForceCasLoginFilterTest {
     filter.doFilter(request, response, chain);
 
     verify(response).sendError(HttpServletResponse.SC_UNAUTHORIZED);
+    verify(accessTokenCookieIssuer, never()).invalidate(request, response);
   }
 
   private void mockNonBrowserRequest() {

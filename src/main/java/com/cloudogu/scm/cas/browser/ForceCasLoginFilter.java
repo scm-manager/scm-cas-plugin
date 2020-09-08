@@ -32,6 +32,7 @@ import sonia.scm.Priority;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.filter.Filters;
 import sonia.scm.filter.WebElement;
+import sonia.scm.security.AccessTokenCookieIssuer;
 import sonia.scm.security.AnonymousMode;
 import sonia.scm.security.Authentications;
 import sonia.scm.util.HttpUtil;
@@ -56,13 +57,15 @@ public class ForceCasLoginFilter extends HttpFilter {
   private final CasContext context;
   private final ScmConfiguration configuration;
   private final UserAgentParser userAgentParser;
+  private final AccessTokenCookieIssuer accessTokenCookieIssuer;
 
   @Inject
-  public ForceCasLoginFilter(ServiceUrlProvider serviceUrlProvider, CasContext context, ScmConfiguration configuration, UserAgentParser userAgentParser) {
+  public ForceCasLoginFilter(ServiceUrlProvider serviceUrlProvider, CasContext context, ScmConfiguration configuration, UserAgentParser userAgentParser, AccessTokenCookieIssuer accessTokenCookieIssuer) {
     this.serviceUrlProvider = serviceUrlProvider;
     this.context = context;
     this.configuration = configuration;
     this.userAgentParser = userAgentParser;
+    this.accessTokenCookieIssuer = accessTokenCookieIssuer;
   }
 
   @Override
@@ -72,11 +75,12 @@ public class ForceCasLoginFilter extends HttpFilter {
     } else if (isWebInterfaceRequest(request)) {
       sendUnauthorized(response);
     } else {
-      redirectToCas(response);
+      redirectToCas(request, response);
     }
   }
 
-  private void redirectToCas(HttpServletResponse response) throws IOException {
+  private void redirectToCas(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    accessTokenCookieIssuer.invalidate(request, response);
     response.sendRedirect(createLoginLink(context, serviceUrlProvider.create()));
   }
 
