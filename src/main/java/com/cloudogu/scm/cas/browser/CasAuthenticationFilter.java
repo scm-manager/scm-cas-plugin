@@ -24,35 +24,38 @@
 package com.cloudogu.scm.cas.browser;
 
 import org.apache.shiro.SecurityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.Priority;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.filter.Filters;
 import sonia.scm.filter.WebElement;
+import sonia.scm.security.AccessTokenCookieIssuer;
 import sonia.scm.security.AnonymousToken;
 import sonia.scm.security.TokenExpiredException;
 import sonia.scm.security.TokenValidationFailedException;
-import sonia.scm.util.HttpUtil;
 import sonia.scm.web.WebTokenGenerator;
 import sonia.scm.web.filter.AuthenticationFilter;
 
 import javax.inject.Inject;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Set;
 
 @WebElement("/*")
 @Priority(Filters.PRIORITY_AUTHENTICATION)
 public class CasAuthenticationFilter extends AuthenticationFilter {
 
+  private static final Logger LOG = LoggerFactory.getLogger(CasAuthenticationFilter.class);
+  private final AccessTokenCookieIssuer cookieIssuer;
+
   @Inject
-  public CasAuthenticationFilter(ScmConfiguration configuration, Set<WebTokenGenerator> tokenGenerators) {
+  public CasAuthenticationFilter(ScmConfiguration configuration, Set<WebTokenGenerator> tokenGenerators, AccessTokenCookieIssuer cookieIssuer) {
     super(configuration, tokenGenerators);
+    this.cookieIssuer = cookieIssuer;
   }
 
   @Override
@@ -67,22 +70,20 @@ public class CasAuthenticationFilter extends AuthenticationFilter {
 
   @Override
   protected void handleTokenValidationFailedException(HttpServletRequest request, HttpServletResponse response, FilterChain chain, TokenValidationFailedException tokenValidationFailedException) throws IOException, ServletException {
-    if (tokenValidationFailedException.getValidator().getClass() == LogoutAccessTokenValidator.class) {
-      SecurityUtils.getSubject().login(new AnonymousToken());
-      chain.doFilter(new ExcludeCookieRequestWrapper(request), response);
-    } else {
-      super.handleTokenValidationFailedException(request, response, chain, tokenValidationFailedException);
+    if (shouldContinueAsAnonymous(tokenValidationFailedException)) {
+      LOG.debug("access token is marked as invalid by LogoutAccessTokenValidator, continue as anonymous");
+      continueAsAnonymous(request, response);
     }
+    chain.doFilter(request, response);
   }
 
-  private static class ExcludeCookieRequestWrapper extends HttpServletRequestWrapper {
-    public ExcludeCookieRequestWrapper(HttpServletRequest request) {
-      super(request);
-    }
+  private void continueAsAnonymous(HttpServletRequest request, HttpServletResponse response) {
+    cookieIssuer.invalidate(request, response);
+    SecurityUtils.getSubject().login(new AnonymousToken());
+  }
 
-    @Override
-    public Cookie[] getCookies() {
-      return Arrays.stream(super.getCookies()).filter(cookie -> !cookie.getName().equals(HttpUtil.COOKIE_BEARER_AUTHENTICATION)).toArray(Cookie[]::new);
-    }
+  private boolean shouldContinueAsAnonymous(TokenValidationFailedException tokenValidationFailedException) {
+    return isAnonymousAccessEnabled()
+      && tokenValidationFailedException.getValidator().getClass() == LogoutAccessTokenValidator.class;
   }
 }
