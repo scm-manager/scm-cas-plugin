@@ -23,20 +23,27 @@
  */
 package com.cloudogu.scm.cas.browser;
 
+import org.apache.shiro.SecurityUtils;
 import sonia.scm.Priority;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.filter.Filters;
 import sonia.scm.filter.WebElement;
+import sonia.scm.security.AnonymousToken;
 import sonia.scm.security.TokenExpiredException;
+import sonia.scm.security.TokenValidationFailedException;
+import sonia.scm.util.HttpUtil;
 import sonia.scm.web.WebTokenGenerator;
 import sonia.scm.web.filter.AuthenticationFilter;
 
 import javax.inject.Inject;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Set;
 
 @WebElement("/*")
@@ -56,5 +63,26 @@ public class CasAuthenticationFilter extends AuthenticationFilter {
   @Override
   protected void handleTokenExpiredException(HttpServletRequest request, HttpServletResponse response, FilterChain chain, TokenExpiredException tokenExpiredException) throws IOException, ServletException {
     chain.doFilter(request, response);
+  }
+
+  @Override
+  protected void handleTokenValidationFailedException(HttpServletRequest request, HttpServletResponse response, FilterChain chain, TokenValidationFailedException tokenValidationFailedException) throws IOException, ServletException {
+    if (tokenValidationFailedException.getValidator().getClass() == LogoutAccessTokenValidator.class) {
+      SecurityUtils.getSubject().login(new AnonymousToken());
+      chain.doFilter(new ExcludeCookieRequestWrapper(request), response);
+    } else {
+      super.handleTokenValidationFailedException(request, response, chain, tokenValidationFailedException);
+    }
+  }
+
+  private static class ExcludeCookieRequestWrapper extends HttpServletRequestWrapper {
+    public ExcludeCookieRequestWrapper(HttpServletRequest request) {
+      super(request);
+    }
+
+    @Override
+    public Cookie[] getCookies() {
+      return Arrays.stream(super.getCookies()).filter(cookie -> !cookie.getName().equals(HttpUtil.COOKIE_BEARER_AUTHENTICATION)).toArray(Cookie[]::new);
+    }
   }
 }
