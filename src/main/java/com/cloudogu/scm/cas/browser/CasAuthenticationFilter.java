@@ -23,11 +23,17 @@
  */
 package com.cloudogu.scm.cas.browser;
 
+import org.apache.shiro.SecurityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.Priority;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.filter.Filters;
 import sonia.scm.filter.WebElement;
+import sonia.scm.security.AccessTokenCookieIssuer;
+import sonia.scm.security.AnonymousToken;
 import sonia.scm.security.TokenExpiredException;
+import sonia.scm.security.TokenValidationFailedException;
 import sonia.scm.web.WebTokenGenerator;
 import sonia.scm.web.filter.AuthenticationFilter;
 
@@ -43,9 +49,13 @@ import java.util.Set;
 @Priority(Filters.PRIORITY_AUTHENTICATION)
 public class CasAuthenticationFilter extends AuthenticationFilter {
 
+  private static final Logger LOG = LoggerFactory.getLogger(CasAuthenticationFilter.class);
+  private final AccessTokenCookieIssuer cookieIssuer;
+
   @Inject
-  public CasAuthenticationFilter(ScmConfiguration configuration, Set<WebTokenGenerator> tokenGenerators) {
+  public CasAuthenticationFilter(ScmConfiguration configuration, Set<WebTokenGenerator> tokenGenerators, AccessTokenCookieIssuer cookieIssuer) {
     super(configuration, tokenGenerators);
+    this.cookieIssuer = cookieIssuer;
   }
 
   @Override
@@ -56,5 +66,24 @@ public class CasAuthenticationFilter extends AuthenticationFilter {
   @Override
   protected void handleTokenExpiredException(HttpServletRequest request, HttpServletResponse response, FilterChain chain, TokenExpiredException tokenExpiredException) throws IOException, ServletException {
     chain.doFilter(request, response);
+  }
+
+  @Override
+  protected void handleTokenValidationFailedException(HttpServletRequest request, HttpServletResponse response, FilterChain chain, TokenValidationFailedException tokenValidationFailedException) throws IOException, ServletException {
+    if (shouldContinueAsAnonymous(tokenValidationFailedException)) {
+      LOG.debug("access token is marked as invalid by LogoutAccessTokenValidator, continue as anonymous");
+      continueAsAnonymous(request, response);
+    }
+    chain.doFilter(request, response);
+  }
+
+  private void continueAsAnonymous(HttpServletRequest request, HttpServletResponse response) {
+    cookieIssuer.invalidate(request, response);
+    SecurityUtils.getSubject().login(new AnonymousToken());
+  }
+
+  private boolean shouldContinueAsAnonymous(TokenValidationFailedException tokenValidationFailedException) {
+    return isAnonymousAccessEnabled()
+      && tokenValidationFailedException.getValidator().getClass() == LogoutAccessTokenValidator.class;
   }
 }
