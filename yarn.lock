@@ -1223,10 +1223,10 @@
     schema-utils "^2.6.5"
     source-map "^0.7.3"
 
-"@scm-manager/babel-preset@^2.1.0":
-  version "2.6.2"
-  resolved "https://registry.yarnpkg.com/@scm-manager/babel-preset/-/babel-preset-2.6.2.tgz#b37867546338f9c6ea0f528c4c128f2505c67093"
-  integrity sha512-hjZ+6TwY6xTfoba9iqVclTU0tft4O2qsU0c4hi4tu9YxuoLSiSvWLJ/YNegiUVVeUUGIcxUL2u3qPP/fqga5wA==
+"@scm-manager/babel-preset@^2.9.0":
+  version "2.9.0"
+  resolved "https://registry.yarnpkg.com/@scm-manager/babel-preset/-/babel-preset-2.9.0.tgz#7af75f82d7b8f5f7e3a489c1925bd287daa9932a"
+  integrity sha512-GZIJKEBYkrRsjS+0+82lEeiuc1xmof6Kxuzn+9cL7nTg5RMsISi0PVovksIzK7VHJl40fVtRXqm0OUxqhs9y4w==
   dependencies:
     "@babel/core" "^7.6.3"
     "@babel/plugin-proposal-class-properties" "^7.5.5"
@@ -1237,10 +1237,10 @@
     "@babel/preset-typescript" "^7.6.0"
     babel-plugin-styled-components "^1.10.7"
 
-"@scm-manager/eslint-config@^2.1.0":
-  version "2.6.2"
-  resolved "https://registry.yarnpkg.com/@scm-manager/eslint-config/-/eslint-config-2.6.2.tgz#6ad54cbff97fd8b1941ac98d9cdee13acc680a32"
-  integrity sha512-XHAp6kXgT6JTMC51yRqW8ot/On/hzAnG00NKvgdngNUWiV0B6v0QYAVb9gFPkv6m6TkOOR5OP3piLm3OOM3vqg==
+"@scm-manager/eslint-config@^2.9.0":
+  version "2.9.0"
+  resolved "https://registry.yarnpkg.com/@scm-manager/eslint-config/-/eslint-config-2.9.0.tgz#06a7fdcf6ebe30165b884e945a7070f5adf6f038"
+  integrity sha512-6+7QcUDhry6/AAz09PDL9OEvcPGu1DJUT+rtG1AzBuHGRtoFnbDMkt+CFcFvpvyXb/o9PRwKDRhcTaekxcgXMw==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^2.12.0"
     "@typescript-eslint/parser" "^2.12.0"
@@ -1256,41 +1256,42 @@
     eslint-plugin-react "^7.16.0"
     eslint-plugin-react-hooks "^2.1.2"
 
-"@scm-manager/jest-preset@^2.1.0":
-  version "2.6.2"
-  resolved "https://registry.yarnpkg.com/@scm-manager/jest-preset/-/jest-preset-2.6.2.tgz#e0197149a9a15fb46c14ca556b28fdb68483405c"
-  integrity sha512-T857bKRFyNqA/vkjdBjKFbRfLBOnAwpQnhroD1g8yWiHFbX4VERugjN7sfhzB9jQwr9AaBbsyS17DnvJYDaP3g==
+"@scm-manager/jest-preset@^2.9.0":
+  version "2.9.0"
+  resolved "https://registry.yarnpkg.com/@scm-manager/jest-preset/-/jest-preset-2.9.0.tgz#fb9678c2a29baf8178d3749bf4eb127cd3358a89"
+  integrity sha512-OjOCXi6oUyPoAuALL2KOTQXIMBI6WM3A07EQ+6ygk3Ua6NMHx4JrHIDMB1ZbK1euh/VPJzFfAkcJXZGHjCC24Q==
   dependencies:
     babel-jest "^24.9.0"
     babel-plugin-require-context-hook "^1.0.0"
     jest "^24.9.0"
     jest-junit "^8.0.0"
 
-"@scm-manager/prettier-config@^2.1.0":
-  version "2.6.2"
-  resolved "https://registry.yarnpkg.com/@scm-manager/prettier-config/-/prettier-config-2.6.2.tgz#1b7efd48e32377a6b398fc29ad301abd09e4d338"
-  integrity sha512-4eNpqP5d6bAsvrDEj9LNvz2uvVXd1LEr/M1BWRmxTvwbbh7Kjowm3vG6zL1tcfrgiyewSfi8rY+QxncJzY4e7A==
+"@scm-manager/prettier-config@^2.9.0":
+  version "2.9.0"
+  resolved "https://registry.yarnpkg.com/@scm-manager/prettier-config/-/prettier-config-2.9.0.tgz#f46589b3309e3fc823c5312b571acbab9f6866b5"
+  integrity sha512-EEmKGC3EnbiziCNIG4DuoEU9jcyes2j/BB65pljfM3PJMhikAiJh/8wQctscWDiY77CdjeRXMuiYE8Gc5wRJvw==
   dependencies:
     prettier "^1.19.1"
 
-"@scm-manager/tsconfig@^2.1.0":
-  version "2.6.2"
-  resolved "https://registry.yarnpkg.com/@scm-manager/tsconfig/-/tsconfig-2.6.2.tgz#e5775eb2a7676a35eb772421287848c456dffdfc"
-  integrity sha512-6VgX1n3cQxza3phtoXiacgKqmyV7unwsLN1VnQzOSnQ1HScCDkGJzH0H7HAU2duP22xPbM2SE0i7GYZbIF/2Vw==
+"@scm-manager/tsconfig@^2.9.0":
+  version "2.9.0"
+  resolved "https://registry.yarnpkg.com/@scm-manager/tsconfig/-/tsconfig-2.9.0.tgz#7118184d203bcd51fb424b0c53afa67a866f5c47"
+  integrity sha512-nwaoaZ3RmkFRkBMnuY/WqssgS/Czlp+FtViYJvvel6w/wk7ie3eW5M3FcrrH4xQYqgOe3Yb5g8LhCcYVIMTM0w==
   dependencies:
     typescript "^3.7.2"
 
-"@scm-manager/ui-components@^2.4.1":
-  version "2.6.2"
-  resolved "https://registry.yarnpkg.com/@scm-manager/ui-components/-/ui-components-2.6.2.tgz#c6b1da27bd7dbbfef9782259d8b16641d497defb"
-  integrity sha512-ZB3p8fNWAF56+IqW/xBYefdHUvtV5bAtNS0RbU+DpjLSNxpXlcvyL1/C8UwriQFLUrMYPLPIVCf+uaBtdxRQsw==
+"@scm-manager/ui-components@^2.9.0":
+  version "2.9.0"
+  resolved "https://registry.yarnpkg.com/@scm-manager/ui-components/-/ui-components-2.9.0.tgz#5c1a0fd1c65134fbd40a9f7da2ff249f79263c44"
+  integrity sha512-m7gFN2NrSi3qo8WXvXCQ4/wqHTJTPwDe0doTkTjOJLpxxjqAme6cVFGWffBFsX+st/cQcLYgoDIBXVZcGck6SA==
   dependencies:
-    "@scm-manager/ui-extensions" "^2.6.2"
-    "@scm-manager/ui-types" "^2.6.2"
+    "@scm-manager/ui-extensions" "^2.9.0"
+    "@scm-manager/ui-types" "^2.9.0"
     classnames "^2.2.6"
     date-fns "^2.4.1"
     gitdiff-parser "^0.1.2"
     lowlight "^1.13.0"
+    prism-themes "^1.4.0"
     query-string "5"
     react "^16.8.6"
     react-diff-view "^2.4.1"
@@ -1299,22 +1300,23 @@
     react-markdown "^4.0.6"
     react-router-dom "^5.1.2"
     react-select "^2.1.2"
-    react-syntax-highlighter "https://github.com/conorhastings/react-syntax-highlighter#08bcf49b1aa7877ce94f7208e73dfa6bef8b26e7"
+    react-syntax-highlighter "^15.2.1"
+    refractor "^3.0.0"
 
-"@scm-manager/ui-extensions@^2.1.0", "@scm-manager/ui-extensions@^2.6.2":
-  version "2.6.2"
-  resolved "https://registry.yarnpkg.com/@scm-manager/ui-extensions/-/ui-extensions-2.6.2.tgz#e98d3626ff69eaa918e934be9725f657b384237d"
-  integrity sha512-FGU3/YUex+D1hsSqd4/Dzr22etens7UAFOM19NxuZnFyGU/R3oQSa5j3SzJHYv90ckhp5hahdxiPby6kS4eA5A==
+"@scm-manager/ui-extensions@^2.9.0":
+  version "2.9.0"
+  resolved "https://registry.yarnpkg.com/@scm-manager/ui-extensions/-/ui-extensions-2.9.0.tgz#f333304e99df69c5c196a1f5d0a616226bab136d"
+  integrity sha512-LpASV2T0tJpcxED4pngs6Qfzu1ALmrGIZUN+mmcfDnHiIkyUgUh0ETuXxse3VnHcX0OIJzyLWFDkEB2/K7SHXA==
   dependencies:
     react "^16.10.2"
 
-"@scm-manager/ui-plugins@2.4.1":
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/@scm-manager/ui-plugins/-/ui-plugins-2.4.1.tgz#ad2cfaec1784d53ba3613bfd693a63faa72da9b9"
-  integrity sha512-t0SGmJLM6SL9/VX0s/SjYnUp4HNk+AwTVZkvKNwHC9YDH1lIwKU0oK/WgvppeIZo1TejHCiQt8eJnpupFMoQpw==
+"@scm-manager/ui-plugins@2.9.0":
+  version "2.9.0"
+  resolved "https://registry.yarnpkg.com/@scm-manager/ui-plugins/-/ui-plugins-2.9.0.tgz#5322852fe47b1e553de172fd6a91a2568e05e70a"
+  integrity sha512-rylyZxpIKZ0QQoZSJeTRmo1gC37NLiyAFa8My31FvCyv0ijy18VULOjBY9458Y3l4xKpISEXFZexrLq+0dgTRQ==
   dependencies:
-    "@scm-manager/ui-components" "^2.4.1"
-    "@scm-manager/ui-extensions" "^2.1.0"
+    "@scm-manager/ui-components" "^2.9.0"
+    "@scm-manager/ui-extensions" "^2.9.0"
     classnames "^2.2.6"
     query-string "^5.0.1"
     react "^16.10.2"
@@ -1324,16 +1326,16 @@
     redux "^4.0.0"
     styled-components "^5.1.0"
 
-"@scm-manager/ui-scripts@^2.4.1":
-  version "2.6.2"
-  resolved "https://registry.yarnpkg.com/@scm-manager/ui-scripts/-/ui-scripts-2.6.2.tgz#9fceb4b5f2d8d9a42838a4731df9fd7e3e50ecf4"
-  integrity sha512-A44AoCQYzXgH7I+cnsEMXNuy8R4svW93GDPykFTID6tZTh21LNWmZcqtvo2UTWNjhlYDYWnct00anqvJZcrNcQ==
+"@scm-manager/ui-scripts@^2.9.0":
+  version "2.9.0"
+  resolved "https://registry.yarnpkg.com/@scm-manager/ui-scripts/-/ui-scripts-2.9.0.tgz#1a2c19fbdf30bff53adbc7aa828f5b11083695c0"
+  integrity sha512-AtQQCqx83DEJc39rnho4XgpAOXgVUnw9Yq9sM+K0ybKPiOr2U2beoMNuwriZyxS/aU+QRZYIqeulNMmTwYj2GQ==
   dependencies:
     "@pmmmwh/react-refresh-webpack-plugin" "^0.4.0"
     babel-loader "^8.0.6"
     css-loader "^3.2.0"
     file-loader "^4.2.0"
-    mini-css-extract-plugin "^0.11.0"
+    mini-css-extract-plugin "^0.12.0"
     mustache "^3.1.0"
     optimize-css-assets-webpack-plugin "^5.0.3"
     react-refresh "^0.8.0"
@@ -1346,10 +1348,10 @@
     webpack-dev-server "^3.10.1"
     worker-plugin "^3.2.0"
 
-"@scm-manager/ui-tests@^2.1.0":
-  version "2.6.2"
-  resolved "https://registry.yarnpkg.com/@scm-manager/ui-tests/-/ui-tests-2.6.2.tgz#d18c6e30de4709bf79cd531c8e475db8d6f1fe34"
-  integrity sha512-i7hwLnS5ynGnZWv22IjfyObPzhsKkXS7b0ETQ6eKZlobwnH41bTCo5UGOGLZQMI9j0nN/6rOrpBMt7lH29sQtQ==
+"@scm-manager/ui-tests@^2.9.0":
+  version "2.9.0"
+  resolved "https://registry.yarnpkg.com/@scm-manager/ui-tests/-/ui-tests-2.9.0.tgz#6cc7083da8fb66d7f7a80b8669af7bf5c728a063"
+  integrity sha512-OvaoyxLqLAh0Q99hyjcGfOVR4ZHbAE5HAswloBisG3mKf2uO/TGT58rX4FdQEbvMlDqYveljMQVrqkLCyw7hTg==
   dependencies:
     babel-plugin-istanbul "^5.2.0"
     enzyme "^3.10.0"
@@ -1360,10 +1362,10 @@
     raf "^3.4.1"
     react-test-renderer "^16.10.2"
 
-"@scm-manager/ui-types@^2.4.0", "@scm-manager/ui-types@^2.6.2":
-  version "2.6.2"
-  resolved "https://registry.yarnpkg.com/@scm-manager/ui-types/-/ui-types-2.6.2.tgz#226eb3febf7d9ff0d89e7b3f612c36acf4304e9e"
-  integrity sha512-gvy/4gyRRkcvXjKImZb4Nc1eJh24wHG7H22I0wE6C1orLpkfcS6bSxrUolC7YyNzTnTIcTlWqPGm/xbphML5WQ==
+"@scm-manager/ui-types@^2.9.0":
+  version "2.9.0"
+  resolved "https://registry.yarnpkg.com/@scm-manager/ui-types/-/ui-types-2.9.0.tgz#50affd3201e2460a509b77c86c3741ba07ed95d9"
+  integrity sha512-yH9jcRm4NugEWNkU7dZ6DC9RPU8Y0Xu39tG4aaKxzZkvNb4PALvGVVvpFyHA0rX6ArAr0d510ZI9P5cmWzO/3A==
 
 "@types/babel__core@^7.1.0":
   version "7.1.10"
@@ -1435,6 +1437,13 @@
   dependencies:
     "@types/minimatch" "*"
     "@types/node" "*"
+
+"@types/hast@^2.0.0":
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@types/hast/-/hast-2.3.1.tgz#b16872f2a6144c7025f296fb9636a667ebb79cd9"
+  integrity sha512-viwwrB+6xGzw+G1eWpF9geV3fnsDgXqHG+cqgiHrvQfDUW5hzhCyV7Sy3UJxhfRFBsgky2SSW33qi/YrIkjX5Q==
+  dependencies:
+    "@types/unist" "*"
 
 "@types/history@*", "@types/history@^4.7.3":
   version "4.7.8"
@@ -1589,6 +1598,11 @@
     "@types/react" "*"
     "@types/react-native" "*"
     csstype "^3.0.2"
+
+"@types/unist@*":
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/@types/unist/-/unist-2.0.3.tgz#9c088679876f374eb5983f150d4787aa6fb32d7e"
+  integrity sha512-FvUupuM3rlRsRtCN+fDudtmytGO6iHJuuRKS1Ss0pG5z8oX0diNEw94UEL7hgDbpN94rgaK5R7sWm6RrSkZuAQ==
 
 "@types/yargs-parser@*":
   version "15.0.0"
@@ -4334,7 +4348,7 @@ fast-levenshtein@^2.0.6, fast-levenshtein@~2.0.6:
   resolved "https://registry.yarnpkg.com/fast-levenshtein/-/fast-levenshtein-2.0.6.tgz#3d8a5c66883a16a30ca8643e851f19baa7797917"
   integrity sha1-PYpcZog6FqMMqGQ+hR8Zuqd5eRc=
 
-fault@^1.0.0, fault@^1.0.2:
+fault@^1.0.0:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/fault/-/fault-1.0.4.tgz#eafcfc0a6d214fc94601e170df29954a4f842f13"
   integrity sha512-CJ0HCB5tL5fYTEA7ToAq5+kTwd++Borf1/bifxd9iT70QcXr4MRrO3Llf8Ifs70q+SJcGHFtnIE/Nw6giCtECA==
@@ -4818,11 +4832,12 @@ hast-util-parse-selector@^2.0.0:
   resolved "https://registry.yarnpkg.com/hast-util-parse-selector/-/hast-util-parse-selector-2.2.4.tgz#60c99d0b519e12ab4ed32e58f150ec3f61ed1974"
   integrity sha512-gW3sxfynIvZApL4L07wryYF4+C9VvH3AUi7LAnVXV4MneGEgwOByXvFo18BgmTWnm7oHAe874jKbIB1YhHSIzA==
 
-hastscript@^5.0.0:
-  version "5.1.2"
-  resolved "https://registry.yarnpkg.com/hastscript/-/hastscript-5.1.2.tgz#bde2c2e56d04c62dd24e8c5df288d050a355fb8a"
-  integrity sha512-WlztFuK+Lrvi3EggsqOkQ52rKbxkXL3RwB6t5lwoa8QLMemoWfBuL43eDrwOamJyR7uKQKdmKYaBH1NZBiIRrQ==
+hastscript@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/hastscript/-/hastscript-6.0.0.tgz#e8768d7eac56c3fdeac8a92830d58e811e5bf640"
+  integrity sha512-nDM6bvd7lIqDUiYEiu5Sl/+6ReP0BMk/2f4U/Rooccxkj0P5nm+acM5PrGJ/t5I8qPGiqZSE6hVAwZEdZIvP4w==
   dependencies:
+    "@types/hast" "^2.0.0"
     comma-separated-tokens "^1.0.0"
     hast-util-parse-selector "^2.0.0"
     property-information "^5.0.0"
@@ -4833,15 +4848,15 @@ hex-color-regex@^1.1.0:
   resolved "https://registry.yarnpkg.com/hex-color-regex/-/hex-color-regex-1.1.0.tgz#4c06fccb4602fe2602b3c93df82d7e7dbf1a8a8e"
   integrity sha512-l9sfDFsuqtOqKDsQdqrMRk0U85RZc0RtOR9yPI7mRVOa4FsR/BVnZ0shmQRM96Ji99kYZP/7hn1cedc1+ApsTQ==
 
+highlight.js@^10.1.1, highlight.js@~10.3.0:
+  version "10.3.1"
+  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-10.3.1.tgz#3ca6bf007377faae347e8135ff25900aac734b9a"
+  integrity sha512-jeW8rdPdhshYKObedYg5XGbpVgb1/DT4AHvDFXhkU7UnGSIjy9kkJ7zHG7qplhFHMitTSzh5/iClKQk3Kb2RFQ==
+
 highlight.js@~10.2.0:
   version "10.2.1"
   resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-10.2.1.tgz#09784fe2e95612abbefd510948945d4fe6fa9668"
   integrity sha512-A+sckVPIb9zQTUydC9lpRX1qRFO/N0OKEh0NwIr65ckvWA/oMY8v9P3+kGRK3w2ULSh9E8v5MszXafodQ6039g==
-
-highlight.js@~9.13.0:
-  version "9.13.1"
-  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-9.13.1.tgz#054586d53a6863311168488a0f58d6c505ce641e"
-  integrity sha512-Sc28JNQNDzaH6PORtRLMvif9RSn1mYuOoX3omVjnb0+HbpPygU2ALBI0R/wsiqCb4/fcp07Gdo8g+fhtFrQl6A==
 
 history@^4.9.0:
   version "4.10.1"
@@ -6299,13 +6314,13 @@ lowlight@^1.13.0:
     fault "^1.0.0"
     highlight.js "~10.2.0"
 
-lowlight@~1.11.0:
-  version "1.11.0"
-  resolved "https://registry.yarnpkg.com/lowlight/-/lowlight-1.11.0.tgz#1304d83005126d4e8b1dc0f07981e9b689ec2efc"
-  integrity sha512-xrGGN6XLL7MbTMdPD6NfWPwY43SNkjf/d0mecSx/CW36fUZTjRHEq0/Cdug3TWKtRXLWi7iMl1eP0olYxj/a4A==
+lowlight@^1.14.0:
+  version "1.16.0"
+  resolved "https://registry.yarnpkg.com/lowlight/-/lowlight-1.16.0.tgz#9d904370d0b20bca0893d73559cf27428fecbf7e"
+  integrity sha512-ECLdzIJvBEjK4ef51sWiGZyz21yx4IEPaF/62DRxLehoOHkWqN3OsLB1GUMfc6Mcf87rR5eW7z6lI9cNEXZDsQ==
   dependencies:
-    fault "^1.0.2"
-    highlight.js "~9.13.0"
+    fault "^1.0.0"
+    highlight.js "~10.3.0"
 
 lru-cache@^5.1.1:
   version "5.1.1"
@@ -6475,10 +6490,10 @@ mini-create-react-context@^0.4.0:
     "@babel/runtime" "^7.5.5"
     tiny-warning "^1.0.3"
 
-mini-css-extract-plugin@^0.11.0:
-  version "0.11.3"
-  resolved "https://registry.yarnpkg.com/mini-css-extract-plugin/-/mini-css-extract-plugin-0.11.3.tgz#15b0910a7f32e62ffde4a7430cfefbd700724ea6"
-  integrity sha512-n9BA8LonkOkW1/zn+IbLPQmovsL0wMb9yx75fMJQZf2X1Zoec9yTZtyMePcyu19wPkmFbzZZA6fLTotpFhQsOA==
+mini-css-extract-plugin@^0.12.0:
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/mini-css-extract-plugin/-/mini-css-extract-plugin-0.12.0.tgz#ddeb74fd6304ca9f99c1db74acc7d5b507705454"
+  integrity sha512-z6PQCe9rd1XUwZ8gMaEVwwRyZlrYy8Ba1gRjFP5HcV51HkXX+XlwZ+a1iAYTjSYwgNBXoNR7mhx79mDpOn5fdw==
   dependencies:
     loader-utils "^1.1.0"
     normalize-url "1.9.1"
@@ -7043,10 +7058,22 @@ parse-asn1@^5.0.0, parse-asn1@^5.1.5:
     pbkdf2 "^3.0.3"
     safe-buffer "^5.1.1"
 
-parse-entities@^1.1.0, parse-entities@^1.1.2:
+parse-entities@^1.1.0:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/parse-entities/-/parse-entities-1.2.2.tgz#c31bf0f653b6661354f8973559cb86dd1d5edf50"
   integrity sha512-NzfpbxW/NPrzZ/yYSoQxyqUZMZXIdCfE0OIN4ESsnptHJECoUk3FZktxNuzQf4tjt5UEopnxpYJbvYuxIFDdsg==
+  dependencies:
+    character-entities "^1.0.0"
+    character-entities-legacy "^1.0.0"
+    character-reference-invalid "^1.0.0"
+    is-alphanumerical "^1.0.0"
+    is-decimal "^1.0.0"
+    is-hexadecimal "^1.0.0"
+
+parse-entities@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/parse-entities/-/parse-entities-2.0.0.tgz#53c6eb5b9314a1f4ec99fa0fdf7ce01ecda0cbe8"
+  integrity sha512-kkywGpCcRYhqQIchaWqZ875wzpS/bMKhz5HnN3p7wveJTkTtyAB/AlnS0f8DFSqYW1T82t6yEAkEcB+A1I3MbQ==
   dependencies:
     character-entities "^1.0.0"
     character-entities-legacy "^1.0.0"
@@ -7621,17 +7648,15 @@ pretty-format@^24.9.0:
     ansi-styles "^3.2.0"
     react-is "^16.8.4"
 
-prismjs@^1.16.0:
-  version "1.21.0"
-  resolved "https://registry.yarnpkg.com/prismjs/-/prismjs-1.21.0.tgz#36c086ec36b45319ec4218ee164c110f9fc015a3"
-  integrity sha512-uGdSIu1nk3kej2iZsLyDoJ7e9bnPzIgY0naW/HdknGj61zScaprVEVGHrPoXqI+M9sP0NDnTK2jpkvmldpuqDw==
-  optionalDependencies:
-    clipboard "^2.0.0"
+prism-themes@^1.4.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/prism-themes/-/prism-themes-1.5.0.tgz#92925e4aa0ab5e0afefcea1032df7d61bbcdc1a5"
+  integrity sha512-aqKD610WNYO90MVXm0xM8P1pX5jPHyTjbAefV0TtWFLZk7eNWnGqLGx+HH6Xxlf9hiC66VjBeCP7m3P72FS+ZQ==
 
-prismjs@~1.17.0:
-  version "1.17.1"
-  resolved "https://registry.yarnpkg.com/prismjs/-/prismjs-1.17.1.tgz#e669fcbd4cdd873c35102881c33b14d0d68519be"
-  integrity sha512-PrEDJAFdUGbOP6xK/UsfkC5ghJsPJviKgnQOoxaDbBjwc8op68Quupwt1DeAFoG8GImPhiKXAvvsH7wDSLsu1Q==
+prismjs@^1.21.0, prismjs@~1.22.0:
+  version "1.22.0"
+  resolved "https://registry.yarnpkg.com/prismjs/-/prismjs-1.22.0.tgz#73c3400afc58a823dd7eed023f8e1ce9fd8977fa"
+  integrity sha512-lLJ/Wt9yy0AiSYBf212kK3mM5L8ycwlyTlSxHBAneXLR0nzFMlZ5y7riFPF3E33zXOF2IH95xdY5jIyZbM9z/w==
   optionalDependencies:
     clipboard "^2.0.0"
 
@@ -7979,15 +8004,16 @@ react-select@^2.1.2:
     react-input-autosize "^2.2.1"
     react-transition-group "^2.2.1"
 
-"react-syntax-highlighter@git+https://github.com/conorhastings/react-syntax-highlighter.git#08bcf49b1aa7877ce94f7208e73dfa6bef8b26e7":
-  version "12.0.2"
-  resolved "git+https://github.com/conorhastings/react-syntax-highlighter.git#08bcf49b1aa7877ce94f7208e73dfa6bef8b26e7"
+react-syntax-highlighter@^15.2.1:
+  version "15.2.1"
+  resolved "https://registry.yarnpkg.com/react-syntax-highlighter/-/react-syntax-highlighter-15.2.1.tgz#63a42be96a645407a394cd7b93b99622f3ea179f"
+  integrity sha512-xrSfqX5Rztf9x4Fa6W+DbbKaJmi5zvh+tAvG2MnktZPDLeX/iMkumwxJdGYn5M1jM3d4+EJTloVAB8UvD7O0nA==
   dependencies:
     "@babel/runtime" "^7.3.1"
-    highlight.js "~9.13.0"
-    lowlight "~1.11.0"
-    prismjs "^1.16.0"
-    refractor "^2.10.1"
+    highlight.js "^10.1.1"
+    lowlight "^1.14.0"
+    prismjs "^1.21.0"
+    refractor "^3.1.0"
 
 react-test-renderer@^16.0.0-0, react-test-renderer@^16.10.2:
   version "16.13.1"
@@ -8120,14 +8146,14 @@ reflect.ownkeys@^0.2.0:
   resolved "https://registry.yarnpkg.com/reflect.ownkeys/-/reflect.ownkeys-0.2.0.tgz#749aceec7f3fdf8b63f927a04809e90c5c0b3460"
   integrity sha1-dJrO7H8/34tj+SegSAnpDFwLNGA=
 
-refractor@^2.10.1:
-  version "2.10.1"
-  resolved "https://registry.yarnpkg.com/refractor/-/refractor-2.10.1.tgz#166c32f114ed16fd96190ad21d5193d3afc7d34e"
-  integrity sha512-Xh9o7hQiQlDbxo5/XkOX6H+x/q8rmlmZKr97Ie1Q8ZM32IRRd3B/UxuA/yXDW79DBSXGWxm2yRTbcTVmAciJRw==
+refractor@^3.0.0, refractor@^3.1.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/refractor/-/refractor-3.2.0.tgz#bc46f7cfbb6adbf45cd304e8e299b7fa854804e0"
+  integrity sha512-hSo+EyMIZTLBvNNgIU5lW4yjCzNYMZ4dcEhBq/3nReGfqzd2JfVhdlPDfU9rEsgcAyWx+OimIIUoL4ZU7NtYHQ==
   dependencies:
-    hastscript "^5.0.0"
-    parse-entities "^1.1.2"
-    prismjs "~1.17.0"
+    hastscript "^6.0.0"
+    parse-entities "^2.0.0"
+    prismjs "~1.22.0"
 
 regenerate-unicode-properties@^8.2.0:
   version "8.2.0"

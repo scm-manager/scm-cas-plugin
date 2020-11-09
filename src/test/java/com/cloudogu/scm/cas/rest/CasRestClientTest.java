@@ -45,6 +45,7 @@ import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.RETURNS_SELF;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -187,7 +188,7 @@ class CasRestClientTest {
   }
 
   private AdvancedHttpRequestWithBody mockRequest() {
-    AdvancedHttpRequestWithBody request = mock(AdvancedHttpRequestWithBody.class);
+    AdvancedHttpRequestWithBody request = mock(AdvancedHttpRequestWithBody.class, RETURNS_SELF);
     when(request.disableCertificateValidation(false)).thenReturn(request);
     return request;
   }

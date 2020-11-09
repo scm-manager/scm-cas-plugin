@@ -93,7 +93,7 @@ public class CasRestClient {
 
   private AdvancedHttpResponse execute(AdvancedHttpRequestWithBody request) {
     try {
-      return request.request();
+      return request.spanKind("CAS").request();
     } catch (IOException ex) {
       throw new AuthenticationException("failed to execute cas rest request", ex);
     }
