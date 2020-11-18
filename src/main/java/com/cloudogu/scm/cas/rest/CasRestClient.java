@@ -88,12 +88,14 @@ public class CasRestClient {
 
   private AdvancedHttpRequestWithBody post(String url) {
     return httpClient.post(url)
+      .spanKind("CAS")
+      .acceptStatusCodes(400, 401, 403) // status code 400 is used for failed logins by cas, too
       .disableCertificateValidation(isDevelopmentStageActive());
   }
 
   private AdvancedHttpResponse execute(AdvancedHttpRequestWithBody request) {
     try {
-      return request.spanKind("CAS").request();
+      return request.request();
     } catch (IOException ex) {
       throw new AuthenticationException("failed to execute cas rest request", ex);
     }
