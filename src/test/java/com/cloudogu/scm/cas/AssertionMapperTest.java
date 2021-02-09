@@ -91,7 +91,7 @@ class AssertionMapperTest {
       assertThat(user.getName()).isEqualTo("tricia");
       assertThat(user.getDisplayName()).isEqualTo("Tricia McMillan");
       assertThat(user.getMail()).isEqualTo("tricia.mcmillan@hitchhiker.com");
-      assertThat(user.getType()).isEqualTo("cas");
+      assertThat(user.isExternal()).isTrue();
     }
 
     @Test
@@ -103,7 +103,16 @@ class AssertionMapperTest {
       assertThat(user.getName()).isEqualTo("tricia");
       assertThat(user.getDisplayName()).isEqualTo(principal.getName());
       assertThat(user.getMail()).isEqualTo("tricia.mcmillan@hitchhiker.com");
-      assertThat(user.getType()).isEqualTo("cas");
+      assertThat(user.isExternal()).isTrue();
+    }
+
+    @Test
+    void shouldCreateUserWithoutEmailIfInvalid() {
+      configuration.setMailAttribute("cn");
+
+      User user = mapper.createUser(assertion);
+
+      assertThat(user.getMail()).isNull();
     }
   }
 
