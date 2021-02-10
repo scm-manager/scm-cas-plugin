@@ -26,7 +26,10 @@ package com.cloudogu.scm.cas;
 import com.google.common.collect.ImmutableSet;
 import org.jasig.cas.client.authentication.AttributePrincipal;
 import org.jasig.cas.client.validation.Assertion;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.user.User;
+import sonia.scm.util.ValidationUtil;
 
 import javax.inject.Inject;
 import java.util.Collection;
@@ -34,6 +37,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class AssertionMapper {
+
+  private static final Logger LOG = LoggerFactory.getLogger(AssertionMapper.class);
 
   private final CasContext context;
 
@@ -49,10 +54,19 @@ public class AssertionMapper {
     User user = new User(principal.getName());
 
     user.setDisplayName(getDisplayName(attributes, principal));
-    user.setMail(getMail(attributes));
-    user.setType(Constants.NAME);
+    setEmail(principal, attributes, user);
+    user.setExternal(true);
 
     return user;
+  }
+
+  private void setEmail(AttributePrincipal principal, Map<String, Object> attributes, User user) {
+    String mail = getMail(attributes);
+    if (ValidationUtil.isMailAddressValid(mail)) {
+      user.setMail(mail);
+    } else {
+      LOG.info("found invalid email address '{}' for cas user '{}'; leaving email blank", mail, principal.getName());
+    }
   }
 
   private String getDisplayName(Map<String, Object> attributes, AttributePrincipal principal) {
