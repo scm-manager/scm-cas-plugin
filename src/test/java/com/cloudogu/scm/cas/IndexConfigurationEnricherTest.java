@@ -112,7 +112,7 @@ class IndexConfigurationEnricherTest {
     configuration.setCasUrl("https://cas.hitchhiker.com");
 
     when(subject.isAuthenticated()).thenReturn(true);
-    mockTrillianAuthentication("cas");
+    mockTrillianAuthentication(true);
 
     enricher.enrich(context(VndMediaType.INDEX));
 
@@ -137,7 +137,7 @@ class IndexConfigurationEnricherTest {
     configuration.setCasUrl("https://cas.hitchhiker.com");
 
     when(subject.isAuthenticated()).thenReturn(true);
-    mockTrillianAuthentication("xml");
+    mockTrillianAuthentication(false);
 
     enricher.enrich(context(VndMediaType.INDEX));
 
@@ -159,7 +159,7 @@ class IndexConfigurationEnricherTest {
     configuration.setCasUrl("https://cas.hitchhiker.com");
 
     when(subject.isAuthenticated()).thenReturn(false);
-    mockTrillianAuthentication("cas");
+    mockTrillianAuthentication(true);
 
     enricher.enrich(context(VndMediaType.INDEX));
 
@@ -197,9 +197,9 @@ class IndexConfigurationEnricherTest {
     assertThat(links.has("casLogin")).isFalse();
   }
 
-  private void mockTrillianAuthentication(String type) {
+  private void mockTrillianAuthentication(boolean external) {
     User trillian = UserTestData.createTrillian();
-    trillian.setType(type);
+    trillian.setExternal(external);
     mockAuthentication(trillian);
   }
 

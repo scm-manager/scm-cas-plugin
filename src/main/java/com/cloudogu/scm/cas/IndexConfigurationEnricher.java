@@ -99,7 +99,7 @@ public class IndexConfigurationEnricher extends JsonEnricherBase {
     Subject subject = SecurityUtils.getSubject();
     if (subject.isAuthenticated()) {
       User user = subject.getPrincipals().oneByType(User.class);
-      return Constants.NAME.equals(user.getType());
+      return user.isExternal();
     }
     return false;
   }
