@@ -35,6 +35,43 @@ If the browser does not start automatically, start it manually and go to [http:/
 
 In this mode each change to web files (src/main/js or src/main/webapp), should trigger reload of the browser with the made changes.
 
+## Setup Test Environment
+
+Add the following hostnames to your local `/etc/hosts`, pointing to your ip address (**not 127.0.0.1**):
+
+* cas.hitchhiker.com
+* scm.hitchhiker.com
+
+Replace `%%myip%%` in the docker-compose file with the one you added to your /etc/hosts.
+
+Start cas server with docker-compose:
+
+```bash
+docker-compose up
+```
+
+The server should now run on https://cas.hitchhicker.com:8443/cas the default credential are `trillian` with password `secret`.
+
+To enabled cas authentication for the test server use the following curl command:
+
+```bash
+curl -u "scmadmin:scmadmin" -H "Content-Type: application/vnd.scmm-casconfig+json;v=2" -XPUT -d '{ "casUrl": "https://cas.hitchhiker.com:8443/cas", "displayNameAttribute": "displayName", "mailAttribute": "mail", "groupAttribute": "groups", "enabled": true }' http://scm.hitchhiker.com:8081/scm/api/v2/cas/configuration
+```
+
+To test the cas login start the scm-cas-plugin, by running:
+
+```bash
+mvn clean run
+```
+
+Not you should be able to login, by accessing http://scm.hitchhiker.com:8081/scm
+
+For testing the rest client, you could use the following command:
+
+```bash
+curl -u trillian:secret http://scm.hitchhiker.com:8081/scm/api/v2/me
+```
+
 ## Directory & File structure
 
 A quick look at the files and directories you'll see in an SCM-Manager project.
