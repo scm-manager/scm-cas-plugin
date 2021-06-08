@@ -1,8 +1,6 @@
 import org.apache.tools.ant.taskdefs.condition.*
 import org.gradle.internal.logging.text.*
-import org.apereo.cas.metadata.*
 import java.nio.file.*
-import static org.gradle.internal.logging.text.StyledTextOutput.Style
 
 buildscript {
   repositories {
