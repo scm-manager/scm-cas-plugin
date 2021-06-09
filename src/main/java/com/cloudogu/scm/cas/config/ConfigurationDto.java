@@ -38,6 +38,10 @@ public class ConfigurationDto extends HalRepresentation {
   private String displayNameAttribute;
   private String mailAttribute;
   private String groupAttribute;
+
+  private boolean acceptAnyProxy;
+  private String allowedProxyChains;
+
   private boolean enabled;
 
   @Override

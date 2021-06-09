@@ -39,6 +39,10 @@ public class Configuration {
   private String displayNameAttribute = "displayName";
   private String mailAttribute = "mail";
   private String groupAttribute = "groups";
+
+  private boolean acceptAnyProxy = false;
+  private String allowedProxyChains;
+
   private boolean enabled;
 
 }
