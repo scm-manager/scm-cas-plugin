@@ -32,6 +32,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.api.v2.resources.ErrorDto;
+import sonia.scm.security.AccessToken;
+import sonia.scm.security.AccessTokenBuilderFactory;
 import sonia.scm.security.AllowAnonymousAccess;
 import sonia.scm.security.CipherHandler;
 import sonia.scm.util.HttpUtil;
@@ -66,12 +68,14 @@ public class CasAuthenticationResource {
   private final LoginHandler loginHandler;
   private final LogoutHandler logoutHandler;
   private final CipherHandler cipherHandler;
+  private final AccessTokenBuilderFactory accessTokenBuilderFactory;
 
   @Inject
-  public CasAuthenticationResource(LoginHandler loginHandler, LogoutHandler logoutHandler, CipherHandler cipherHandler) {
+  public CasAuthenticationResource(LoginHandler loginHandler, LogoutHandler logoutHandler, CipherHandler cipherHandler, AccessTokenBuilderFactory accessTokenBuilderFactory) {
     this.loginHandler = loginHandler;
     this.logoutHandler = logoutHandler;
     this.cipherHandler = cipherHandler;
+    this.accessTokenBuilderFactory = accessTokenBuilderFactory;
   }
 
   @GET
@@ -123,6 +127,33 @@ public class CasAuthenticationResource {
     LOG.debug("got logout call from cas");
     logoutHandler.logout(logoutRequest);
     return Response.ok().build();
+  }
+
+  @POST
+  @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+  @Path("")
+  @Operation(summary = "CAS access token", description = "Creates access token for SCM-Manager.", tags = "CAS Plugin")
+  @ApiResponse(responseCode = "200", description = "success")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
+  public Response accessToken(
+    @Context HttpServletRequest request,
+    @Context HttpServletResponse response,
+    @FormParam("ticket") String ticket
+  ) {
+    CasToken token = CasToken.valueOf(ticket, "/");
+    LOG.debug("got login call from cas with cas token {}", token.getCredentials());
+
+    loginHandler.login(request, response, token);
+
+    AccessToken accessToken = accessTokenBuilderFactory.create().build();
+    return Response.ok().entity(accessToken.compact()).build();
   }
 
 }
