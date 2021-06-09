@@ -22,15 +22,14 @@
 # SOFTWARE.
 #
 
-version: '2.1'
+version: '3'
 services:
   cas:
-    # Tag version does not really represent CAS server version. Please check pom.xml to get real version.
     build: ./cas-overlay
     ports:
       - "8443:8443"
     extra_hosts:
-      - "scm.hitchhiker.com:192.168.178.28"
+      - "scm.hitchhiker.com:host-gateway"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/cas"]
       interval: 1m30s
