@@ -25,7 +25,7 @@
 version: '3'
 services:
   cas:
-    build: ./cas-overlay
+    build: ./test-environment/cas-overlay
     ports:
       - "8443:8443"
     extra_hosts:
