@@ -29,7 +29,7 @@ services:
     ports:
       - "8443:8443"
     extra_hosts:
-      - "scm.hitchhiker.com:192.168.178.34"
+      - "scm.hitchhiker.com:host-gateway"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/cas"]
       interval: 1m30s
