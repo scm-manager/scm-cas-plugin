@@ -22,9 +22,9 @@
  * SOFTWARE.
  */
 import React from "react";
-import {WithTranslation, withTranslation} from "react-i18next";
-import {Links} from "@scm-manager/ui-types";
-import {InputField, Textarea, Checkbox, Subtitle} from "@scm-manager/ui-components";
+import { WithTranslation, withTranslation } from "react-i18next";
+import { Links } from "@scm-manager/ui-types";
+import { Checkbox, InputField, Subtitle, Textarea } from "@scm-manager/ui-components";
 
 type GlobalConfiguration = {
   casUrl: string;
@@ -56,7 +56,7 @@ class GlobalCasConfigurationForm extends React.Component<Props, State> {
   }
 
   render() {
-    const {t} = this.props;
+    const { t } = this.props;
     return (
       <>
         {this.renderConfigChangedNotification()}
@@ -77,7 +77,7 @@ class GlobalCasConfigurationForm extends React.Component<Props, State> {
           type="url"
         />
         <div>
-          <Subtitle subtitle={t("scm-cas-plugin.form.attributeMapping")}/>
+          <Subtitle subtitle={t("scm-cas-plugin.form.attributeMapping")} />
           <InputField
             name="displayNameAttribute"
             label={t("scm-cas-plugin.form.displayName")}
@@ -104,7 +104,7 @@ class GlobalCasConfigurationForm extends React.Component<Props, State> {
           />
         </div>
         <div>
-          <Subtitle subtitle={t("scm-cas-plugin.form.proxyConfiguration")}/>
+          <Subtitle subtitle={t("scm-cas-plugin.form.proxyConfiguration")} />
           <Checkbox
             name="acceptAnyProxy"
             label={t("scm-cas-plugin.form.acceptAnyProxy")}
