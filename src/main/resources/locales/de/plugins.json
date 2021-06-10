@@ -13,7 +13,12 @@
       "mail": "Mail",
       "mailHelp": "CAS Attribut für die E-Mail-Adresse",
       "groups": "Gruppen",
-      "groupsHelp": "CAS Attribut für die Gruppen"
+      "groupsHelp": "CAS Attribut für die Gruppen",
+      "proxyConfiguration": "Proxy Konfiguration",
+      "acceptAnyProxy": "Alle Proxies erlauben",
+      "acceptAnyProxyHelp": "Erlaubt alle Proxies ohne weitere Beschränkungen",
+      "allowedProxyChains": "Liste erlaubter Proxy Chains",
+      "allowedProxyChainsHelp": "Jede zulässige Proxy-Kette sollte eine durch Leerzeichen getrennte Liste von URLs (für exakte Übereinstimmung) oder reguläre Ausdrücke von URLs (beginnend mit dem Zeichen ^) enthalten. Jede akzeptable Proxy-Kette sollte in einer eigenen Zeile stehen."
     },
     "configurationChangedSuccess": "CAS Konfiguration gespeichert."
   },
