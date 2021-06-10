@@ -23,11 +23,16 @@
  */
 package com.cloudogu.scm.cas;
 
+import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
 import org.apache.shiro.authc.AuthenticationException;
-import org.jasig.cas.client.validation.Cas30ServiceTicketValidator;
+import org.jasig.cas.client.validation.Cas30ProxyTicketValidator;
+import org.jasig.cas.client.validation.ProxyList;
 import org.jasig.cas.client.validation.TicketValidator;
 
 import javax.inject.Inject;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class TicketValidatorFactory {
 
@@ -43,6 +48,25 @@ public class TicketValidatorFactory {
     if (!configuration.isEnabled()) {
       throw new AuthenticationException("cas authentication is disabled");
     }
-    return new Cas30ServiceTicketValidator(configuration.getCasUrl());
+
+    Cas30ProxyTicketValidator validator = new Cas30ProxyTicketValidator(configuration.getCasUrl());
+    validator.setAcceptAnyProxy(configuration.isAcceptAnyProxy());
+
+    String allowedProxyChains = configuration.getAllowedProxyChains();
+    if (!Strings.isNullOrEmpty(allowedProxyChains)) {
+      validator.setAllowedProxyChains(createProxyList(allowedProxyChains));
+    }
+
+    return validator;
+  }
+
+  private ProxyList createProxyList(String allowedProxyChains) {
+    List<String[]> proxyList = Splitter.on('\n').trimResults()
+      .omitEmptyStrings()
+      .splitToList(allowedProxyChains)
+      .stream()
+      .map(s -> s.split("\\s"))
+      .collect(Collectors.toList());
+    return new ProxyList(proxyList);
   }
 }

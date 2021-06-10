@@ -13,7 +13,12 @@
       "mail": "Mail",
       "mailHelp": "CAS attribute for email",
       "groups": "Groups",
-      "groupsHelp": "CAS attribute for group"
+      "groupsHelp": "CAS attribute for group",
+      "proxyConfiguration": "Proxy Configuration",
+      "acceptAnyProxy": "Accept any proxy",
+      "acceptAnyProxyHelp": "Specifies whether any proxy is OK",
+      "allowedProxyChains": "List of allowed proxy chains",
+      "allowedProxyChainsHelp": "Each acceptable proxy chain should include a space-separated list of URLs (for exact match) or regular expressions of URLs (starting by the ^ character). Each acceptable proxy chain should appear on its own line."
     },
     "configurationChangedSuccess": "Configuration changed"
   },

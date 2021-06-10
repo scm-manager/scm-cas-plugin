@@ -54,6 +54,6 @@
         "@types/react-router-dom": "^5.1.0",
         "@types/styled-components": "^5.1.0",
         "jest": "^24.9.0",
-        "@scm-manager/plugin-scripts": "1.0.1"
+        "@scm-manager/plugin-scripts": "^1.1.0"
     }
 }

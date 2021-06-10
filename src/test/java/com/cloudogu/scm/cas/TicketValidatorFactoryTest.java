@@ -24,7 +24,7 @@
 package com.cloudogu.scm.cas;
 
 import org.apache.shiro.authc.AuthenticationException;
-import org.jasig.cas.client.validation.Cas30ServiceTicketValidator;
+import org.jasig.cas.client.validation.Cas30ProxyTicketValidator;
 import org.jasig.cas.client.validation.TicketValidator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -48,7 +48,7 @@ class TicketValidatorFactoryTest {
     TicketValidatorFactory factory = new TicketValidatorFactory(casContext);
     TicketValidator ticketValidator = factory.create();
 
-    assertThat(ticketValidator).isInstanceOf(Cas30ServiceTicketValidator.class);
+    assertThat(ticketValidator).isInstanceOf(Cas30ProxyTicketValidator.class);
   }
 
   @Test

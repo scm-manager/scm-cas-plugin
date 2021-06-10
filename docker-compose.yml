@@ -22,21 +22,14 @@
 # SOFTWARE.
 #
 
-version: '2.1'
+version: '3'
 services:
   cas:
-    # Tag version does not really represent CAS server version. Please check pom.xml to get real version.
-    image: apereo/cas:v5.1.3
+    build: ./test-environment/cas-overlay
     ports:
       - "8443:8443"
-    volumes:
-      - ./docker/tmp:/root/.m2/repository/
-      - ./docker/config:/cas-overlay/etc/cas/config:ro
-      - ./docker/services:/cas-overlay/etc/cas/services:ro
-      - ./docker/keystore.jks:/cas-overlay/etc/cas/thekeystore:ro
-      - ./docker/pom.xml:/cas-overlay/pom.xml
     extra_hosts:
-      - "scm.hitchhiker.com:%%myip%%"
+      - "scm.hitchhiker.com:host-gateway"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/cas"]
       interval: 1m30s

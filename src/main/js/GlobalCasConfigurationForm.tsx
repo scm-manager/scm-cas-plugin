@@ -24,7 +24,7 @@
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Links } from "@scm-manager/ui-types";
-import { InputField, Checkbox, Subtitle } from "@scm-manager/ui-components";
+import { Checkbox, InputField, Subtitle, Textarea } from "@scm-manager/ui-components";
 
 type GlobalConfiguration = {
   casUrl: string;
@@ -32,6 +32,9 @@ type GlobalConfiguration = {
   enabled: boolean;
   groupAttribute: string;
   mailAttribute: string;
+
+  acceptAnyProxy: boolean;
+  allowedProxyChains: string;
   _links: Links;
 };
 // navposition
@@ -97,6 +100,25 @@ class GlobalCasConfigurationForm extends React.Component<Props, State> {
             helpText={t("scm-cas-plugin.form.groupsHelp")}
             disabled={!this.state.enabled}
             value={this.state.groupAttribute}
+            onChange={this.valueChangeHandler}
+          />
+        </div>
+        <div>
+          <Subtitle subtitle={t("scm-cas-plugin.form.proxyConfiguration")} />
+          <Checkbox
+            name="acceptAnyProxy"
+            label={t("scm-cas-plugin.form.acceptAnyProxy")}
+            helpText={t("scm-cas-plugin.form.acceptAnyProxyHelp")}
+            checked={this.state.acceptAnyProxy}
+            disabled={!this.state.enabled}
+            onChange={this.valueChangeHandler}
+          />
+          <Textarea
+            name="allowedProxyChains"
+            label={t("scm-cas-plugin.form.allowedProxyChains")}
+            helpText={t("scm-cas-plugin.form.allowedProxyChainsHelp")}
+            disabled={!this.state.enabled}
+            value={this.state.allowedProxyChains}
             onChange={this.valueChangeHandler}
           />
         </div>
