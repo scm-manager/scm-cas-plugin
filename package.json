@@ -1,7 +1,7 @@
 {
     "name": "@scm-manager/scm-cas-plugin",
     "private": true,
-    "version": "2.2.4-SNAPSHOT",
+    "version": "2.3.0",
     "license": "MIT",
     "main": "./src/main/js/index.ts",
     "scripts": {
