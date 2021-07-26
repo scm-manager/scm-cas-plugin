@@ -22,20 +22,15 @@
  * SOFTWARE.
  */
 
-import React, {FC} from "react";
+import React, { FC } from "react";
+import { LoginButton } from "@scm-manager/ui-components";
 
 type Props = {
-  label: string;
-  loginUrl: string;
-  from: string;
+  burgerMode: boolean;
 };
 
-const CasLoginLink: FC<Props> = ({label, loginUrl, from}) => {
-  return (
-    <li>
-      <a href={`${loginUrl}?from=${from}`}>{label}</a>
-    </li>
-  );
+const CasLoginLink: FC<Props> = ({ burgerMode }) => {
+  return <LoginButton burgerMode={burgerMode} />;
 };
 
 export default CasLoginLink;
