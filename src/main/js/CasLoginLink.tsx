@@ -23,19 +23,17 @@
  */
 
 import React, { FC } from "react";
-import { Icon } from "@scm-manager/ui-components";
+import { extensionPoints } from "@scm-manager/ui-extensions";
 
-type Props = {
-  label: string;
-  loginUrl: string;
-  from: string;
-};
-
-const CasLoginLink: FC<Props> = ({ loginUrl, from, label }) => {
+const CasLoginLink: FC<extensionPoints.PrimaryNavigationLoginButtonProps> = ({
+  loginUrl,
+  from,
+  className,
+  content
+}) => {
   return (
-    <a href={`${loginUrl}?from=${from}`}>
-      <Icon title={label} name="sign-in-alt" color="white" className="is-size-5" />
-      <span className="has-text-white">{" " + label}</span>
+    <a href={`${loginUrl}?from=${from}`} className={className}>
+      {content}
     </a>
   );
 };
