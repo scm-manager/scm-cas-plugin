@@ -38,6 +38,7 @@ scmPlugin {
   description = "Authentication for SCM-Manager using CAS"
   author = "Cloudogu GmbH"
   category = "Authentication"
+  avatarUrl = '/images/cas-logo.png'
 
   openapi {
     packages = [
