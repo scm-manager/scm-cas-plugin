@@ -22,19 +22,19 @@
  * SOFTWARE.
  */
 
-import React, {FC} from "react";
+import React, { FC } from "react";
+import { extensionPoints } from "@scm-manager/ui-extensions";
 
-type Props = {
-  label: string;
-  loginUrl: string;
-  from: string;
-};
-
-const CasLoginLink: FC<Props> = ({label, loginUrl, from}) => {
+const CasLoginLink: FC<extensionPoints.PrimaryNavigationLoginButtonProps> = ({
+  loginUrl,
+  from,
+  className,
+  content
+}) => {
   return (
-    <li>
-      <a href={`${loginUrl}?from=${from}`}>{label}</a>
-    </li>
+    <a href={`${loginUrl}?from=${from}`} className={className}>
+      {content}
+    </a>
   );
 };
 
