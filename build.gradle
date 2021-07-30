@@ -33,7 +33,7 @@ dependencies {
 }
 
 scmPlugin {
-  scmVersion = "2.21.1-SNAPSHOT"
+  scmVersion = "2.22.0"
   displayName = "Central Authentication Service"
   description = "Authentication for SCM-Manager using CAS"
   author = "Cloudogu GmbH"
