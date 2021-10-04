@@ -30,6 +30,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.event.ScmEventBus;
+import sonia.scm.security.LogoutEvent;
 
 import java.io.IOException;
 import java.net.URL;
@@ -43,6 +45,9 @@ class LogoutHandlerTest {
   @Mock
   private TicketStore ticketStore;
 
+  @Mock
+  private ScmEventBus eventBus;
+
   @InjectMocks
   private LogoutHandler handler;
 
@@ -54,6 +59,7 @@ class LogoutHandlerTest {
     handler.logout(logoutRequest);
 
     verify(ticketStore).logout("ST-8-L66D4LTpMGDptQ7kLark-f77b8125e3a6");
+    verify(eventBus).post(new LogoutEvent("trillian"));
   }
 
 }

@@ -23,6 +23,9 @@
  */
 package com.cloudogu.scm.cas.browser;
 
+import sonia.scm.event.ScmEventBus;
+import sonia.scm.security.LogoutEvent;
+
 import javax.inject.Inject;
 import javax.xml.bind.JAXB;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -34,15 +37,18 @@ import java.io.StringReader;
 public class LogoutHandler {
 
   private final TicketStore ticketStore;
+  private final ScmEventBus eventBus;
 
   @Inject
-  public LogoutHandler(TicketStore ticketStore) {
+  public LogoutHandler(TicketStore ticketStore, ScmEventBus eventBus) {
     this.ticketStore = ticketStore;
+    this.eventBus = eventBus;
   }
 
   public void logout(String logoutRequest) {
     LogoutRequest request = JAXB.unmarshal(new StringReader(logoutRequest), LogoutRequest.class);
     ticketStore.logout(request.sessionId);
+    eventBus.post(new LogoutEvent(request.username));
   }
 
   @XmlAccessorType(XmlAccessType.FIELD)
@@ -51,6 +57,9 @@ public class LogoutHandler {
 
     @XmlElement(name = "SessionIndex", namespace = "urn:oasis:names:tc:SAML:2.0:protocol")
     private String sessionId;
+
+    @XmlElement(name = "NameID", namespace = "urn:oasis:names:tc:SAML:2.0:assertion")
+    private String username;
 
   }
 
