@@ -23,6 +23,8 @@
  */
 package com.cloudogu.scm.cas.browser;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.security.LogoutEvent;
 
@@ -36,6 +38,8 @@ import java.io.StringReader;
 
 public class LogoutHandler {
 
+  private static final Logger LOG = LoggerFactory.getLogger(LogoutHandler.class);
+
   private final TicketStore ticketStore;
   private final ScmEventBus eventBus;
 
@@ -48,6 +52,7 @@ public class LogoutHandler {
   public void logout(String logoutRequest) {
     LogoutRequest request = JAXB.unmarshal(new StringReader(logoutRequest), LogoutRequest.class);
     ticketStore.logout(request.sessionId);
+    LOG.debug("Logout cas user with username: {}", request.username);
     eventBus.post(new LogoutEvent(request.username));
   }
 
