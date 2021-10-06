@@ -23,7 +23,6 @@
  */
 package com.cloudogu.scm.cas.browser;
 
-import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.event.ScmEventBus;
@@ -36,6 +35,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.StringReader;
+import java.util.Optional;
 
 public class LogoutHandler {
 
@@ -52,22 +52,13 @@ public class LogoutHandler {
 
   public void logout(String logoutRequest) {
     LogoutRequest request = JAXB.unmarshal(new StringReader(logoutRequest), LogoutRequest.class);
-    ticketStore.logout(request.sessionId);
-
-    String username = request.username;
-    if (isValidUsername(username)) {
-      LOG.debug("Logout cas user with username: {}", username);
-      eventBus.post(new LogoutEvent(username));
+    Optional<String> subject = ticketStore.logout(request.sessionId);
+    if (subject.isPresent()) {
+      LOG.debug("logout cas user {}", subject.get());
+      eventBus.post(new LogoutEvent(subject.get()));
     } else {
-      LOG.debug("slo request does not contain a valid username, skip sending logout event");
+      LOG.debug("received cas logout, but no subject is stored with the ticket. Skip fire logout event.");
     }
-  }
-
-  private boolean isValidUsername(String username) {
-    // The spec is not really clear about an implementation has to send the username.
-    // So we are test if it is really set and not the strange @NOT_USED@ of the examples.
-    // https://apereo.github.io/cas/6.4.x/installation/Logout-Single-Signout.html#logout-and-single-logout-slo
-    return !Strings.isNullOrEmpty(username) && !username.equals("@NOT_USED@");
   }
 
   @XmlAccessorType(XmlAccessType.FIELD)
@@ -76,9 +67,6 @@ public class LogoutHandler {
 
     @XmlElement(name = "SessionIndex", namespace = "urn:oasis:names:tc:SAML:2.0:protocol")
     private String sessionId;
-
-    @XmlElement(name = "NameID", namespace = "urn:oasis:names:tc:SAML:2.0:assertion")
-    private String username;
 
   }
 

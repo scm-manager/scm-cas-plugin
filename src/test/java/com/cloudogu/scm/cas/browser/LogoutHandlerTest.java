@@ -35,12 +35,16 @@ import sonia.scm.security.LogoutEvent;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class LogoutHandlerTest {
+
+  private static final String CAS_TICKET = "ST-8-L66D4LTpMGDptQ7kLark-f77b8125e3a6";
 
   @Mock
   private TicketStore ticketStore;
@@ -53,35 +57,38 @@ class LogoutHandlerTest {
 
   @Test
   void shouldLogout() throws IOException {
-    logout("slo-trillian");
+    logout();
+  }
 
-    verify(ticketStore).logout("ST-8-L66D4LTpMGDptQ7kLark-f77b8125e3a6");
+  @Test
+  void shouldNotFireLogoutEventWithoutSubject() throws IOException {
+    when(ticketStore.logout(CAS_TICKET)).thenReturn(Optional.empty());
+
+    logout();
+
+    verifyNoInteractions(eventBus);
+  }
+
+  @Test
+  void shouldFireLogoutEvent() throws IOException {
+    when(ticketStore.logout(CAS_TICKET)).thenReturn(Optional.of("trillian"));
+
+    logout();
+
     verify(eventBus).post(new LogoutEvent("trillian"));
   }
 
-  private void logout(String requestName) throws IOException {
-    String logoutRequest = read(requestName);
+  private void logout() throws IOException {
+    String logoutRequest = read();
 
     handler.logout(logoutRequest);
-  }
 
-  @Test
-  void shouldNotFireLogoutEventWithoutNameID() throws IOException {
-    logout("slo-without-nameid");
-
-    verifyNoInteractions(eventBus);
-  }
-
-  @Test
-  void shouldNotFireLogoutEventWithoutNotUsedNameID() throws IOException {
-    logout("slo-nameid-not-used");
-
-    verifyNoInteractions(eventBus);
+    verify(ticketStore).logout(CAS_TICKET);
   }
 
   @SuppressWarnings("UnstableApiUsage")
-  private String read(String name) throws IOException {
-    URL resource = Resources.getResource("com/cloudogu/scm/cas/browser/" + name + ".xml");
+  private String read() throws IOException {
+    URL resource = Resources.getResource("com/cloudogu/scm/cas/browser/slo.xml");
     return Resources.toString(resource, Charsets.UTF_8);
   }
 
