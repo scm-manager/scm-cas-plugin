@@ -36,8 +36,8 @@ import sonia.scm.security.LogoutEvent;
 import java.io.IOException;
 import java.net.URL;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 @ExtendWith(MockitoExtension.class)
 class LogoutHandlerTest {
@@ -53,13 +53,36 @@ class LogoutHandlerTest {
 
   @Test
   void shouldLogout() throws IOException {
-    URL resource = Resources.getResource("com/cloudogu/scm/cas/browser/logoutRequest.xml");
-    String logoutRequest = Resources.toString(resource, Charsets.UTF_8);
-
-    handler.logout(logoutRequest);
+    logout("slo-trillian");
 
     verify(ticketStore).logout("ST-8-L66D4LTpMGDptQ7kLark-f77b8125e3a6");
     verify(eventBus).post(new LogoutEvent("trillian"));
+  }
+
+  private void logout(String requestName) throws IOException {
+    String logoutRequest = read(requestName);
+
+    handler.logout(logoutRequest);
+  }
+
+  @Test
+  void shouldNotFireLogoutEventWithoutNameID() throws IOException {
+    logout("slo-without-nameid");
+
+    verifyNoInteractions(eventBus);
+  }
+
+  @Test
+  void shouldNotFireLogoutEventWithoutNotUsedNameID() throws IOException {
+    logout("slo-nameid-not-used");
+
+    verifyNoInteractions(eventBus);
+  }
+
+  @SuppressWarnings("UnstableApiUsage")
+  private String read(String name) throws IOException {
+    URL resource = Resources.getResource("com/cloudogu/scm/cas/browser/" + name + ".xml");
+    return Resources.toString(resource, Charsets.UTF_8);
   }
 
 }

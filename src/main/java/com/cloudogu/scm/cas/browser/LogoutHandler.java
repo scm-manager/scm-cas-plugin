@@ -23,6 +23,7 @@
  */
 package com.cloudogu.scm.cas.browser;
 
+import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.event.ScmEventBus;
@@ -52,8 +53,21 @@ public class LogoutHandler {
   public void logout(String logoutRequest) {
     LogoutRequest request = JAXB.unmarshal(new StringReader(logoutRequest), LogoutRequest.class);
     ticketStore.logout(request.sessionId);
-    LOG.debug("Logout cas user with username: {}", request.username);
-    eventBus.post(new LogoutEvent(request.username));
+
+    String username = request.username;
+    if (isValidUsername(username)) {
+      LOG.debug("Logout cas user with username: {}", username);
+      eventBus.post(new LogoutEvent(username));
+    } else {
+      LOG.debug("slo request does not contain a valid username, skip sending logout event");
+    }
+  }
+
+  private boolean isValidUsername(String username) {
+    // The spec is not really clear about an implementation has to send the username.
+    // So we are test if it is really set and not the strange @NOT_USED@ of the examples.
+    // https://apereo.github.io/cas/6.4.x/installation/Logout-Single-Signout.html#logout-and-single-logout-slo
+    return !Strings.isNullOrEmpty(username) && !username.equals("@NOT_USED@");
   }
 
   @XmlAccessorType(XmlAccessType.FIELD)
