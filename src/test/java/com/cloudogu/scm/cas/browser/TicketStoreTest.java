@@ -38,6 +38,7 @@ import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -51,6 +52,7 @@ class TicketStoreTest {
   @Test
   void shouldStore() {
     Instant instant = Instant.now();
+    when(accessToken.getSubject()).thenReturn("trillian");
     when(accessToken.getExpiration()).thenReturn(Date.from(instant));
     when(accessToken.getParentKey()).thenReturn(Optional.of("AC-123"));
 
@@ -59,7 +61,8 @@ class TicketStoreTest {
 
     assertFalse(ticketStore.isBlacklisted("AC-123"));
 
-    ticketStore.logout("CAS-123");
+    Optional<String> subject = ticketStore.logout("CAS-123");
+    assertThat(subject).contains("trillian");
 
     assertTrue(ticketStore.isBlacklisted("AC-123"));
   }
@@ -67,7 +70,7 @@ class TicketStoreTest {
   @Test
   void shouldLoadBlacklistFromStore() {
     InMemoryDataStore<TicketStore.StoreEntry> store = new InMemoryDataStore<>();
-    TicketStore.StoreEntry entry = new TicketStore.StoreEntry("AC-123", Instant.now());
+    TicketStore.StoreEntry entry = new TicketStore.StoreEntry("AC-123", "dent", Instant.now());
     entry.setBlacklisted(true);
     store.put("CAS-123", entry);
 
@@ -99,7 +102,7 @@ class TicketStoreTest {
     LocalDateTime actual = issuedAt.plusHours(11).plusSeconds(1);
 
     // add not expired ticket
-    TicketStore.StoreEntry entry = new TicketStore.StoreEntry("AC-123", toInstant(actual.plusHours(1)));
+    TicketStore.StoreEntry entry = new TicketStore.StoreEntry("AC-123", "slarti", toInstant(actual.plusHours(1)));
     entry.setBlacklisted(true);
     store.put("CAS-123", entry);
 

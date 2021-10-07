@@ -83,16 +83,19 @@ public class TicketStore {
     LOG.trace("login for cas ticket {} with access token id {}", casToken.getCredentials(), entry.getAccessTokenId());
   }
 
-  public void logout(String casTicket) {
+  public Optional<String> logout(String casTicket) {
     StoreEntry entry = byCasTicket.get(casTicket);
     if (entry != null) {
       LOG.trace("blacklisting cas ticket {} with access token id {}", casTicket, entry.getAccessTokenId());
       entry.setBlacklisted(true);
       byCasTicket.put(casTicket, entry);
       byAccessTokenId.put(entry.getAccessTokenId(), entry);
+      // old store entries may have no subject
+      return Optional.ofNullable(entry.getSubject());
     } else {
       LOG.warn("no stored login entry found for cas ticket {}", casTicket);
     }
+    return Optional.empty();
   }
 
   public boolean isBlacklisted(String accessTokenId) {
@@ -129,7 +132,7 @@ public class TicketStore {
   private StoreEntry create(AccessToken accessToken) {
     String id = accessToken.getParentKey().orElse(accessToken.getId());
     Instant expires = computeExpiration(accessToken);
-    return new StoreEntry(id, expires);
+    return new StoreEntry(id, accessToken.getSubject(), expires);
   }
 
   private Instant computeExpiration(AccessToken accessToken) {
@@ -148,15 +151,21 @@ public class TicketStore {
   public static class StoreEntry {
 
     private String accessTokenId;
+    private String subject;
     @XmlJavaTypeAdapter(XmlInstantAdapter.class)
     private Instant expires;
     private boolean blacklisted = false;
 
     public StoreEntry() {}
 
-    public StoreEntry(String accessTokenId, Instant expires) {
+    public StoreEntry(String accessTokenId, String subject, Instant expires) {
       this.accessTokenId = accessTokenId;
+      this.subject = subject;
       this.expires = expires;
+    }
+
+    public String getSubject() {
+      return subject;
     }
 
     public String getAccessTokenId() {

@@ -23,6 +23,11 @@
  */
 package com.cloudogu.scm.cas.browser;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sonia.scm.event.ScmEventBus;
+import sonia.scm.security.LogoutEvent;
+
 import javax.inject.Inject;
 import javax.xml.bind.JAXB;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -30,19 +35,30 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.StringReader;
+import java.util.Optional;
 
 public class LogoutHandler {
 
+  private static final Logger LOG = LoggerFactory.getLogger(LogoutHandler.class);
+
   private final TicketStore ticketStore;
+  private final ScmEventBus eventBus;
 
   @Inject
-  public LogoutHandler(TicketStore ticketStore) {
+  public LogoutHandler(TicketStore ticketStore, ScmEventBus eventBus) {
     this.ticketStore = ticketStore;
+    this.eventBus = eventBus;
   }
 
   public void logout(String logoutRequest) {
     LogoutRequest request = JAXB.unmarshal(new StringReader(logoutRequest), LogoutRequest.class);
-    ticketStore.logout(request.sessionId);
+    Optional<String> subject = ticketStore.logout(request.sessionId);
+    if (subject.isPresent()) {
+      LOG.debug("logout cas user {}", subject.get());
+      eventBus.post(new LogoutEvent(subject.get()));
+    } else {
+      LOG.debug("received cas logout, but no subject is stored with the ticket. Skip fire logout event.");
+    }
   }
 
   @XmlAccessorType(XmlAccessType.FIELD)
