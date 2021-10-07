@@ -1,7 +1,7 @@
 {
     "name": "@scm-manager/scm-cas-plugin",
     "private": true,
-    "version": "2.3.2-SNAPSHOT",
+    "version": "2.4.0",
     "license": "MIT",
     "main": "./src/main/js/index.ts",
     "scripts": {
@@ -10,7 +10,7 @@
         "postinstall": "plugin-scripts postinstall"
     },
     "dependencies": {
-        "@scm-manager/ui-plugins": "2.22.0",
+        "@scm-manager/ui-plugins": "2.24.0",
         "@scm-manager/ui-components": "^2.22.0",
         "@scm-manager/ui-extensions": "^2.22.0",
         "classnames": "^2.2.6",
