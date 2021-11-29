@@ -1,5 +1,4 @@
 <!--
-
     MIT License
 
     Copyright (c) 2020-present Cloudogu GmbH and Contributors
@@ -21,8 +20,8 @@
     LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
-
 -->
+
 <samlp:LogoutRequest xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"
                      xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
                      ID="LR-5-uwwgScnlh0R2ohM5Kj5pE1ddWlqufBDFQUQ"
