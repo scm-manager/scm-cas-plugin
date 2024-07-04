@@ -31,9 +31,9 @@ import sonia.scm.security.AccessTokenBuilder;
 import sonia.scm.security.AccessTokenBuilderFactory;
 import sonia.scm.security.AccessTokenCookieIssuer;
 
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.inject.Inject;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 public class LoginHandler {
 

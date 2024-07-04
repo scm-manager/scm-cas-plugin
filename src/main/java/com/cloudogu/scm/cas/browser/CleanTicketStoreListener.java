@@ -28,9 +28,9 @@ import sonia.scm.plugin.Extension;
 import sonia.scm.schedule.Scheduler;
 import sonia.scm.schedule.Task;
 
-import javax.inject.Inject;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import jakarta.inject.Inject;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
 
 @Extension
 public class CleanTicketStoreListener implements ServletContextListener {

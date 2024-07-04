@@ -32,8 +32,8 @@ import sonia.scm.config.ScmConfiguration;
 import sonia.scm.security.CipherHandler;
 import sonia.scm.util.HttpUtil;
 
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.inject.Inject;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;

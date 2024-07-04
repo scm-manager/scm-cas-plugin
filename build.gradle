@@ -23,7 +23,7 @@
  */
 
 plugins {
-  id 'org.scm-manager.smp' version '0.10.1'
+  id 'org.scm-manager.smp' version '0.16.4'
 }
 
 dependencies {
@@ -32,7 +32,7 @@ dependencies {
 }
 
 scmPlugin {
-  scmVersion = "2.24.0"
+  scmVersion = "3.2.3-SNAPSHOT"
   displayName = "Central Authentication Service"
   description = "Authentication for SCM-Manager using CAS"
   author = "Cloudogu GmbH"

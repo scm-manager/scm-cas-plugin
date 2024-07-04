@@ -23,7 +23,7 @@
  */
 package com.cloudogu.scm.cas.browser;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 public class CleanTicketStoreTask implements Runnable {
 

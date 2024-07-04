@@ -40,7 +40,7 @@ import sonia.scm.net.ahc.AdvancedHttpRequestWithBody;
 import sonia.scm.net.ahc.AdvancedHttpResponse;
 import sonia.scm.net.ahc.FormContentBuilder;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;

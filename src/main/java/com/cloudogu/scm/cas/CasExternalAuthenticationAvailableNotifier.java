@@ -21,41 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.cloudogu.scm.cas.rest;
 
-import com.cloudogu.scm.cas.CasContext;
-import com.cloudogu.scm.cas.Configuration;
-import sonia.scm.api.v2.resources.LogoutRedirection;
-import sonia.scm.plugin.Extension;
+package com.cloudogu.scm.cas;
 
 import jakarta.inject.Inject;
-import java.net.URI;
-import java.util.Optional;
-
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
+import sonia.scm.plugin.Extension;
+import sonia.scm.user.ExternalAuthenticationAvailableNotifier;
 
 @Extension
-public class AfterLogoutRedirectToCas implements LogoutRedirection {
+public class CasExternalAuthenticationAvailableNotifier implements ExternalAuthenticationAvailableNotifier {
 
   private final CasContext context;
 
   @Inject
-  public AfterLogoutRedirectToCas(CasContext context) {
+  public CasExternalAuthenticationAvailableNotifier(CasContext context) {
     this.context = context;
   }
 
   @Override
-  public Optional<URI> afterLogoutRedirectTo() {
-    Configuration configuration = context.get();
-    if (configuration.isEnabled()) {
-      String casBaseUrl = configuration.getCasUrl();
-      if (!casBaseUrl.endsWith("/")) {
-        casBaseUrl = casBaseUrl + "/";
-      }
-      return of(URI.create(casBaseUrl).resolve("./logout"));
-    } else {
-      return empty();
-    }
+  public boolean isExternalAuthenticationAvailable() {
+    return context.get().isEnabled();
   }
 }

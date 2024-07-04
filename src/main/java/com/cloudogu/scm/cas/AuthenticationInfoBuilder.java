@@ -31,7 +31,7 @@ import org.jasig.cas.client.validation.TicketValidator;
 import sonia.scm.security.SyncingRealmHelper;
 import sonia.scm.user.User;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import java.util.Set;
 
 public class AuthenticationInfoBuilder {

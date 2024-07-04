@@ -43,11 +43,11 @@ import sonia.scm.security.AnonymousMode;
 import sonia.scm.web.UserAgent;
 import sonia.scm.web.UserAgentParser;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.MediaType;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.ws.rs.core.MediaType;
 import java.io.IOException;
 
 import static org.mockito.Mockito.mock;

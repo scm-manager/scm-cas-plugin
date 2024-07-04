@@ -27,8 +27,8 @@ import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.ConfigurationStoreFactory;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 @Singleton
 public class CasContext {

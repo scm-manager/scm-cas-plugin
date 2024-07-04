@@ -37,8 +37,8 @@ import sonia.scm.util.HttpUtil;
 import sonia.scm.web.JsonEnricherBase;
 import sonia.scm.web.JsonEnricherContext;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 import static com.cloudogu.scm.cas.CasLoginLinkProvider.createLoginLink;
 import static java.util.Collections.singletonMap;

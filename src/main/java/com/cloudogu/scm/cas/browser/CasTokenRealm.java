@@ -31,8 +31,8 @@ import org.apache.shiro.authc.credential.AllowAllCredentialsMatcher;
 import org.apache.shiro.realm.AuthenticatingRealm;
 import sonia.scm.plugin.Extension;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 @Extension
 @Singleton

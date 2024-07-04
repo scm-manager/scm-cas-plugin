@@ -28,7 +28,7 @@ import com.google.inject.OutOfScopeException;
 import com.google.inject.Provider;
 import com.google.inject.ProvisionException;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 public class RequestHolder {

@@ -31,8 +31,8 @@ import sonia.scm.net.ahc.AdvancedHttpClient;
 import sonia.scm.net.ahc.AdvancedHttpRequestWithBody;
 import sonia.scm.net.ahc.AdvancedHttpResponse;
 
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.inject.Inject;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class CasRestClient {

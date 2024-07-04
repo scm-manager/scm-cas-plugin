@@ -30,7 +30,7 @@ import org.jasig.cas.client.validation.Cas30ProxyTicketValidator;
 import org.jasig.cas.client.validation.ProxyList;
 import org.jasig.cas.client.validation.TicketValidator;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import java.util.List;
 import java.util.stream.Collectors;
 

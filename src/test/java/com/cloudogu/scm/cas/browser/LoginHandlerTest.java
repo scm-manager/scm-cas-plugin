@@ -39,8 +39,8 @@ import sonia.scm.security.AccessTokenBuilderFactory;
 import sonia.scm.security.AccessTokenCookieIssuer;
 import sonia.scm.user.UserTestData;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;

@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.user.User;
 import sonia.scm.util.ValidationUtil;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;

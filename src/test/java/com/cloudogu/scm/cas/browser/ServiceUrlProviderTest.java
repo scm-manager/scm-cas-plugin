@@ -36,7 +36,7 @@ import org.mockito.quality.Strictness;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.security.CipherHandler;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Collections;
 import java.util.Optional;
 

@@ -45,7 +45,7 @@ import sonia.scm.user.UserTestData;
 import sonia.scm.web.JsonEnricherContext;
 import sonia.scm.web.VndMediaType;
 
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MediaType;
 import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;

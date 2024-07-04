@@ -29,12 +29,12 @@ import lombok.NoArgsConstructor;
 import sonia.scm.store.DataStore;
 import sonia.scm.store.DataStoreFactory;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import java.util.Set;
 
 @Singleton

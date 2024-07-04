@@ -31,7 +31,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.schedule.Scheduler;
 import sonia.scm.schedule.Task;
 
-import javax.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextEvent;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;

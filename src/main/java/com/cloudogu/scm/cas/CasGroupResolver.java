@@ -26,7 +26,7 @@ package com.cloudogu.scm.cas;
 import sonia.scm.group.GroupResolver;
 import sonia.scm.plugin.Extension;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import java.util.Set;
 
 import static java.util.Collections.emptySet;

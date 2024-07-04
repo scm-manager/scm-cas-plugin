@@ -29,7 +29,7 @@ import sonia.scm.plugin.Extension;
 import sonia.scm.security.AccessToken;
 import sonia.scm.security.AccessTokenValidator;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 @Extension
 public class LogoutAccessTokenValidator implements AccessTokenValidator {

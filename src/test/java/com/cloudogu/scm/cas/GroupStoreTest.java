@@ -32,7 +32,7 @@ import sonia.scm.store.DataStoreFactory;
 import sonia.scm.store.InMemoryDataStore;
 import sonia.scm.store.InMemoryDataStoreFactory;
 
-import javax.xml.bind.JAXB;
+import jakarta.xml.bind.JAXB;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Set;
