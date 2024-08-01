@@ -28,6 +28,7 @@ import com.cloudogu.scm.cas.CasContext;
 import com.cloudogu.scm.cas.Configuration;
 import com.cloudogu.scm.cas.ServiceUrlProvider;
 import com.google.inject.util.Providers;
+import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,8 +36,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.cache.CacheManager;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -59,11 +66,17 @@ class CasRestRealmTest {
   @Mock
   private AuthenticationInfo authenticationInfo;
 
+  @Mock
+  private InvalidCredentialsCache invalidCredentialsCache;
+
+  @Mock
+  private CacheManager cacheManager;
+
   private CasRestRealm realm;
 
   @BeforeEach
   void setUpObjectUnderTest() {
-    realm = new CasRestRealm(context, authenticationInfoBuilder, Providers.of(restClient), serviceUrlProvider);
+    realm = new CasRestRealm(context, authenticationInfoBuilder, Providers.of(restClient), serviceUrlProvider, cacheManager, invalidCredentialsCache);
   }
 
   @Test
@@ -92,6 +105,29 @@ class CasRestRealmTest {
     AuthenticationInfo result = realm.doGetAuthenticationInfo(token);
 
     assertThat(result).isNull();
+  }
+
+  @Test
+  void shouldNotQueryCasIfInvalidPasswordIsCached() {
+    bindConfiguration(true);
+    UsernamePasswordToken token = new UsernamePasswordToken("trillian", "secret".toCharArray());
+    doThrow(AuthenticationException.class).when(invalidCredentialsCache).verifyNotInvalid(token);
+
+    assertThrows(AuthenticationException.class, () -> realm.getAuthenticationInfo(token));
+
+    verifyNoInteractions(restClient);
+  }
+
+  @Test
+  void shouldCacheInvalidCredential() {
+    bindConfiguration(true);
+
+    when(restClient.requestGrantingTicketUrl("trillian", "secret")).thenThrow(new AuthenticationException());
+
+    UsernamePasswordToken token = new UsernamePasswordToken("trillian", "secret".toCharArray());
+    assertThrows(AuthenticationException.class, () -> realm.getAuthenticationInfo(token));
+
+    verify(invalidCredentialsCache).cacheAsInvalid(any());
   }
 
   private void bindConfiguration(boolean enabled) {

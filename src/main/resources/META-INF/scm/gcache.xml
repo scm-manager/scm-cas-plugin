@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
     MIT License
 
@@ -22,10 +23,19 @@
     SOFTWARE.
 -->
 
-<samlp:LogoutRequest xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"
-                     xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
-                     ID="LR-5-uwwgScnlh0R2ohM5Kj5pE1ddWlqufBDFQUQ"
-                     Version="2.0" IssueInstant="2018-12-17T09:26:06Z">
-  <saml:NameID>@NOT_USED@</saml:NameID>
-  <samlp:SessionIndex>ST-8-L66D4LTpMGDptQ7kLark-f77b8125e3a6</samlp:SessionIndex>
-</samlp:LogoutRequest>
+<caches>
+
+  <cache
+    name="sonia.scm.cas.authentication"
+    maximumSize="1000"
+    expireAfterAccess="60"
+    expireAfterWrite="120"
+  />
+  <cache
+    name="sonia.scm.cas.invalidCredentials"
+    maximumSize="1000"
+    expireAfterAccess="5"
+    expireAfterWrite="5"
+  />
+
+</caches>

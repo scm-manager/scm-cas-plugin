@@ -1,0 +1,4 @@
+- type: fixed
+  description: Prevent CAS throttling for local users and api token logins
+- type: added
+  description: Cache for successful CAS authentications
