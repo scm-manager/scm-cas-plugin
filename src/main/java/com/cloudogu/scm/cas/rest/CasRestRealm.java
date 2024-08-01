@@ -26,6 +26,7 @@ package com.cloudogu.scm.cas.rest;
 import com.cloudogu.scm.cas.AuthenticationInfoBuilder;
 import com.cloudogu.scm.cas.CasContext;
 import com.cloudogu.scm.cas.ServiceUrlProvider;
+import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -33,6 +34,8 @@ import org.apache.shiro.authc.credential.AllowAllCredentialsMatcher;
 import org.apache.shiro.realm.AuthenticatingRealm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.cache.Cache;
+import sonia.scm.cache.CacheManager;
 import sonia.scm.plugin.Extension;
 
 import jakarta.inject.Inject;
@@ -44,21 +47,33 @@ import jakarta.inject.Singleton;
 public class CasRestRealm extends AuthenticatingRealm {
 
   private static final Logger LOG = LoggerFactory.getLogger(CasRestRealm.class);
+  private static final String CACHE_NAME = "sonia.scm.cas.authentication";
 
   private final CasContext context;
   private final AuthenticationInfoBuilder authenticationInfoBuilder;
   private final Provider<CasRestClient> restClientProvider;
   private final ServiceUrlProvider serviceUrlProvider;
+  private final InvalidCredentialsCache invalidCredentialsCache;
 
   @Inject
-  public CasRestRealm(CasContext context, AuthenticationInfoBuilder authenticationInfoBuilder, Provider<CasRestClient> restClientProvider, ServiceUrlProvider serviceUrlProvider) {
+  public CasRestRealm(CasContext context,
+                      AuthenticationInfoBuilder authenticationInfoBuilder,
+                      Provider<CasRestClient> restClientProvider,
+                      ServiceUrlProvider serviceUrlProvider,
+                      CacheManager cacheManager,
+                      InvalidCredentialsCache invalidCredentialsCache) {
     this.context = context;
     this.authenticationInfoBuilder = authenticationInfoBuilder;
     this.restClientProvider = restClientProvider;
     this.serviceUrlProvider = serviceUrlProvider;
+    this.invalidCredentialsCache = invalidCredentialsCache;
 
     setAuthenticationTokenClass(UsernamePasswordToken.class);
     setCredentialsMatcher(new AllowAllCredentialsMatcher());
+
+    Cache<Object, AuthenticationInfo> cache = cacheManager.getCache(CACHE_NAME);
+    setAuthenticationCache(cache);
+    setAuthenticationCachingEnabled(true);
   }
 
   @Override
@@ -69,9 +84,16 @@ public class CasRestRealm extends AuthenticatingRealm {
     }
 
     UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
+    invalidCredentialsCache.verifyNotInvalid(token);
 
     CasRestClient restClient = restClientProvider.get();
-    String grantingTicketUrl = restClient.requestGrantingTicketUrl(token.getUsername(), new String(token.getPassword()));
+    String grantingTicketUrl;
+    try {
+      grantingTicketUrl = restClient.requestGrantingTicketUrl(token.getUsername(), new String(token.getPassword()));
+    } catch (AuthenticationException e) {
+      invalidCredentialsCache.cacheAsInvalid(token);
+      throw e;
+    }
 
     String serviceUrl = serviceUrlProvider.create();
     String serviceTicket = restClient.requestServiceTicket(grantingTicketUrl, serviceUrl);

@@ -8,9 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 3.0.0 - 2024-07-16
 ### Added
 - Extension for notification whether external user management system is activated
- 
-## Unreleased
-### 2.4.0 - 2021-10-07
+
+## 2.5.0 - 2024-08-01
+### Added
+- Cache for successful CAS authentications
+
+### Fixed
+- Prevent CAS throttling for local users and api token logins
+
+## 2.4.0 - 2021-10-07
+### Added
 - Fire logout event on cas logout ([#28](https://github.com/scm-manager/scm-cas-plugin/pull/28))
 
 ## 2.3.1 - 2021-07-30

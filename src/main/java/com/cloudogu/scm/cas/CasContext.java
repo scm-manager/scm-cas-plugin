@@ -33,7 +33,7 @@ import jakarta.inject.Singleton;
 @Singleton
 public class CasContext {
 
-  private ConfigurationStore<Configuration> store;
+  private final ConfigurationStore<Configuration> store;
 
   @Inject
   public CasContext(ConfigurationStoreFactory storeFactory) {
