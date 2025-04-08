@@ -15,24 +15,25 @@
  */
 
 import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { Title, Configuration } from "@scm-manager/ui-components";
+import { useTranslation } from "react-i18next";
+import { Configuration } from "@scm-manager/ui-components";
+import { Title, useDocumentTitle } from "@scm-manager/ui-core";
 import GlobalCasConfigurationForm from "./GlobalCasConfigurationForm";
 
-type Props = WithTranslation & {
+type Props = {
   link: string;
 };
 
-class GlobalCasConfiguration extends React.Component<Props> {
-  render() {
-    const { link, t } = this.props;
-    return (
-      <>
-        <Title title={t("scm-cas-plugin.form.header")} />
-        <Configuration link={link} render={props => <GlobalCasConfigurationForm {...props} />} />
-      </>
-    );
-  }
-}
+const GlobalCasConfiguration: React.FC<Props> = ({ link }) => {
+  const [t] = useTranslation("plugins");
+  useDocumentTitle(t("scm-cas-plugin.form.header"));
 
-export default withTranslation("plugins")(GlobalCasConfiguration);
+  return (
+    <>
+      <Title title={t("scm-cas-plugin.form.header")} />
+      <Configuration link={link} render={(props) => <GlobalCasConfigurationForm {...props} />} />
+    </>
+  );
+};
+
+export default GlobalCasConfiguration;
