@@ -17,7 +17,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Configuration } from "@scm-manager/ui-components";
-import { Title, useDocumentTitle } from "@scm-manager/ui-core";
+import { Title } from "@scm-manager/ui-core";
 import GlobalCasConfigurationForm from "./GlobalCasConfigurationForm";
 
 type Props = {
@@ -26,7 +26,6 @@ type Props = {
 
 const GlobalCasConfiguration: React.FC<Props> = ({ link }) => {
   const [t] = useTranslation("plugins");
-  useDocumentTitle(t("scm-cas-plugin.form.header"));
 
   return (
     <>
