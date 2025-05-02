@@ -30,11 +30,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import sonia.scm.config.ScmConfiguration;
 import sonia.scm.security.AccessTokenCookieIssuer;
-import sonia.scm.security.AnonymousMode;
-import sonia.scm.web.UserAgent;
-import sonia.scm.web.UserAgentParser;
+import sonia.scm.security.ShouldRequestPassChecker;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -43,7 +40,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.ws.rs.core.MediaType;
 import java.io.IOException;
 
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -76,10 +72,7 @@ class ForceCasLoginFilterTest {
   private CasContext casContext;
 
   @Mock
-  private ScmConfiguration scmConfiguration;
-
-  @Mock
-  private UserAgentParser userAgentParser;
+  private ShouldRequestPassChecker passChecker;
 
   @Mock
   private AccessTokenCookieIssuer accessTokenCookieIssuer;
@@ -99,7 +92,7 @@ class ForceCasLoginFilterTest {
     when(casContext.get()).thenReturn(configuration);
     when(serviceUrlProvider.create()).thenReturn(SERVICE_URL);
 
-    filter = new ForceCasLoginFilter(serviceUrlProvider, casContext, scmConfiguration, userAgentParser, accessTokenCookieIssuer);
+    filter = new ForceCasLoginFilter(serviceUrlProvider, casContext, accessTokenCookieIssuer, passChecker);
 
     subjectThreadState = new SubjectThreadState(subject);
     subjectThreadState.bind();
@@ -112,30 +105,8 @@ class ForceCasLoginFilterTest {
 
   @Test
   void shouldRedirectToCas() throws IOException, ServletException {
+    when(passChecker.shouldPass(request)).thenReturn(false);
     when(request.getRequestURI()).thenReturn("/scm/repos");
-
-    filter.doFilter(request, response, chain);
-
-    verify(response).sendRedirect(CAS_LOGIN_URL + "?service=" + SERVICE_URL_ESCAPED);
-    verify(accessTokenCookieIssuer).invalidate(request, response);
-  }
-
-  @Test
-  void shouldNotRedirectToCasIfFullAnonymousModeIsEnabled() throws IOException, ServletException {
-    when(scmConfiguration.getAnonymousMode()).thenReturn(AnonymousMode.FULL);
-    when(request.getRequestURI()).thenReturn("/scm/repos");
-
-    filter.doFilter(request, response, chain);
-
-    verify(chain).doFilter(request, response);
-    verify(accessTokenCookieIssuer, never()).invalidate(request, response);
-  }
-
-  @Test
-  void shouldRedirectToCasIfFullAnonymousModeIsEnabledAndIsLoginRoute() throws IOException, ServletException {
-    when(scmConfiguration.getAnonymousMode()).thenReturn(AnonymousMode.FULL);
-    when(request.getRequestURI()).thenReturn("/scm/login");
-    when(request.getContextPath()).thenReturn("/scm");
 
     filter.doFilter(request, response, chain);
 
@@ -170,55 +141,6 @@ class ForceCasLoginFilterTest {
   }
 
   @Test
-  void shouldNotRedirectForHgHooks() throws IOException, ServletException {
-    when(request.getContextPath()).thenReturn("/scm");
-    when(request.getRequestURI()).thenReturn("/scm/hook/hg/?ping=true");
-    when(request.getMethod()).thenReturn("GET");
-
-    filter.doFilter(request, response, chain);
-
-    verify(chain).doFilter(request, response);
-    verify(accessTokenCookieIssuer, never()).invalidate(request, response);
-  }
-
-  @Test
-  void shouldNotRedirectIfUserIsAuthenticated() throws IOException, ServletException {
-    when(subject.isAuthenticated()).thenReturn(true);
-
-    filter.doFilter(request, response, chain);
-
-    verify(chain).doFilter(request, response);
-    verify(accessTokenCookieIssuer, never()).invalidate(request, response);
-  }
-
-  @Test
-  void shouldRedirectIfUserIsAnonymousAndIsNoApiCall() throws IOException, ServletException {
-    mockAnonymousUser();
-    when(request.getRequestURI()).thenReturn("/scm/somewhere");
-    when(serviceUrlProvider.create()).thenReturn(SERVICE_URL);
-
-    filter.doFilter(request, response, chain);
-
-    verify(chain, never()).doFilter(request, response);
-    verify(accessTokenCookieIssuer).invalidate(request, response);
-  }
-
-  @Test
-  void shouldNotRedirectIfUserIsAnonymousAndCallsApi() throws IOException, ServletException {
-    mockAnonymousUser();
-    mockNonBrowserRequest();
-    when(request.getContextPath()).thenReturn("/scm");
-    when(request.getRequestURI()).thenReturn("/scm/api/v2/some");
-    when(serviceUrlProvider.create()).thenReturn(SERVICE_URL);
-    when(scmConfiguration.getAnonymousMode()).thenReturn(AnonymousMode.PROTOCOL_ONLY);
-
-    filter.doFilter(request, response, chain);
-
-    verify(chain).doFilter(request, response);
-    verify(accessTokenCookieIssuer, never()).invalidate(request, response);
-  }
-
-  @Test
   void shouldNotRedirectIfCasIsDisabled() throws IOException, ServletException {
     configuration.setEnabled(false);
 
@@ -241,16 +163,5 @@ class ForceCasLoginFilterTest {
 
     verify(response).sendError(HttpServletResponse.SC_UNAUTHORIZED);
     verify(accessTokenCookieIssuer, never()).invalidate(request, response);
-  }
-
-  private void mockNonBrowserRequest() {
-    UserAgent userAgent = mock(UserAgent.class);
-    when(userAgentParser.parse(request)).thenReturn(userAgent);
-    when(userAgent.isBrowser()).thenReturn(false);
-  }
-
-  private void mockAnonymousUser() {
-    when(subject.isAuthenticated()).thenReturn(true);
-    when(subject.getPrincipal()).thenReturn("_anonymous");
   }
 }

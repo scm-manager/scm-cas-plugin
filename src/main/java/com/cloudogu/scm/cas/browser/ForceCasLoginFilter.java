@@ -19,17 +19,11 @@ package com.cloudogu.scm.cas.browser;
 import com.cloudogu.scm.cas.CasContext;
 import com.cloudogu.scm.cas.ServiceUrlProvider;
 import com.google.common.base.Strings;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 import sonia.scm.Priority;
-import sonia.scm.config.ScmConfiguration;
 import sonia.scm.filter.Filters;
 import sonia.scm.filter.WebElement;
 import sonia.scm.security.AccessTokenCookieIssuer;
-import sonia.scm.security.AnonymousMode;
-import sonia.scm.security.Authentications;
-import sonia.scm.util.HttpUtil;
-import sonia.scm.web.UserAgentParser;
+import sonia.scm.security.ShouldRequestPassChecker;
 import sonia.scm.web.filter.HttpFilter;
 
 import jakarta.inject.Inject;
@@ -48,17 +42,15 @@ public class ForceCasLoginFilter extends HttpFilter {
 
   private final ServiceUrlProvider serviceUrlProvider;
   private final CasContext context;
-  private final ScmConfiguration configuration;
-  private final UserAgentParser userAgentParser;
   private final AccessTokenCookieIssuer accessTokenCookieIssuer;
+  private final ShouldRequestPassChecker requestPassChecker;
 
   @Inject
-  public ForceCasLoginFilter(ServiceUrlProvider serviceUrlProvider, CasContext context, ScmConfiguration configuration, UserAgentParser userAgentParser, AccessTokenCookieIssuer accessTokenCookieIssuer) {
+  public ForceCasLoginFilter(ServiceUrlProvider serviceUrlProvider, CasContext context, AccessTokenCookieIssuer accessTokenCookieIssuer, ShouldRequestPassChecker requestPassChecker) {
     this.serviceUrlProvider = serviceUrlProvider;
     this.context = context;
-    this.configuration = configuration;
-    this.userAgentParser = userAgentParser;
     this.accessTokenCookieIssuer = accessTokenCookieIssuer;
+    this.requestPassChecker = requestPassChecker;
   }
 
   @Override
@@ -86,38 +78,9 @@ public class ForceCasLoginFilter extends HttpFilter {
   }
 
   private boolean shouldPassThrough(HttpServletRequest request) {
-    return isUserAuthenticated()
+    return requestPassChecker.shouldPass(request)
       || isCasAuthenticationDisabled()
-      || isCasCallback(request)
-      || isAnonymousProtocolRequest(request)
-      || isMercurialHookRequest(request)
-      || (!isLoginRequest(request) && isFullAnonymousAccessEnabled());
-  }
-
-  private boolean isMercurialHookRequest(HttpServletRequest request) {
-    return request.getRequestURI().startsWith(request.getContextPath() + "/hook/hg/");
-  }
-
-  private boolean isLoginRequest(HttpServletRequest request) {
-    final String requestURI = request.getRequestURI();
-    final String contextPath = request.getContextPath();
-    return requestURI != null && requestURI.startsWith(contextPath + "/login");
-  }
-
-  private boolean isUserAuthenticated() {
-    Subject subject = SecurityUtils.getSubject();
-    return subject.isAuthenticated() && !Authentications.isAuthenticatedSubjectAnonymous();
-  }
-
-  private boolean isAnonymousProtocolRequest(HttpServletRequest request) {
-    return !HttpUtil.isWUIRequest(request)
-      && Authentications.isAuthenticatedSubjectAnonymous()
-      && configuration.getAnonymousMode() == AnonymousMode.PROTOCOL_ONLY
-      && !userAgentParser.parse(request).isBrowser();
-  }
-
-  private boolean isFullAnonymousAccessEnabled() {
-    return configuration.getAnonymousMode() == AnonymousMode.FULL;
+      || isCasCallback(request);
   }
 
   private boolean isCasAuthenticationDisabled() {
