@@ -58,11 +58,7 @@ To enabled cas authentication for the test server use the following curl command
 curl -u "scmadmin:scmadmin" -H "Content-Type: application/vnd.scmm-casconfig+json;v=2" -XPUT -d '{ "casUrl": "https://cas.hitchhiker.com:8443/cas", "displayNameAttribute": "displayName", "mailAttribute": "mail", "groupAttribute": "groups", "enabled": true }' http://scm.hitchhiker.com:8081/scm/api/v2/cas/configuration
 ```
 
-To test the cas login start the scm-cas-plugin, by running:
-
-```bash
-mvn clean run
-```
+To test the cas login, start the scm-cas-plugin as described above.
 
 Not you should be able to login, by accessing http://scm.hitchhiker.com:8081/scm
 
