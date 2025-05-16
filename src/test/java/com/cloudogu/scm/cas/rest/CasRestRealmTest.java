@@ -82,7 +82,7 @@ class CasRestRealmTest {
     when(serviceUrlProvider.create()).thenReturn(SERVICE_URL);
     when(restClient.requestServiceTicket(tgtLocation, SERVICE_URL)).thenReturn("ST-123");
 
-    when(authenticationInfoBuilder.create("ST-123", SERVICE_URL)).thenReturn(authenticationInfo);
+    when(authenticationInfoBuilder.create("ST-123", SERVICE_URL, "secret")).thenReturn(authenticationInfo);
 
     UsernamePasswordToken token = new UsernamePasswordToken("trillian", "secret".toCharArray());
     AuthenticationInfo result = realm.doGetAuthenticationInfo(token);

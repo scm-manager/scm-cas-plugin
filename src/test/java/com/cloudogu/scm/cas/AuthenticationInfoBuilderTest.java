@@ -25,7 +25,6 @@ import org.jasig.cas.client.validation.TicketValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -33,7 +32,6 @@ import sonia.scm.security.SyncingRealmHelper;
 import sonia.scm.user.User;
 import sonia.scm.user.UserTestData;
 
-import java.util.Collection;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -80,6 +78,7 @@ class AuthenticationInfoBuilderTest {
     when(ticketValidator.validate("ST-123", SERVICE_URL)).thenReturn(assertion);
 
     User trillian = UserTestData.createTrillian();
+    trillian.setPassword("currentPassword");
     when(assertionMapper.createUser(assertion)).thenReturn(trillian);
 
     Set<String> groups = ImmutableSet.of("heartOfGoldCrew", "earth2construction");
@@ -87,9 +86,33 @@ class AuthenticationInfoBuilderTest {
 
     when(syncingRealmHelper.createAuthenticationInfo(Constants.NAME, trillian)).thenReturn(authenticationInfo);
 
-    AuthenticationInfo result = authenticationInfoBuilder.create("ST-123", SERVICE_URL);
+    AuthenticationInfo result = authenticationInfoBuilder.create("ST-123", SERVICE_URL, null);
 
     verify(syncingRealmHelper).store(trillian);
+    assertThat(trillian.getPassword()).isEqualTo("currentPassword");
+    assertThat(result).isSameAs(authenticationInfo);
+
+    verify(groupStore).put(trillian.getName(), groups);
+  }
+
+  @Test
+  void shouldCreateAuthenticationInfoWithPassword() throws TicketValidationException {
+    String password = "password";
+    when(ticketValidator.validate("ST-123", SERVICE_URL)).thenReturn(assertion);
+
+    User trillian = UserTestData.createTrillian();
+    trillian.setPassword(null);
+    when(assertionMapper.createUser(assertion)).thenReturn(trillian);
+
+    Set<String> groups = ImmutableSet.of("heartOfGoldCrew", "earth2construction");
+    when(assertionMapper.createGroups(assertion)).thenReturn(groups);
+
+    when(syncingRealmHelper.createAuthenticationInfo(Constants.NAME, trillian)).thenReturn(authenticationInfo);
+
+    AuthenticationInfo result = authenticationInfoBuilder.create("ST-123", SERVICE_URL, password);
+
+    verify(syncingRealmHelper).store(trillian);
+    assertThat(trillian.getPassword()).isEqualTo(password);
     assertThat(result).isSameAs(authenticationInfo);
 
     verify(groupStore).put(trillian.getName(), groups);
@@ -99,7 +122,6 @@ class AuthenticationInfoBuilderTest {
   void shouldThrowAuthenticationException() throws TicketValidationException {
     when(ticketValidator.validate("ST-456", SERVICE_URL)).thenThrow(TicketValidationException.class);
 
-    assertThrows(AuthenticationException.class, () -> authenticationInfoBuilder.create("ST-456", SERVICE_URL));
+    assertThrows(AuthenticationException.class, () -> authenticationInfoBuilder.create("ST-456", SERVICE_URL, null));
   }
-
 }
