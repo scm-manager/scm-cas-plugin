@@ -55,7 +55,7 @@ public class CasTokenRealm extends AuthenticatingRealm {
     CasToken casToken = (CasToken) token;
 
     String serviceUrl = serviceUrlProvider.createFromToken(casToken);
-    return authenticationInfoBuilder.create(casToken.getCredentials(), serviceUrl);
+    return authenticationInfoBuilder.create(casToken.getCredentials(), serviceUrl, null);
   }
 
 }

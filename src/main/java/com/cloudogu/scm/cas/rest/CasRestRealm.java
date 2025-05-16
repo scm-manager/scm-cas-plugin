@@ -30,7 +30,6 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.authc.credential.AllowAllCredentialsMatcher;
 import org.apache.shiro.realm.AuthenticatingRealm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,7 +68,6 @@ public class CasRestRealm extends AuthenticatingRealm {
     this.invalidCredentialsCache = invalidCredentialsCache;
 
     setAuthenticationTokenClass(UsernamePasswordToken.class);
-    setCredentialsMatcher(new AllowAllCredentialsMatcher());
 
     Cache<Object, AuthenticationInfo> cache = cacheManager.getCache(CACHE_NAME);
     setAuthenticationCache(cache);
@@ -97,7 +95,6 @@ public class CasRestRealm extends AuthenticatingRealm {
 
     String serviceUrl = serviceUrlProvider.create();
     String serviceTicket = restClient.requestServiceTicket(grantingTicketUrl, serviceUrl);
-
-    return authenticationInfoBuilder.create(serviceTicket, serviceUrl);
+    return authenticationInfoBuilder.create(serviceTicket, serviceUrl, new String(token.getPassword()));
   }
 }

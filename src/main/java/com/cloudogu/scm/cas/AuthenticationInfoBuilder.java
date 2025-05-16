@@ -49,7 +49,7 @@ public class AuthenticationInfoBuilder {
     this.groupStore = groupStore;
   }
 
-  public AuthenticationInfo create(String serviceTicket, String serviceUrl) {
+  public AuthenticationInfo create(String serviceTicket, String serviceUrl, String password) {
     Assertion assertion = validate(serviceTicket, serviceUrl);
 
     User user = assertionMapper.createUser(assertion);
@@ -57,6 +57,16 @@ public class AuthenticationInfoBuilder {
 
     Set<String> groups = assertionMapper.createGroups(assertion);
     groupStore.put(user.getName(), groups);
+
+   /*
+    IMPORTANT:
+    AuthenticatingRealm requires the password of the user to verify if user credentials are already cached.
+    Otherwise, the SimpleCredentialMatcher can't verify already cached credentials without causing a NullPointerException
+    Setting this password needs to happen after storing the user in the syncingRealmHelper because this would cause the override of the user password.
+    */
+    if(password != null) {
+      user.setPassword(password);
+    }
 
     return syncingRealmHelper.createAuthenticationInfo(Constants.NAME, user);
   }
