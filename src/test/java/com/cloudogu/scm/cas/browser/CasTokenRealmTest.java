@@ -57,7 +57,7 @@ class CasTokenRealmTest {
     CasToken token = CasToken.valueOf("TGT-123", "anc");
 
     when(serviceUrlProvider.createFromToken(token)).thenReturn(SERVICE_URL);
-    when(authenticationInfoBuilder.create("TGT-123", SERVICE_URL)).thenReturn(authenticationInfo);
+    when(authenticationInfoBuilder.create("TGT-123", SERVICE_URL, null)).thenReturn(authenticationInfo);
 
     AuthenticationInfo result = realm.doGetAuthenticationInfo(token);
     assertThat(result).isSameAs(authenticationInfo);
