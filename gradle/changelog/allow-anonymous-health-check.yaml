@@ -1,2 +1,0 @@
-- type: changed
-  description: Calling the health check anonymously is now allowed, even if the anonymous mode is disabled
