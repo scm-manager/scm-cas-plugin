@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Document titles for configuration pages from core
 
+## 3.3.3 - 2025-09-17
+### Fixed
+- Prevent throttling of CAS by parallel requests
+
 ### Changed
 - Calling the health check anonymously is now allowed, even if the anonymous mode is disabled
 

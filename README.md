@@ -42,15 +42,14 @@ Add the following hostnames to your local `/etc/hosts`, pointing to your ip addr
 * cas.hitchhiker.com
 * scm.hitchhiker.com
 
-Replace `%%myip%%` in the docker-compose file with the one you added to your /etc/hosts.
-
 Start cas server with docker-compose:
 
 ```bash
 docker-compose up
 ```
 
-The server should now run on https://cas.hitchhicker.com:8443/cas the default credential are `trillian` with password `secret`.
+The server should now run on https://cas.hitchhicker.com:8443/cas the default credential are `trillian` or `dent` with
+password `secret`.
 
 To enabled cas authentication for the test server use the following curl command:
 
@@ -60,7 +59,7 @@ curl -u "scmadmin:scmadmin" -H "Content-Type: application/vnd.scmm-casconfig+jso
 
 To test the cas login, start the scm-cas-plugin as described above.
 
-Not you should be able to login, by accessing http://scm.hitchhiker.com:8081/scm
+Now you should be able to login, by accessing http://scm.hitchhiker.com:8081/scm
 
 For testing the rest client, you could use the following command:
 
