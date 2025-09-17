@@ -19,6 +19,7 @@ package com.cloudogu.scm.cas.rest;
 import com.cloudogu.scm.cas.AuthenticationInfoBuilder;
 import com.cloudogu.scm.cas.CasContext;
 import com.cloudogu.scm.cas.ServiceUrlProvider;
+import com.google.common.util.concurrent.Striped;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -33,6 +34,7 @@ import sonia.scm.plugin.Extension;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
+import java.util.concurrent.locks.Lock;
 
 @Singleton
 @Extension
@@ -46,6 +48,7 @@ public class CasRestRealm extends AuthenticatingRealm {
   private final Provider<CasRestClient> restClientProvider;
   private final ServiceUrlProvider serviceUrlProvider;
   private final InvalidCredentialsCache invalidCredentialsCache;
+  private final Striped<Lock> casLock = Striped.lock(10);
 
   @Inject
   public CasRestRealm(CasContext context,
@@ -74,20 +77,25 @@ public class CasRestRealm extends AuthenticatingRealm {
       return null;
     }
 
-    UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
-    invalidCredentialsCache.verifyNotInvalid(token);
-
-    CasRestClient restClient = restClientProvider.get();
     String grantingTicketUrl;
+    UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
+    Lock lock = casLock.get(token.getUsername());
     try {
-      grantingTicketUrl = restClient.requestGrantingTicketUrl(token.getUsername(), new String(token.getPassword()));
-    } catch (AuthenticationException e) {
-      invalidCredentialsCache.cacheAsInvalid(token);
-      throw e;
+      lock.lock();
+      invalidCredentialsCache.verifyNotInvalid(token);
+
+      try {
+        grantingTicketUrl = restClientProvider.get().requestGrantingTicketUrl(token.getUsername(), new String(token.getPassword()));
+      } catch (AuthenticationException e) {
+        invalidCredentialsCache.cacheAsInvalid(token);
+        throw e;
+      }
+    } finally {
+      lock.unlock();
     }
 
     String serviceUrl = serviceUrlProvider.create();
-    String serviceTicket = restClient.requestServiceTicket(grantingTicketUrl, serviceUrl);
+    String serviceTicket = restClientProvider.get().requestServiceTicket(grantingTicketUrl, serviceUrl);
     return authenticationInfoBuilder.create(serviceTicket, serviceUrl, new String(token.getPassword()));
   }
 }

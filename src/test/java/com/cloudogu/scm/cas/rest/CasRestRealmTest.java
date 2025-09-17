@@ -25,15 +25,24 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.cache.CacheManager;
 
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -121,6 +130,92 @@ class CasRestRealmTest {
     assertThrows(AuthenticationException.class, () -> realm.getAuthenticationInfo(token));
 
     verify(invalidCredentialsCache).cacheAsInvalid(any());
+  }
+
+  @Nested
+  class ConcurrentRequests {
+    private static final long SIMULATED_DELAY_MS = 100L;
+
+    private final Queue<Long> executionStartTimes = new ConcurrentLinkedQueue<>();
+    private final ExecutorService executor = Executors.newFixedThreadPool(2);
+
+    private final CountDownLatch startLatch = new CountDownLatch(1);
+    private final CountDownLatch finishLatch = new CountDownLatch(2);
+
+    @BeforeEach
+    void enable() {
+      bindConfiguration(true);
+
+      when(restClient.requestGrantingTicketUrl(anyString(), anyString()))
+        .thenAnswer(invocation -> {
+          executionStartTimes.add(System.currentTimeMillis());
+          Thread.sleep(SIMULATED_DELAY_MS);
+          return "GT-for-" + invocation.getArgument(0);
+        });
+    }
+
+    @Test
+    void shouldExecuteSequentiallyForSameUser() throws InterruptedException {
+      UsernamePasswordToken token = new UsernamePasswordToken("trillian", "secret");
+
+      submit(executor, token);
+      submit(executor, token);
+
+      executeRequests();
+
+      assertThat(executionStartTimes).hasSize(2);
+
+      long difference = getDifference();
+
+      // The difference in start times MUST be >= the simulated delay,
+      // proving one task waited for the other.
+      assertThat(difference).isGreaterThanOrEqualTo(SIMULATED_DELAY_MS);
+    }
+
+    @Test
+    void shouldExecuteInParallelForDifferentUsers() throws InterruptedException {
+      UsernamePasswordToken tokenArthur = new UsernamePasswordToken("arthur", "secret");
+      UsernamePasswordToken tokenFord = new UsernamePasswordToken("ford", "secret");
+
+      submit(executor, tokenArthur);
+      submit(executor, tokenFord);
+
+      executeRequests();
+
+      assertThat(executionStartTimes).hasSize(2);
+
+      long difference = getDifference();
+
+      // The difference in start times MUST be < the simulated delay,
+      // proving they ran concurrently in parallel.
+      assertThat(difference).isLessThan(SIMULATED_DELAY_MS);
+    }
+
+    private void submit(ExecutorService executor, UsernamePasswordToken token) {
+      executor.submit(() -> {
+        try {
+          startLatch.await(); // Wait for the signal to start
+          realm.doGetAuthenticationInfo(token);
+        } catch (InterruptedException e) {
+          Thread.currentThread().interrupt();
+        } finally {
+          finishLatch.countDown(); // Signal that this task is finished
+        }
+      });
+    }
+
+    private void executeRequests() throws InterruptedException {
+      startLatch.countDown();
+      finishLatch.await(2, TimeUnit.SECONDS);
+      executor.shutdown();
+    }
+
+    private long getDifference() {
+      Long t1 = executionStartTimes.poll();
+      Long t2 = executionStartTimes.poll();
+      long difference = Math.abs(t2 - t1);
+      return difference;
+    }
   }
 
   private void bindConfiguration(boolean enabled) {
