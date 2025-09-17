@@ -1,2 +1,0 @@
-- type: fixed
-  description: Prevent throttling of CAS by parallel requests
