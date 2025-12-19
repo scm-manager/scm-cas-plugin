@@ -16,9 +16,14 @@
 
 package com.cloudogu.scm.cas.browser;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Answers;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
@@ -26,16 +31,18 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import sonia.scm.security.AccessToken;
+import sonia.scm.security.AccessTokenBuilder;
+import sonia.scm.security.AccessTokenBuilderFactory;
 import sonia.scm.security.CipherHandler;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.ws.rs.core.Response;
 
 import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -54,6 +61,9 @@ class CasAuthenticationResourceTest {
 
   @Mock
   private CipherHandler cipherHandler;
+
+  @Mock
+  private AccessTokenBuilderFactory accessTokenBuilderFactory;
 
   @InjectMocks
   private CasAuthenticationResource casAuthenticationResource;
@@ -92,4 +102,76 @@ class CasAuthenticationResourceTest {
     verify(logoutHandler).logout("awesomeLogoutRequest");
   }
 
+  @Nested
+  class AccessTokenTests {
+
+    @Mock(answer = Answers.RETURNS_SELF)
+    private AccessTokenBuilder accessTokenBuilder;
+    @Mock
+    private AccessToken accessToken;
+
+    @BeforeEach
+    void mockAccessTokenBuilderFactory() {
+      when(accessTokenBuilderFactory.create()).thenReturn(accessTokenBuilder);
+    }
+
+    @Test
+    void shouldCreateAccessToken() {
+      when(accessTokenBuilder.build())
+        .thenReturn(accessToken);
+      when(accessToken.compact()).thenReturn("myBearerToken");
+
+      Response response = casAuthenticationResource.accessToken(
+        servletRequest,
+        servletResponse,
+        "myTicket",
+        null
+      );
+
+      assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
+      assertThat(response.getEntity()).isEqualTo("myBearerToken");
+      verify(accessTokenBuilder, never()).scope(any());
+      verify(loginHandler)
+        .login(
+          eq(servletRequest),
+          eq(servletResponse),
+          argThat(token -> {
+            assertThat(token.getCredentials()).isEqualTo("myTicket");
+            assertThat(token.getUrlSuffix()).isEqualTo("/");
+            return true;
+          })
+        );
+    }
+
+    @Test
+    void shouldCreateScopedAccessToken() {
+      when(accessTokenBuilder.build())
+        .thenReturn(accessToken);
+      when(accessToken.compact()).thenReturn("myBearerToken");
+
+      Response response = casAuthenticationResource.accessToken(
+        servletRequest,
+        servletResponse,
+        "myTicket",
+        "repository:read:*"
+      );
+
+      assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
+      assertThat(response.getEntity()).isEqualTo("myBearerToken");
+      verify(accessTokenBuilder).scope(argThat(scope -> {
+        assertThat(scope.iterator().next()).isEqualTo("repository:read:*");
+        return true;
+      }));
+      verify(loginHandler)
+        .login(
+          eq(servletRequest),
+          eq(servletResponse),
+          argThat(token -> {
+            assertThat(token.getCredentials()).isEqualTo("myTicket");
+            assertThat(token.getUrlSuffix()).isEqualTo("/");
+            return true;
+          })
+        );
+    }
+  }
 }

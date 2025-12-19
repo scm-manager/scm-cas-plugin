@@ -1,0 +1,2 @@
+- type: added
+  description: Optional scope when creating a new access token using the REST API

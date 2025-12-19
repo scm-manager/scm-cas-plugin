@@ -16,6 +16,7 @@
 
 package com.cloudogu.scm.cas.browser;
 
+import com.google.common.base.Strings;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -26,9 +27,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.api.v2.resources.ErrorDto;
 import sonia.scm.security.AccessToken;
+import sonia.scm.security.AccessTokenBuilder;
 import sonia.scm.security.AccessTokenBuilderFactory;
 import sonia.scm.security.AllowAnonymousAccess;
 import sonia.scm.security.CipherHandler;
+import sonia.scm.security.Scope;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.web.VndMediaType;
 
@@ -138,14 +141,19 @@ public class CasAuthenticationResource {
   public Response accessToken(
     @Context HttpServletRequest request,
     @Context HttpServletResponse response,
-    @FormParam("ticket") String ticket
+    @FormParam("ticket") String ticket,
+    @FormParam("scope") String scope
   ) {
     CasToken token = CasToken.valueOf(ticket, "/");
     LOG.debug("got login call from cas with cas token {}", token.getCredentials());
 
     loginHandler.login(request, response, token);
 
-    AccessToken accessToken = accessTokenBuilderFactory.create().build();
+    AccessTokenBuilder accessTokenBuilder = accessTokenBuilderFactory.create();
+    if (!Strings.isNullOrEmpty(scope)) {
+      accessTokenBuilder = accessTokenBuilder.scope(Scope.valueOf(scope));
+    }
+    AccessToken accessToken = accessTokenBuilder.build();
     return Response.ok().entity(accessToken.compact()).build();
   }
 
