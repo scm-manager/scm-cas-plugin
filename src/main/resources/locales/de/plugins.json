@@ -2,32 +2,32 @@
   "scm-cas-plugin": {
     "nav-link": "CAS",
     "form": {
-      "header": "Globale CAS Konfiguration",
+      "header": "Globale CAS-Konfiguration",
       "enabled": "Aktiviert",
-      "enabledHelp": "Wenn \"Aktiviert\" benutzt der SCM-Manager den CAS Server zur Authentifizierung. \"Deaktiviert\" ermöglicht die herkömmliche Authentifizierung.",
+      "enabledHelp": "Wenn \"Aktiviert\" benutzt der SCM-Manager den CAS-Server zur Authentifizierung. \"Deaktiviert\" ermöglicht die herkömmliche Authentifizierung.",
       "url": "CAS Server URL",
-      "urlHelp": "URL der CAS Installation (inklusive Kontextpfad).",
+      "urlHelp": "URL der CAS-Installation (inklusive Kontextpfad).",
       "attributeMapping": "Attribute Mapping",
       "displayName": "Display Name",
-      "displayNameHelp": "CAS Attribut für den Benutzernamen",
+      "displayNameHelp": "CAS-Attribut für den Benutzernamen",
       "mail": "Mail",
-      "mailHelp": "CAS Attribut für die E-Mail-Adresse",
+      "mailHelp": "CAS-Attribut für die E-Mail-Adresse",
       "groups": "Gruppen",
-      "groupsHelp": "CAS Attribut für die Gruppen",
-      "proxyConfiguration": "Proxy Konfiguration",
+      "groupsHelp": "CAS-Attribut für die Gruppen",
+      "proxyConfiguration": "Proxy-Konfiguration",
       "acceptAnyProxy": "Alle Proxies erlauben",
       "acceptAnyProxyHelp": "Erlaubt alle Proxies ohne weitere Beschränkungen",
-      "allowedProxyChains": "Liste erlaubter Proxy Chains",
+      "allowedProxyChains": "Liste erlaubter Proxy-Ketten (Proxy Chaining)",
       "allowedProxyChainsHelp": "Jede zulässige Proxy-Kette sollte eine durch Leerzeichen getrennte Liste von URLs (für exakte Übereinstimmung) oder reguläre Ausdrücke von URLs (beginnend mit dem Zeichen ^) enthalten. Jede akzeptable Proxy-Kette sollte in einer eigenen Zeile stehen."
     },
-    "configurationChangedSuccess": "CAS Konfiguration gespeichert."
+    "configurationChangedSuccess": "CAS-Konfiguration gespeichert."
   },
   "permissions": {
     "configuration": {
       "read,write": {
         "cas": {
-          "displayName": "CAS Konfiguration ändern",
-          "description": "Darf die CAS Konfiguration verändern"
+          "displayName": "CAS-Konfiguration ändern",
+          "description": "Darf die CAS-Konfiguration verändern"
         }
       }
     }
