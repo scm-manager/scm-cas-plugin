@@ -19,8 +19,8 @@ plugins {
 }
 
 dependencies {
-  implementation "org.jasig.cas.client:cas-client-core:3.5.1"
-  testImplementation "org.jboss.resteasy:resteasy-validator-provider:4.5.8.Final"
+  implementation "org.jasig.cas.client:cas-client-core:3.6.4"
+  testImplementation "org.jboss.resteasy:resteasy-validator-provider:7.0.1.Final"
 }
 
 scmPlugin {
