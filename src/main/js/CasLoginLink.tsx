@@ -17,11 +17,11 @@
 import React, { FC } from "react";
 import { extensionPoints } from "@scm-manager/ui-extensions";
 
-const CasLoginLink: FC<extensionPoints.PrimaryNavigationLoginButtonProps> = ({
+const CasLoginLink: FC<extensionPoints.PrimaryNavigationLoginButton["props"]> = ({
   loginUrl,
   from,
   className,
-  content
+  content,
 }) => {
   return (
     <a href={`${loginUrl}?from=${from}`} className={className}>

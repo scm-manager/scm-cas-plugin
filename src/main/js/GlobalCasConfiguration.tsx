@@ -14,18 +14,16 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React from "react";
+import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
+import { useRequiredIndexLink } from "@scm-manager/ui-api";
 import { Configuration } from "@scm-manager/ui-components";
 import { Title } from "@scm-manager/ui-core";
 import GlobalCasConfigurationForm from "./GlobalCasConfigurationForm";
 
-type Props = {
-  link: string;
-};
-
-const GlobalCasConfiguration: React.FC<Props> = ({ link }) => {
+const GlobalCasConfiguration: FC = () => {
   const [t] = useTranslation("plugins");
+  const link = useRequiredIndexLink("casConfig");
 
   return (
     <>

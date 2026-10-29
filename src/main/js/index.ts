@@ -14,11 +14,11 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import {Links} from "@scm-manager/ui-types";
-import {ConfigurationBinder as cfgBinder} from "@scm-manager/ui-components";
-import {binder} from "@scm-manager/ui-extensions";
+import { ConfigurationBinder as cfgBinder } from "@scm-manager/ui-components";
+import { binder } from "@scm-manager/ui-extensions";
 import GlobalCasConfiguration from "./GlobalCasConfiguration";
 import CasLoginLink from "./CasLoginLink";
+import {useIndexLink} from "@scm-manager/ui-api";
 
-cfgBinder.bindGlobal("/cas", "scm-cas-plugin.nav-link", "casConfig", GlobalCasConfiguration);
-binder.bind("primary-navigation.login", CasLoginLink, props => "casLogin" in (props?.links as Links));
+cfgBinder.bindAdminSetting("/cas", "scm-cas-plugin.nav-link", "casConfig", GlobalCasConfiguration);
+binder.bind("primary-navigation.login", CasLoginLink, () => useIndexLink("casLogin"));

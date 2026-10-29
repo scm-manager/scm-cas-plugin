@@ -44,7 +44,7 @@ class GlobalCasConfigurationForm extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      ...props.initialConfiguration
+      ...props.initialConfiguration,
     };
   }
 
@@ -128,7 +128,7 @@ class GlobalCasConfigurationForm extends React.Component<Props, State> {
             onClick={() =>
               this.setState({
                 ...this.state,
-                configurationChanged: false
+                configurationChanged: false,
               })
             }
           />
@@ -142,15 +142,15 @@ class GlobalCasConfigurationForm extends React.Component<Props, State> {
   valueChangeHandler = (value: string, name: string) => {
     this.setState(
       {
-        [name]: value
+        [name]: value,
       },
       () =>
         this.props.onConfigurationChange(
           {
-            ...this.state
+            ...this.state,
           },
-          true
-        )
+          true,
+        ),
     );
   };
 }
